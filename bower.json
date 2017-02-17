@@ -19,6 +19,6 @@
   },
   "dependencies": {
 	  "utils": "git://github.com/bmelo/matlab-utils.git",
-      "eeglab": "https://adelorme@bitbucket.org/sccn_eeglab/eeglab/get/eeglab14.zip"
+      "eeglab": "https://adelorme@bitbucket.org/sccn_eeglab/eeglab.git#eeglab14"
   }
 }
