@@ -1,9 +1,9 @@
-addpath( fullfile(pwd, '../vendor/eeglab13_5_4b') );
-addpath( fullfile(pwd, 'utils') );
+addpath( fullfile(pwd, 'vendors/eeglab') );
+addpath( fullfile(pwd, 'src/utils') );
 
 %to prepare eeglab
 eeglab;
 close all;
 
-addpath( fullfile(pwd, 'eeg') );
-addpath( fullfile(pwd, 'eeg', 'stats') );
+addpath( fullfile(pwd, 'src', 'eeg') );
+addpath( fullfile(pwd, 'src', 'eeg', 'stats') );
