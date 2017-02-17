@@ -1,0 +1,3 @@
+rawdir_base = '';
+outdir_base = '';
+subj_prefix = 'SUBJ';

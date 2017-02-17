@@ -1,0 +1,24 @@
+{
+  "name": "matlab-eeg",
+  "version": "0.0.1",
+  "authors": [
+    "Bruno Melo <bruno.melo@idor.org>"
+  ],
+  "description": "EEG Tools for Matlab",
+  "license": "MIT",
+  "homepage": "https://github.com/bmelo/matlab-eeg#readme",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "data"
+  ],
+  "scripts": {
+    "postinstall": "sh scripts/install.sh"
+  },
+  "dependencies": {
+	  "utils": "git://github.com/bmelo/matlab-utils.git",
+      "eeglab": "https://adelorme@bitbucket.org/sccn_eeglab/eeglab/get/eeglab14.zip"
+  }
+}
