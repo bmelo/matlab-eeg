@@ -1,0 +1,12 @@
+*.asv
+*.mat
+*.png
+*.tiff
+*.tif
+/node_modules
+/vendors
+
+#to check
+/data
+/extra
+/local_params.m

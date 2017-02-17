@@ -1,0 +1,19 @@
+{
+  "name": "matlab-eeg",
+  "version": "0.0.1",
+  "description": "teste",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bmelo/matlab-eeg.git"
+  },
+  "dependencies": {
+    "matlab-utils": "github:bmelo/matlab-utils"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "install": "sh scripts/install.sh",
+    "build-matlab": "sh scripts/build-matlab.sh"
+  },
+  "author": "",
+  "license": "ISC"
+}
