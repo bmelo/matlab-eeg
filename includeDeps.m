@@ -6,7 +6,7 @@ addpath( fullfile(pwd, 'src/utils') );
 eeglab;
 close all;
 
-% Preparing CosmoMVPA
+% Preparing CoSMoMVPA
 cosmo_set_path;
 
 addpath( fullfile(pwd, 'src', 'eeg') );
