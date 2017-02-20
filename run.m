@@ -1,4 +1,9 @@
-%%% by Bruno Melo (bruno.raphael@gmail.com)
+function run()
+% Scripts to manipulate EEG data
+%
+% by Bruno Melo (bruno.raphael@gmail.com)
+%
+
 if( ~exist('CURRENTSET', 'var') )
     includeDeps;
 end
@@ -17,7 +22,7 @@ results_SL = [];
 
 % Execute
 clc;
-subjs = [1:6];
+subjs = 1:14;
 for subjN = subjs
     subj = sprintf('%s%03d', subj_prefix, subjN);
     rawdir = fullfile(rawdir_base, subj);
@@ -31,31 +36,24 @@ for subjN = subjs
         compute_results = 0;
     end
     
-    fprintf('\n\n\n\n\n####    %s   ####\n', subj);
+    fprintf('\n\n\n####    %s   ####\n', subj);
+    
+    % downsample (500Hz) and separation of EEG channels and ECG, ACC
     prepare_eeg_file;
-    continue;
+    epochs = epocas( EEG );
+    results.canais = {EEG.chanlocs.labels};
+    
+    % artifacts remotion
+    artifact_remotion;
     
     %pop_eegplot( EEG, 1, 1, 1);
     eegplot( EEG, 'title', 'CANAIS EEG' );
     eegplot( AUX, 'title', 'AUXILIARES' );
-    epochs = epocas( EEG );
-    results.canais = {EEG.chanlocs.labels};
     
-    if( compute_results )
-        disp('Computing ...');
-        results.stats.bands = testBands( epochs );
-        results.stats.conds = testConds( epochs );
-        results.stats.condsJoin = testCondsJoin( epochs );
-        results.stats.condsJoinRuns = testCondsJoinRuns( epochs );
-        save( results_file, 'results' );
-        generate_SL = 1;
-    end
+    if( compute_results ); do_stats; end;
     results_SL.(subj) = results;
     
-    cEEG.printReport( results.(subj).stats.bands, '\n\n-- Bands --', 2, [3 5] );
-    cEEG.printReport( results.(subj).stats.conds, '\n\n-- Conds --', 1, [2 3] );
-    cEEG.printReport( results.(subj).stats.condsJoin, '\n\n-- CondsJoin --', 1, [1 2] );
-    cEEG.printReport( results.(subj).stats.condsJoinRuns, '\n\n-- CondsJoinRUNs --', 2, [1 1] );
+    do_report;
     
     clear EEG results;
 end
