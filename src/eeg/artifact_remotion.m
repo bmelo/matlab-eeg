@@ -1,37 +1,33 @@
+function artifact_remotion( epochs )
+canais = [1 2 46 47];
 
-if( ~isdir(outdir) )
-    mkdir(outdir)
-end
+win_size = 500;
 
-if( exist( fullfile(outdir, 'eeg_500.mat'), 'file' ) )
-    load( fullfile(outdir, 'eeg_500.mat') );
-else
-    fname = dir( fullfile(rawdir, '*.vhdr') );
+stds = struct('NEUTRAL', [], 'TASK_T', [], 'TASK_A', []);
+flds = fields(epochs);
+
+figure;
+for nF=1:length(flds)
+    field = flds{nF};
+    stds.(field).data = [];
     
-    EEG = pop_loadbv( rawdir, fname.name );
-    
-    %Changing labels, if necessary
-    if exist( fullfile(rawdir, '/canais.txt'), 'file' )
-        labels = textread( fullfile(rawdir, '/canais.txt'), '%s' );
-        for k=1:length( EEG.chanlocs )
-            EEG.chanlocs(k).labels = labels{k};
-        end
+    for nE = 1:length(epochs.(field))
+        data = epochs.(field)(nE).data;
+        window = 1:win_size;
+        while 1
+            stds.(field).data = [stds.(field).data std(data(:,window)')'];
+            window = window + floor((win_size/2));
+            if( max(window) > length(data) )
+                break;
+            end
+        end     
     end
     
-    %Clearing events
-    %Inserting events using log
-    %extract_events;
-    %fields = {'type', 'latency','duration', 'init_time', 'init_index'};
-    %[EEG, eventnumbers] = pop_importevent(EEG, 'event', events, 'fields', fields,'append', 'no', 'timeunit', 1 );
+    subplot( length(flds), 1, nF );
+    plot(stds.(field).data(46, :));
+    title( [field ' F_5'] );
+    hold on;
     
-    %Splitting data and aux
-    labelsAUX = {EEG.chanlocs([32 65:68]).labels}; %ECG, GSR, ACC_x, ACC_y, ACC_z
-    AUX = pop_select( EEG, 'channel', labelsAUX);
-    EEG = pop_select( EEG, 'nochannel', labelsAUX);
-    save( fullfile(outdir, 'eeg.mat'), 'EEG', 'AUX', '-v7.3');
-    
-    %Resampling to 500Hz
-    EEG = pop_resample( EEG, 500 );
-    AUX = pop_resample( AUX, 500 );
-    save( fullfile(outdir, 'eeg_500.mat'), 'EEG', 'AUX', '-v7.3');
+end
+
 end

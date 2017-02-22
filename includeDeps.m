@@ -7,7 +7,7 @@ eeglab;
 close all;
 
 % Preparing CoSMoMVPA
-cosmo_set_path;
+%cosmo_set_path;
 
 addpath( fullfile(pwd, 'src', 'eeg') );
 addpath( fullfile(pwd, 'src', 'eeg', 'stats') );

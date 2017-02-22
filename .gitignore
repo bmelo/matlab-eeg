@@ -3,6 +3,7 @@
 *.png
 *.tiff
 *.tif
+*~
 /node_modules
 /vendors
 
