@@ -7,7 +7,7 @@ for ch=1:size(EEG.data,1)
   
     one_chan = squeeze( EEG.data(ch,:,:) );
     
-    % tirar média para cada janela
+    % tirar mÃ©dia para cada janela
     baseline_janela = mean( one_chan, 1 );
     
     one_chan_demeaned = one_chan - repmat( baseline_janela, size( one_chan,1), 1);
@@ -31,7 +31,7 @@ for ch=1:size(EEG.data,1)
         
         inds( inds == vol ) = [];
         
-        % calcular média sobre as janelas 
+        % calcular mÃ©dia sobre as janelas 
         m = mean( one_chan_demeaned(:, inds), 2 );
         
         EEG_out.data(ch,:,vol) = EEG_out.data(ch,:,vol) - m';

@@ -1,6 +1,8 @@
 % [EEG, eventnumbers] = pop_importevent(EEG, 'event', ...
 %           'event_values.txt', 'fields', {'type', 'latency','condition' }, ...
 %           'append', 'no', 'align', 0, 'timeunit', 1E-3 );
+import utils.Time;
+
 [~, logfile] = fileattrib( fullfile(rawdir, '*.log') );
 eegfile = dir( fullfile(rawdir, '*.eeg') );
 eventsfile = fullfile( outdir, 'events.mat' );
