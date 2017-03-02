@@ -1,5 +1,5 @@
-global epochs;
-close all;
+function plot_sync_desync(epochs)
+
 cond = 'TASK_T';
 nData = 23000; % 46s
 filterB = 1;
@@ -7,7 +7,7 @@ filterB = 1;
 %bpFilt = designfilt('bandpassfir','FilterOrder',2, ...
 %         'CutoffFrequency1',7,'CutoffFrequency2',45, ...
 %         'SampleRate',500/2);
-     
+
 %[B,A,C,D] = butter(2,[7 30]/(500/2));
 
 % Plotting signals
@@ -44,3 +44,5 @@ hold on;
 title([cond 'F_5 mean']);
 plot( 1:length(interv), (sin(interv)*ampM+meanM), 'b', 'LineWidth', 3 )
 hold off;
+
+end
