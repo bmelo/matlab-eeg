@@ -1,13 +1,17 @@
-addpath( fullfile(pwd, 'vendors/eeglab') );
-addpath( fullfile(pwd, 'vendors/cosmomvpa') );
-addpath( fullfile(pwd, 'src/utils') );
+%run('vendors/matlab-utils/init.m');
+
+% Primeiro os vendors, para poderem ser sobrescritos pela aplicação
+utils.path.includeSubdirs({
+    'vendors/eeglab'
+    'vendors/cosmomvpa'
+    'src'
+});
 
 % Preparing eeglab
-eeglab;
+if ~exist('eeglabUpdater', 'var')
+    eeglab;
+end
 close all;
 
 % Preparing CoSMoMVPA
 %cosmo_set_path;
-
-addpath( fullfile(pwd, 'src', 'eeg') );
-addpath( fullfile(pwd, 'src', 'eeg', 'stats') );

@@ -4,6 +4,9 @@
 *.tiff
 *.tif
 *~
+*.example
+*.bck
+
 /node_modules
 /vendors
 
