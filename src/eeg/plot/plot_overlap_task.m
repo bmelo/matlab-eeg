@@ -1,14 +1,6 @@
-function plot_sync_desync(epochs)
-
-cond = 'TASK_T';
-nData = 23000; % 46s
-filterB = 1;
-
-%bpFilt = designfilt('bandpassfir','FilterOrder',2, ...
-%         'CutoffFrequency1',7,'CutoffFrequency2',45, ...
-%         'SampleRate',500/2);
-
-%[B,A,C,D] = butter(2,[7 30]/(500/2));
+function [ output_args ] = plot_overlap_task( epochs )
+%PLOT_OVERLAP_TASK Summary of this function goes here
+%   Detailed explanation goes here
 
 % Plotting signals
 figure;
@@ -18,10 +10,6 @@ data = zeros( length(epochs.(cond)), nData );
 for n=1:length(epochs.(cond))
     hold on;
     data(n,:) = epochs.(cond)(n).data(46,1:nData);
-    if filterB
-        [b,a] = butter(4,[7 30]/(500/2));
-        data(n,:) = filtfilt(b,a, data(n,:));
-    end
     % Sinc/Dessinc
     data(n,:) = data(n,:).^2;
     plot( data(n,:) );
@@ -46,3 +34,4 @@ plot( 1:length(interv), (sin(interv)*ampM+meanM), 'b', 'LineWidth', 3 )
 hold off;
 
 end
+

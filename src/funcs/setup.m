@@ -9,7 +9,10 @@ end
 local_params;
 
 params = utils.Var.argin2struct( varargin );
+
+warning off;
 config = utils.Var.catstruct(config, params);
+warning on;
 
 end
 

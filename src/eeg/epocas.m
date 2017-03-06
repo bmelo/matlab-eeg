@@ -19,7 +19,7 @@ for k=1:nEvts
     
     epoca.inicio = ceil(evt.latency);
     epoca.end = ceil(EEG.event(k+1).latency);
-    epoca.duracao = epoca.end - epoca.inicio;
+    epoca.duracao = (epoca.end - epoca.inicio)+1;
     epoca.data = EEG.data( :, epoca.inicio:epoca.end );
     epoca.evt = evt;
     

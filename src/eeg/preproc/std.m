@@ -1,6 +1,6 @@
-function artifact_remotion( epochs )
-canais = [1 2 46 47];
+function std( epochs )
 
+canais = [1 2 46 47];
 win_size = 500;
 
 stds = struct('NEUTRAL', [], 'TASK_T', [], 'TASK_A', []);
@@ -29,5 +29,6 @@ for nF=1:length(flds)
     hold on;
     
 end
+print(gcf,fullfile( outdir, 'std_ch_F5.png' ),'-dpng')
 
 end

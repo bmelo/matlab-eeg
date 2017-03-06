@@ -2,10 +2,13 @@ function run_eeg()
 % Scripts to manipulate EEG data
 %
 % by Bruno Melo (bruno.raphael@gmail.com)
-%
-includeDeps;
+
 import utils.Msgs;
 
+% Preparing components (eeglab, matlab-utils)
+includeDeps;
+
+%% Setup of processing
 config = setup('subjs', 8);
 clear results_SL;
 
@@ -14,24 +17,33 @@ for subjN = config.subjs
     subj = sprintf('%s%03d', config.subj_prefix, subjN);
     fprintf('\n\n\n####    %s   ####\n', subj);
     
-    % Preproc
+    %% Preproc
     if config.do.preproc
+        %extract_matrix -> Epochs
         load_data;
-        %extract_matrix;
+        
+        % Manipulating signal
+        epochs = match_length_all(epochs);
+        epochs = filter_bands(epochs, [7 45]);
+        epochsSD = sync_desync(epochs);
     end
     
-    if config.do.first_level
-        first_level;
-    end
-    
+    %% Visual Check
     %plot_eeg(EEG);
     %plot_cond(EEG);
-    plot_sync_desync(epochs);
+    % std(epochs);
+    plot_overlap_task(epochsSD);
     
-    input('[Enter] para continuar...');
+    %% Processing
+    if config.do.first_level
+        %first_level;
+    end
+    
+    %input('[Enter] para continuar...');
     clear EEG results;
 end
 
+%% Group processing
 if( config.do.second_level )
-    second_level;
+    %second_level;
 end

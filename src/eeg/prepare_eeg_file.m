@@ -35,7 +35,7 @@ else
     AUX = pop_resample( AUX, 500 );
     save( fullfile(outdir, 'eeg_500.mat'), 'EEG', 'AUX', '-v7.3');
     
-    % Removing 
-    EEG = remove_bands( EEG, [1 7; 46 Inf]);
-    save( fullfile(outdir, 'eeg_500_f.mat'), 'EEG', 'AUX', '-v7.3');
+    % HIGH/LOW FILTER
+    %EEG = filter_bands( EEG, [7 45]);
+    %save( fullfile(outdir, 'eeg_500_f.mat'), 'EEG', 'AUX', '-v7.3');
 end
