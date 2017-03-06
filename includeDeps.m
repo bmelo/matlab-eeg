@@ -7,7 +7,7 @@ end
 mdir = fileparts(mfilename('fullpath'));
 run( fullfile(mdir, 'vendors/matlab-utils/init.m'));
 
-%% Primeiro os vendors, para poderem ser sobrescritos pela aplicação
+%% Primeiro os vendors, para poderem ser sobrescritos pela aplicaï¿½ï¿½o
 utils.path.includeSubdirs({
     'vendors/eeglab'
     'vendors/cosmomvpa'
@@ -22,4 +22,5 @@ close all;
 
 % Preparing CoSMoMVPA
 %cosmo_set_path;
+
 included = 1;
