@@ -10,31 +10,34 @@ import utils.Msgs;
 
 %% Setup of processing
 close all; clc;
-config = setup('subjs', 8);
+config = setup('subjs', [1:14]);
 
 % Do the same for each subject
 for subjN = config.subjs
     subj = sprintf('%s%03d', config.subj_prefix, subjN);
-    fprintf('\n####    %s   ####\n\n\n', subj);
+    fprintf('\n####    %s   ####\n\n', subj);
     
     %% Preproc
     if config.do_preproc
-        %extract_matrix -> Epochs
-        load_data;
+        % Loading EEG/AUX - downsample to 500Hz
+        [EEG, AUX] = prepare_eeg(config, subj, 500);
+        EEG.ext.epochs = epocas( EEG );
         
         % Manipulating signal
-        epochs = match_length_all(epochs);
-        epochs = filter_bands(epochs, [7 45]);
+        EEG = epochs_match_all(EEG);
+        EEG = filter_bands(EEG, [7 45]);
     end
     
     %% Characteristics
-    epochsSD = sync_desync(epochs);
+    EEG_sd = sync_desync(EEG);
+    %EEG_en = entropy(epochs)
+    %EEG_pw = power(epochs)
     
     %% Visual Check
     %plot_eeg(EEG);
     %plot_cond(EEG);
     % std(epochs);
-    plot_overlap_task(epochsSD);
+    plot_overlap_task(EEG_sd, 1:63, 1);
     
     %% Processing
     if config.do_first_level
@@ -43,6 +46,7 @@ for subjN = config.subjs
     
     %input('[Enter] para continuar...');
     clear EEG results;
+    disp('');
 end
 
 %% Group processing

@@ -1,12 +1,13 @@
-function signal = filter_bands( signal, bands )
+function EEG = filter_bands( EEG, bands )
 %FILTER_BANDS Remove bands using butter filter
 %   Detailed explanation goes here
 %
 
-freq = 500;
+signal = EEG.ext.epochs;
+srate = EEG.srate;
 
 %Filter to be used
-[b,a] = butter(4, bands/(freq/2));
+[b,a] = butter(4, bands/(srate/2));
 
 conds = fields(signal);
 % Each condition
@@ -21,6 +22,9 @@ for nCond = 1:length(conds)
         end
     end
 end
+
+% putting return value
+EEG.ext.epochs = signal;
 
 end
 

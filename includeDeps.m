@@ -17,6 +17,12 @@ utils.path.includeSubdirs({
 %% Preparing eeglab
 if ~exist('eeglabUpdater', 'var')
     eeglab;
+    
+    % Installing plugin to read Brain Vision signal
+    if( ~exist( 'pop_loadbv' ) )
+        plugin_install('https://github.com/widmann/bva-io/archive/v1.5.14.zip', 'bva-io', '1.5.14');
+        eeglab;
+    end
 end
 close all;
 
