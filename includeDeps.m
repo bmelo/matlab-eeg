@@ -1,11 +1,26 @@
+%% Checking if need run file again
 global included
 if ~isempty(included)
     return;
 end
 
+%% Loading configuration
+try
+    local_params
+catch e
+    config.vendors_dir = 'vendors';
+end
+
+%% Checking config.vendors_dir
+[~, config.vendors_dir] = fileattrib( config.vendors_dir );
+if ~( config.vendors_dir(1).directory )
+    error(['config.vendors_dir = ' config.vendors_dir '\n Invalid directory.']);
+else
+    config.vendors_dir = config.vendors_dir(1).Name;
+end
+
 %% Including component matlab-utils
-mdir = fileparts(mfilename('fullpath'));
-run( fullfile(mdir, 'vendors/matlab-utils/init.m'));
+run( fullfile(config.vendors_dir, 'matlab-utils/init.m'));
 
 %% Primeiro os vendors, para poderem ser sobrescritos pela aplica��o
 utils.path.includeSubdirs({
