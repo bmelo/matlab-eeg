@@ -10,7 +10,7 @@ import utils.Msgs;
 
 %% Setup of processing
 close all; clc;
-config = setup('subjs', [1:14]);
+config = setup('subjs', 1:14);
 
 % Do the same for each subject
 for subjN = config.subjs
@@ -21,15 +21,15 @@ for subjN = config.subjs
     if config.do_preproc
         % Loading EEG/AUX - downsample to 500Hz
         [EEG, AUX] = prepare_eeg(config, subj, 500);
-        EEG.ext.epochs = epocas( EEG );
+        EEG.ext.epochs = epocas_v2( EEG );
         
         % Manipulating signal
         EEG = epochs_match_all(EEG);
-        EEG = filter_bands(EEG, [7 45]);
+        EEG = epochs_apply(EEG, @filter_bands, EEG.srate, [7 45]);
     end
     
     %% Characteristics
-    EEG_sd = sync_desync(EEG);
+    EEG_pw = epochs_apply(EEG, @power_eeg);
     %EEG_en = entropy(epochs)
     %EEG_pw = power(epochs)
     
@@ -37,7 +37,7 @@ for subjN = config.subjs
     %plot_eeg(EEG);
     %plot_cond(EEG);
     % std(epochs);
-    plot_overlap_task(EEG_sd, 1:63, 1);
+    plot_overlap_task(EEG_pw, 1:63, 'power');
     
     %% Processing
     if config.do_first_level

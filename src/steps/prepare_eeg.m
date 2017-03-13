@@ -46,17 +46,8 @@ rawdir = fullfile(config.rawdir_base, subj);
 if( exist( alt_file, 'file' ) )
     fprintf('loading data\n%s\n\n', alt_file);
     load( alt_file );
-    disp('fixing data info');
-    EEG.subject =subj;
-    EEG.filename = basename(alt_file);
-    EEG.filepath = fileparts(alt_file);
     EEG.ext.config = config;
-    EEG.ext.type = 'raw_data';
-    AUX.subject =subj;
-    AUX.filename = basename(alt_file);
-    AUX.filepath = fileparts(alt_file);
-    AUX.ext = EEG.ext;
-    save( alt_file, 'EEG', 'AUX', '-v7.3');
+    AUX.ext.config = config;
 else
     fname = resolve_names( fullfile(rawdir, '*.vhdr') );
     fprintf('loading data\n%s\n\n', fname{1});

@@ -8,9 +8,11 @@ for field = fields(epochs)'
     
     %% Preparing sync/desync
     n_pieces = length(epochs.(cond));
-    [n_ch, len] = size(epochs.(cond)(1).data);
-    data = [epochs.(cond)(:).data];
-    data = reshape( data, n_ch, len, n_pieces );
+    
+    data = [epochs.(cond)(:).before epochs.(cond)(:).data epochs.(cond)(:).after];
+    [n_ch, len] = size(data);
+    
+    data = reshape( data, n_ch, len/n_pieces, n_pieces );
     
     matrices.(cond) = data;
     
