@@ -1,7 +1,8 @@
-function [ EEG ] = epochs_apply( EEG, hFunc, varargin )
+function [ EEG ] = epochs_apply( hFunc, varargin )
 %EPOCHS_APPLY Apply function to each epoch
 %   Detailed explanation goes here
 
+EEG = varargin{1};
 signal = EEG.ext.epochs;
 conds = fields(signal);
 
@@ -16,16 +17,16 @@ for nCond = 1:length(conds)
         for nCh = 1:size(signal.(cond)(p).data, 1)
             
             % Task
-            args = [signal.(cond)(p).data(nCh,:) varargin];
-            signal.(cond)(p).data(nCh,:) = hFunc( args{:} );
+            varargin{1} = signal.(cond)(p).data(nCh,:);
+            signal.(cond)(p).data(nCh,:) = hFunc( varargin{:} );
             
             % Neutral Before
-            args = [signal.(cond)(p).before(nCh,:) varargin];
-            signal.(cond)(p).before(nCh,:) = hFunc( args{:} );
+            varargin{1} = signal.(cond)(p).before(nCh,:);
+            signal.(cond)(p).before(nCh,:) = hFunc( varargin{:} );
             
             % Neutral After
-            args = [signal.(cond)(p).after(nCh,:) varargin];
-            signal.(cond)(p).after(nCh,:) = hFunc( args{:} );
+            varargin{1} = signal.(cond)(p).after(nCh,:);
+            signal.(cond)(p).after(nCh,:) = hFunc( varargin{:} );
             
         end
     end

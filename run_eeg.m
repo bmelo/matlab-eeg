@@ -10,7 +10,8 @@ import utils.Msgs;
 
 %% Setup of processing
 close all; clc;
-config = setup('subjs', 1:14);
+config = setup('subjs', 7);
+chs = 46;
 
 % Do the same for each subject
 for subjN = config.subjs
@@ -25,19 +26,21 @@ for subjN = config.subjs
         
         % Manipulating signal
         EEG = epochs_match_all(EEG);
-        EEG = epochs_apply(EEG, @filter_bands, EEG.srate, [7 45]);
+        cEEG = epochs_apply(@filter_bands, EEG, EEG.srate, [7 45]);
     end
-    
+    plot_overlap_task(EEG, 'raw', chs);
+    plot_overlap_task(EEG, 'raw-mean', chs, 1);
+    plot_overlap_task(cEEG, 'high-low filtered', chs, 1);
     %% Characteristics
-    EEG_pw = epochs_apply(EEG, @power_eeg);
-    %EEG_en = entropy(epochs)
-    %EEG_pw = power(epochs)
     
-    %% Visual Check
-    %plot_eeg(EEG);
-    %plot_cond(EEG);
-    % std(epochs);
-    plot_overlap_task(EEG_pw, 1:63, 'power');
+    % POWER
+    EEG_pow  = epochs_apply(@power_eeg, cEEG);
+    plot_overlap_task(EEG_pow, 'power', chs);
+
+    % ERD/ERS
+    %EEG_erd = epochs_apply(@erd_ers, cEEG, 500, 100);
+    %plot_overlap_task(EEG_erd, 'ERD-ERS');
+    
     
     %% Processing
     if config.do_first_level
@@ -45,8 +48,8 @@ for subjN = config.subjs
     end
     
     %input('[Enter] para continuar...');
-    clear EEG results;
-    disp('');
+    fprintf('\n\n');
+    close all;
 end
 
 %% Group processing
