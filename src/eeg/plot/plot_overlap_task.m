@@ -19,6 +19,7 @@ for chan_num = channels
     suptitle( sprintf('%s - %s %s', folder_save, EEG.subject, chan_name) );
     
     if save_img
+        extra = '';
         if EEG.ext.only_before
             extra = '_before';
         end        
@@ -52,7 +53,7 @@ for nC = 1:length(conds)
     if strcmp(cond, 'TASK_A')
         mult = -1;
     end
-    signal = squeeze( epochsM.(cond)(chan_num,:,:) );
+    signal = squeeze( epochsM.(cond)(chan_num,:,:) )';
     signal_mean = squeeze( mean(signal, 2) );
     if( remove_mean )
         % To remove, both matrix need match in size

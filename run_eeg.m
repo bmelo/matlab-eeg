@@ -8,9 +8,9 @@ includeDeps;
 
 %% Setup of processing
 close all; clc;
-config = setup('subjs', 7, 'neutral_length', 12);
+config = setup('subjs', 7, 'neutral_length', 6);
 chs = 46;
-extra = 'before';
+extra = '';
 
 % Do the same for each subject
 for subjN = config.subjs

@@ -7,17 +7,27 @@ only_before = utils.Var.arg_exist(varargin, 'before');
 for field = fields(epochs)'
     cond = field{1};
     
-    %% Preparing sync/desync
+    %% Preparing matrix with all elements
+    % calculating basic info
     n_pieces = length(epochs.(cond));
+    [n_ch, len_data] = size(epochs.(cond)(1).data);
+    len_before = length(epochs.(cond)(1).before);
+    len_after = length(epochs.(cond)(1).after);
     
-    if only_before
-        data = [epochs.(cond)(:).before epochs.(cond)(:).data];
-    else
-        data = [epochs.(cond)(:).before epochs.(cond)(:).data epochs.(cond)(:).after];
+    len_total = len_data + len_before;
+    if ~only_before
+        len_total = len_total + len_after;
     end
-    [n_ch, len] = size(data);
     
-    data = reshape( data, n_ch, len/n_pieces, n_pieces );
+    % merging data
+    data = zeros(n_ch, n_pieces, len_total);
+    for nP = 1:n_pieces
+        if only_before
+            data(:,nP,:) = [epochs.(cond)(nP).before epochs.(cond)(nP).data];
+        else
+            data(:,nP,:) = [epochs.(cond)(nP).before epochs.(cond)(nP).data epochs.(cond)(nP).after];
+        end
+    end
     
     matrices.(cond) = data;
     
