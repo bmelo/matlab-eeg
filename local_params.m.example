@@ -1,3 +1,13 @@
-rawdir_base = '';
-outdir_base = '';
-subj_prefix = 'SUBJ';
+config.vendors_dir = 'vendors';
+
+config.rawdir_base = '/dados2/PROJETOS/PRJ1411_NFB_VR/03_PROCS/RAW_DATA/EEG';
+config.outdir_base = '/dados2/PROJETOS/PRJ1411_NFB_VR/03_PROCS/PROC_DATA/EEG';
+config.subj_prefix = 'SUBJ';
+
+config.neutral_length = 4;
+
+config.compute_results = 0;
+
+config.do_preproc = 1;
+config.do_first_level = 1;
+config.do_second_level = 1;

@@ -1,15 +1,14 @@
-function plot_overlap_task( EEG, folder_save, channels, remove_mean )
+function plot_overlap_task( EEG, folder_save, channels, remove_mean, varargin )
 %PLOT_OVERLAP_TASK Summary of this function goes here
 %   Detailed explanation goes here
 
 if nargin < 3, channels = 1:length(EEG.chanlocs); end
 if nargin < 4, remove_mean = 0; end
+EEG.ext.only_before = utils.Var.arg_exist(varargin, 'before');
 
 % Checking if needs generate output
 save_img = (nargin > 1) && ~isempty(folder_save);
-if save_img
-    save_dir = fullfile( EEG.ext.config.outdir_base, EEG.subject, 'imgs', folder_save );
-end
+save_dir = fullfile( EEG.ext.config.outdir_base, EEG.subject, 'imgs', folder_save );
 
 figure;
 for chan_num = channels
@@ -20,7 +19,11 @@ for chan_num = channels
     suptitle( sprintf('%s - %s %s', folder_save, EEG.subject, chan_name) );
     
     if save_img
-        utils.imgs.print_fig( fullfile(save_dir, sprintf('%03d_%s.png', chan_num, chan_name)) );
+        if EEG.ext.only_before
+            extra = '_before';
+        end        
+        file_name = sprintf('%s_%03d_%s%s.png', EEG.subject, chan_num, chan_name, extra);
+        utils.imgs.print_fig( fullfile(save_dir, file_name) );
     end
 end
 
@@ -34,7 +37,14 @@ clf('reset'); % Clear current figure
 conds = {'TASK_T' 'TASK_A'};
 
 epochs = EEG.ext.epochs;
-epochsM = matrices(epochs);
+% Check if only needs plot before neutral
+if EEG.ext.only_before
+    epochsM = matrices(epochs, 'before');
+else
+    epochsM = matrices(epochs);
+end
+
+% Plots each condition
 for nC = 1:length(conds)
     % preparing vars
     cond = conds{nC};
@@ -48,7 +58,11 @@ for nC = 1:length(conds)
         % To remove, both matrix need match in size
         signal = signal- repmat(signal_mean, 1, size(signal,2));
     end
+    
     lims = [length(epochs.(cond)(1).before) length(signal)-length(epochs.(cond)(1).after)] + 1;
+    if EEG.ext.only_before
+        lims(2) = []; % Remove when is not necessary the last line
+    end
     
     % Plotting
     subplot( 2, 2, nC );
@@ -93,17 +107,17 @@ plot( data );
 
 % Putting lines
 vline(lims(1), '--g', 'start');
-vline(lims(2), '--r', 'end');
+if length(lims) == 2
+    vline(lims(2), '--r', 'end');
+end
 
-% Some important info
-ampA = (max( data(:) ) - min( data(:) )) / 2;
-%sMean = mean(data, 2);
-%meanM = mean(sMean);
+% % Plotting experimental design
+% ampA = (max( data(:) ) - min( data(:) )) / 2;
 
-task_x = lims(1):lims(2);
-interv = linspace(-pi/2, 5.5*pi, length(task_x));
-%interv = -pi/2 : (6*pi/(length(task_x)-1)) : (6*pi - pi/2);
-plot( task_x, mult* ( sin(interv)*ampA+(ampA/2) ), '--k', 'LineWidth', .5 )
+% task_x = lims(1):lims(2);
+% interv = linspace(-pi/2, 5.5*pi, length(task_x));
+% interv = -pi/2 : (6*pi/(length(task_x)-1)) : (6*pi - pi/2);
+% plot( task_x, mult* ( sin(interv)*ampA+(ampA/2) ), '--k', 'LineWidth', .5 )
 
 hold off;
 end
