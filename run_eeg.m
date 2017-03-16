@@ -37,7 +37,7 @@ for subjN = config.subjs
     %plot_overlap_task(EEG_pow, 'power', chs, 0, extra);
 
     % ERD/ERS
-    EEG_erd = epochs_apply(@erd_ers, cEEG, 500, 100);
+    EEG_erd = epochs_apply( @erd_ers, cEEG, EEG.srate, floor(EEG.srate/5) );
     plot_overlap_task(EEG_erd, 'ERD-ERS', chs, 0, extra);
     
     

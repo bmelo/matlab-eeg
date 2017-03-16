@@ -11,8 +11,8 @@ for field = fields(epochs)'
     % calculating basic info
     n_pieces = length(epochs.(cond));
     [n_ch, len_data] = size(epochs.(cond)(1).data);
-    len_before = length(epochs.(cond)(1).before);
-    len_after = length(epochs.(cond)(1).after);
+    len_before = size(epochs.(cond)(1).before, 2);
+    len_after = size(epochs.(cond)(1).after, 2);
     
     len_total = len_data + len_before;
     if ~only_before

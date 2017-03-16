@@ -15,22 +15,26 @@ for nCond = 1:length(conds)
     % Each piece
     for p = 1:length(signal.(cond))
         
+        temp = signal.(cond)(p);
+        temp.data = [];
+        temp.before = [];
+        temp.after = [];
+        
         % Each channel
-        for nCh = 1:size(signal.(cond)(p).data, 1)
-            
+        for nCh = 1:size(signal.(cond)(p).data, 1)    
             % Task
             varargin{1} = signal.(cond)(p).data(nCh,:);
-            signal.(cond)(p).data(nCh,:) = hFunc( varargin{:} );
+            temp.data(nCh,:) = hFunc( varargin{:} );
             
             % Neutral Before
             varargin{1} = signal.(cond)(p).before(nCh,:);
-            signal.(cond)(p).before(nCh,:) = hFunc( varargin{:} );
+            temp.before(nCh,:) = hFunc( varargin{:} );
             
             % Neutral After
             varargin{1} = signal.(cond)(p).after(nCh,:);
-            signal.(cond)(p).after(nCh,:) = hFunc( varargin{:} );
-            
+            temp.after(nCh,:) = hFunc( varargin{:} );
         end
+        signal.(cond)(p) = temp;
     end
 end
 
