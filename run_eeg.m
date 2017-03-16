@@ -27,18 +27,18 @@ for subjN = config.subjs
         EEG = epochs_match_all(EEG);
         cEEG = epochs_apply(@filter_bands, EEG, EEG.srate, [7 45]);
     end
-    plot_overlap_task(EEG, 'raw', chs, 0, extra);
-    plot_overlap_task(EEG, 'raw-mean', chs, 1, extra);
-    plot_overlap_task(cEEG, 'high-low filtered', chs, 1, extra);
+    %plot_overlap_task(EEG, 'raw', chs, 0, extra);
+    %plot_overlap_task(EEG, 'raw-mean', chs, 1, extra);
+    %plot_overlap_task(cEEG, 'high-low filtered', chs, 1, extra);
     %% Characteristics
     
     % POWER
-    EEG_pow  = epochs_apply(@power_eeg, cEEG);
-    plot_overlap_task(EEG_pow, 'power', chs, 0, extra);
+    %EEG_pow  = epochs_apply(@power_eeg, cEEG);
+    %plot_overlap_task(EEG_pow, 'power', chs, 0, extra);
 
     % ERD/ERS
-    %EEG_erd = epochs_apply(@erd_ers, cEEG, 500, 100);
-    %plot_overlap_task(EEG_erd, 'ERD-ERS');
+    EEG_erd = epochs_apply(@erd_ers, cEEG, 500, 100);
+    plot_overlap_task(EEG_erd, 'ERD-ERS', chs, 0, extra);
     
     
     %% Processing

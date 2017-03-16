@@ -1,6 +1,8 @@
 function [ EEG ] = epochs_apply( hFunc, varargin )
 %EPOCHS_APPLY Apply function to each epoch
 %   Detailed explanation goes here
+tic;
+fprintf('Applying function <a href="matlab:help %1$s">%1$s</a>\n', func2str(hFunc));
 
 EEG = varargin{1};
 signal = EEG.ext.epochs;
@@ -35,6 +37,7 @@ end
 % putting return value
 EEG.ext.epochs = signal;
 
-
+secs = toc;
+fprintf('Finished after %.2f s\n\n', secs);
 end
 
