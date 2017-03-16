@@ -42,15 +42,16 @@ import utils.path.basename;
 AUX = [];
 rawdir = fullfile(config.rawdir_base, subj);
 
+tic;
 % Searching EEG already downsampled
 if( exist( alt_file, 'file' ) )
-    fprintf('loading data\n%s\n\n', alt_file);
+    fprintf('loading data: %s\n', alt_file);
     load( alt_file );
     EEG.ext.config = config;
     AUX.ext.config = config;
 else
     fname = resolve_names( fullfile(rawdir, '*.vhdr') );
-    fprintf('loading data\n%s\n\n', fname{1});
+    fprintf('loading data: %s\n', fname{1});
     
     EEG = pop_loadbv( rawdir, basename(fname{1}) );
 
@@ -68,5 +69,7 @@ else
         end
     end
 end
+secs = toc;
+fprintf('loaded after %.2f s\n\n', secs);
 
 end
