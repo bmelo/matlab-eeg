@@ -8,9 +8,9 @@ includeDeps;
 
 %% Setup of processing
 close all; clc;
-config = setup('subjs', 7, 'neutral_length', 6);
+config = setup('subjs', 7, 'neutral_length', 10);
 chs = 46;
-extra = '';
+extra = 'before';
 
 % Do the same for each subject
 for subjN = config.subjs
@@ -30,16 +30,15 @@ for subjN = config.subjs
     %plot_overlap_task(EEG, 'raw', chs, 0, extra);
     %plot_overlap_task(EEG, 'raw-mean', chs, 1, extra);
     %plot_overlap_task(cEEG, 'high-low filtered', chs, 1, extra);
-    %% Characteristics
     
+    %% Characteristics
     % POWER
     %EEG_pow  = epochs_apply(@power_eeg, cEEG);
     %plot_overlap_task(EEG_pow, 'power', chs, 0, extra);
 
     % ERD/ERS
-    EEG_erd = epochs_apply( @erd_ers, cEEG, EEG.srate, floor(EEG.srate/5) );
+    EEG_erd = epochs_apply( @erd_ers, cEEG, cEEG.srate, floor(cEEG.srate/5) );
     plot_overlap_task(EEG_erd, 'ERD-ERS', chs, 0, extra);
-    
     
     %% Processing
     if config.do_first_level

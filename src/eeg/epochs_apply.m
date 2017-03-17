@@ -17,23 +17,18 @@ for nCond = 1:length(conds)
         
         temp = signal.(cond)(p);
         temp.data = [];
-        temp.before = [];
-        temp.after = [];
         
         % Each channel
         for nCh = 1:size(signal.(cond)(p).data, 1)    
             % Task
             varargin{1} = signal.(cond)(p).data(nCh,:);
             temp.data(nCh,:) = hFunc( varargin{:} );
-            
-            % Neutral Before
-            varargin{1} = signal.(cond)(p).before(nCh,:);
-            temp.before(nCh,:) = hFunc( varargin{:} );
-            
-            % Neutral After
-            varargin{1} = signal.(cond)(p).after(nCh,:);
-            temp.after(nCh,:) = hFunc( varargin{:} );
         end
+        % adjusting resize
+        perc = size(temp.data,2) / size(signal.(cond)(p).data,2);
+        temp.duracao = floor( temp.duracao * perc );
+        temp.idx_data = floor( temp.idx_data(1) * perc ) : ceil(temp.idx_data(end) * perc);
+        
         signal.(cond)(p) = temp;
     end
 end

@@ -11,6 +11,7 @@ relative_power = mpow( signal(1:window) );
 win_overlap = window-overlap;
 
 % Filling all values
+signalERD = [];
 for k = 1:win_overlap:length(signal)
     last = k+win_overlap-1;
     

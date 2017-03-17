@@ -4,21 +4,24 @@ function signal = match_length(signal, direction)
 
 if ~exist('direction', 'var'), direction = 0; end
 
-width = min([signal(:).duracao]);
+duracao = min([signal(:).duracao]);
 % Each piece
 for p=1:length(signal)
-    sizeW = size(signal(p).data,1);
-    if sizeW == width
+    start_pt = signal(p).idx_data(1);
+    end_pt   = signal(p).idx_data(end);
+    if duracao == size(signal(p).data,2)
         continue;
     end
     
     % Do the same for all channels
     % Checking direction
     if direction == 0 % From le
-        signal(p).data(:,width+1:end) = [];
+        signal(p).data(:,start_pt+duracao:end_pt) = [];
     else
-        signal(p).data(:,1:end-width) = [];
+        signal(p).data(:,start_pt:end_pt-duracao) = [];
     end
+    
     %Updates duracao
-    signal(p).duracao = size(signal(p).data,2);
+    signal(p).duracao = duracao;
+    signal(p).idx_data = start_pt : (start_pt + duracao - 1);
 end

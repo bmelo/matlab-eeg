@@ -38,17 +38,20 @@ clf('reset'); % Clear current figure
 conds = {'TASK_T' 'TASK_A'};
 
 epochs = EEG.ext.epochs;
-% Check if only needs plot before neutral
-if EEG.ext.only_before
-    epochsM = matrices(epochs, 'before');
-else
-    epochsM = matrices(epochs);
-end
+epochsM = matrices(epochs);
 
 % Plots each condition
 for nC = 1:length(conds)
     % preparing vars
     cond = conds{nC};
+    ref = epochs.(cond)(1);
+    lims = [ref.idx_data(1) ref.idx_data(end)];
+    % Check if only needs neutral that comes before main task
+    if EEG.ext.only_before
+        epochsM.(cond)(:,:,lims(end)+1:end) = [];
+        lims(2) = [];
+    end
+    
     mult = 1;
     if strcmp(cond, 'TASK_A')
         mult = -1;
@@ -58,11 +61,6 @@ for nC = 1:length(conds)
     if( remove_mean )
         % To remove, both matrix need match in size
         signal = signal- repmat(signal_mean, 1, size(signal,2));
-    end
-    
-    lims = [length(epochs.(cond)(1).before) length(signal)-length(epochs.(cond)(1).after)] + 1;
-    if EEG.ext.only_before
-        lims(2) = []; % Remove when is not necessary the last line
     end
     
     % Plotting

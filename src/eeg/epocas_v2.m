@@ -12,7 +12,7 @@ durNeutral = EEG.ext.config.neutral_length * EEG.srate;
 for k=1:nEvts
     evt = EEG.event(k);
     type = find(strcmp(evt.type, codes(:,2)));
-    %% ??
+    %% If is not a marker with specified codes ('S  2', 'S  3')
     if ~any( type > 0 )
         continue
     end
@@ -20,6 +20,7 @@ for k=1:nEvts
     epoca.inicio = ceil(evt.latency);
     epoca.end = ceil(EEG.event(k+1).latency);
     epoca.duracao = (epoca.end - epoca.inicio)+1;
+    epoca.raw = epoca;
     
     first_pt = epoca.inicio - durNeutral;
     last_pt = epoca.end + durNeutral;
@@ -31,9 +32,7 @@ for k=1:nEvts
     epoca.evt = evt;
     
     % Neutrals
-    epoca.idx_before = 1 : (epoca.inicio - first_pt);
     epoca.idx_data = (epoca.inicio:epoca.end) - first_pt+1;
-    epoca.idx_after  = epoca.idx_data(end)+1 : size(epoca.data,2);
     
     % Add or create structure
     try
