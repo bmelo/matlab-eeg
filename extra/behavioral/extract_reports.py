@@ -9,7 +9,8 @@ from openpyxl import Workbook, load_workbook
 # Main function
 def main():
     baseDir = r'..\..\..\..\..\RAW_DATA\EEG\\'
-    logs = sorted(glob.glob(baseDir+r'SUBJ*\*.log'))
+    pattLogs = r'SUBJ*\*.log'
+    logs = sorted(glob.glob(baseDir+pattLogs))
     for log in logs:
         print(log)
         report = ReportUnity(log)
@@ -29,7 +30,7 @@ class ReportUnity:
     def extractReports( self ):
         rBegin = r'== FORM REPORT BEGIN =='
         rEnd = r'== FORM REPORT END =='
-        fileContent = open( self.file ).read()
+        fileContent = open( self.file, encoding="utf8" ).read()
         #print(fileContent)
         rex = re.compile( rBegin+r'(.*?)'+rEnd, re.S|re.M )
         self.reports = rex.findall( fileContent )
@@ -49,11 +50,19 @@ class ReportUnity:
     # Write logs in the last line of each sheet
     def writeExcel( self, xlsFile ):
         wb = load_workbook(filename = xlsFile)
-        ws = wb['INTENSITY']
-        nrow = ReportUnity.nextLine( ws )
-        self.writeLine( ws, nrow, self.intensity() )
-        wb.save( xlsFile )
+        self.writeSheet( wb, 'INTENSITY', self.intensity());
+        self.writeSheet( wb, 'MANTRAS', self.mantras());
+        self.writeSheet( wb, 'CANSAÇO', self.tiredness());
+        self.writeSheet( wb, 'CONCENTRAÇÃO', self.concentration());
+        self.writeSheet( wb, 'OBSERVAÇÕES', self.observacoes());
+        wb.save(xlsFile)
 
+    def writeSheet(self, wb, sheetName, values):
+        print(sheetName)
+        ws = wb[sheetName]
+        nrow = ReportUnity.nextLine( ws )
+        self.writeLine( ws, nrow, values )
+        
     # Find next line that is empty
     def nextLine( ws ):
         for nrow in range(3,25):
@@ -84,14 +93,14 @@ class ReportUnity:
             for key in keys:
                 try:
                     value = self.reportsDict[nR][key]
-                    # Translate values to mapped value
+                    # Translate values to mapped value, if needed
                     if value in mapValues.keys():
-                        value = mapValues[value] 
+                        value = mapValues[value]
                     values.append(value)
                 except:
                     break
         return values
-
+    
     # List values of intensity
     def intensity(self):
         return self.extractValues( ['intensidade_emocao', 'intensidade_neutro'], mapValues={
@@ -101,6 +110,41 @@ class ReportUnity:
             'Intensa':4,
             'Muito Intensa':5
         } )
+
+    # List values for mantras
+    def mantras(self):
+        return self.extractValues( ['mantras_emocao', 'mantras_neutro'], mapValues={
+            'Inútil':1,
+            'Pouco útil':2,
+            'Moderada':3,
+            'Útil':4,
+            'Muito Útil':5
+        } )
+
+    # List values for tiredness
+    def tiredness(self):
+        return self.extractValues( ['cansaco'], mapValues={
+            'Nada':1,
+            'Pouco':2,
+            'Cansado':3,
+            'Muito':4,
+            'Extremamente':5
+        } )
+
+
+    # List values for tiredness
+    def concentration(self):
+        return self.extractValues( ['concentracao'], mapValues={
+            'Nada':1,
+            'Pouco':2,
+            'Concentrado':3,
+            'Muito':4,
+            'Extremamente':5
+        } )
+
+    # List values of observations
+    def observacoes(self):
+        return self.extractValues( ['observacoes'] )
 
         
 # Checks if this is the main file (when imported, is not used)
