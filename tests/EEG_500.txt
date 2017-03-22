@@ -1,0 +1,98 @@
+  Name                   Size                     Bytes  Class     Attributes
+
+  chaninfo               1x1                        884  struct              
+  chanlocs               1x63                     27730  struct              
+  cmd_var                1x13                        26  char                
+  comments               1x27                        54  char                
+  condition              0x0                          0  char                
+  data                  63x1320100            332665200  single              
+  dipfit                 0x0                          0  double              
+  epoch                  0x0                          0  double              
+  epochdescription       0x0                          0  cell                
+  etc                    0x0                          0  double              
+  event                  1x106                   102294  struct              
+  eventdescription       1x8                        896  cell                
+  fds                   40x1                       5062  cell                
+  filename               0x0                          0  char                
+  filepath               0x0                          0  char                
+  group                  0x0                          0  char                
+  history                0x0                          0  char                
+  icaact                 0x0                          0  double              
+  icachansind            0x0                          0  double              
+  icasphere              0x0                          0  double              
+  icasplinefile          0x0                          0  char                
+  icaweights             0x0                          0  double              
+  icawinv                0x0                          0  double              
+  k                      1x1                          8  double              
+  nbchan                 1x1                          8  double              
+  pnts                   1x1                          8  double              
+  ref                    1x6                         12  char                
+  reject                 1x1                       6880  struct              
+  saved                  1x2                          4  char                
+  session                0x0                          0  double              
+  setname                1x10                        20  char                
+  specdata               0x0                          0  double              
+  specicaact             0x0                          0  double              
+  splinefile             0x0                          0  char                
+  srate                  1x1                          8  double              
+  st                     1x1                  343463660  struct              
+  stats                  1x1                       2288  struct              
+  subject                0x0                          0  char                
+  times                  1x1320100             10560800  double              
+  trials                 1x1                          8  double              
+  urchanlocs             0x0                          0  double              
+  urevent                1x106                    89510  struct              
+  xmax                   1x1                          8  double              
+  xmin                   1x1                          8  double 
+
+
+
+  Name                   Size                    Bytes  Class     Attributes
+
+  chaninfo               1x1                       884  struct              
+  chanlocs               1x5                      2852  struct              
+  cmd_var                1x13                       26  char                
+  comments               1x27                       54  char                
+  condition              0x0                         0  char                
+  data                   5x1320100            26402000  single              
+  dipfit                 0x0                         0  double              
+  epoch                  0x0                         0  double              
+  epochdescription       0x0                         0  cell                
+  etc                    0x0                         0  double              
+  event                  1x106                  102294  struct              
+  eventdescription       1x8                       896  cell                
+  fds                   40x1                      5062  cell                
+  filename               0x0                         0  char                
+  filepath               0x0                         0  char                
+  group                  0x0                         0  char                
+  history                0x0                         0  char                
+  icaact                 0x0                         0  double              
+  icachansind            0x0                         0  double              
+  icasphere              0x0                         0  double              
+  icasplinefile          0x0                         0  char                
+  icaweights             0x0                         0  double              
+  icawinv                0x0                         0  double              
+  k                      1x1                         8  double              
+  nbchan                 1x1                         8  double              
+  pnts                   1x1                         8  double              
+  ref                    1x6                        12  char                
+  reject                 1x1                      6880  struct              
+  saved                  1x2                         4  char                
+  session                0x0                         0  double              
+  setname                1x10                       20  char                
+  specdata               0x0                         0  double              
+  specicaact             0x0                         0  double              
+  splinefile             0x0                         0  char                
+  srate                  1x1                         8  double              
+  st                     1x1                  37175582  struct              
+  stats                  1x1                      2288  struct              
+  subject                0x0                         0  char                
+  times                  1x1320100            10560800  double              
+  trials                 1x1                         8  double              
+  urchanlocs             0x0                         0  double              
+  urevent                1x106                   89510  struct              
+  xmax                   1x1                         8  double              
+  xmin                   1x1                         8  double
+  
+  
+  
