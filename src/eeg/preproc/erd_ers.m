@@ -1,11 +1,8 @@
 function signalERD = erd_ers(signal, window, overlap, same_density)
 % ERD_ERS
 % Details
-
 if nargin < 4, same_density = 0; end;    
 
-%eeg_mean = mean(signal);
-%variance = var(signal);
 relative_power = mpow( signal(1:window) );
 
 win_overlap = window-overlap;

@@ -11,6 +11,8 @@ close all; clc;
 config = setup('subjs', 7, 'neutral_length', 10);
 chs = 46;
 extra = 'before';
+%bands = [8 10; 10 13; 13 20; 20 26; 26 30; 30 45];
+bands = [8 13; 13 26; 26 45];
 
 % Do the same for each subject
 for subjN = config.subjs
@@ -25,8 +27,8 @@ for subjN = config.subjs
         
         % Manipulating signal
         EEG = epochs_match_all(EEG);
-        %cEEG = epochs_apply(@filter_bands, EEG, EEG.srate, [7 45]);
-        bEEG = break_bands(EEG, [8 10; 10 13; 13 20; 20 26; 26 30; 30 45] );
+        cEEG = epochs_apply(@filter_bands, EEG, EEG.srate, [7 45]);
+        bEEG = break_bands(EEG, bands);
     end
     %plot_overlap_task(EEG, 'raw', chs, 0, extra);
     %plot_overlap_task(EEG, 'raw-mean', chs, 1, extra);
@@ -34,14 +36,14 @@ for subjN = config.subjs
     
     %% Characteristics
     % POWER
-    %EEG_pow  = epochs_apply(@power_eeg, cEEG);
-    %plot_overlap_task(EEG_pow, 'power', chs, 0, extra);
+    EEG_pow  = epochs_apply(@power_eeg, cEEG);
+    plot_overlap_task(EEG_pow, 'power', chs, 0, extra, @erd_ers, EEG.srate, floor(EEG.srate/5));
 
     % ERD/ERS
     %EEG_erd = epochs_apply( @erd_ers, EEG, EEG.srate, floor(EEG.srate/5) );
     %plot_overlap_task(EEG_erd, 'ERD-ERS', chs, 0, extra);
-    bEEG_erd = epochs_apply( @erd_ers, bEEG, bEEG(1).srate, floor(bEEG(1).srate/5) );
-    plot_bands_overlap_task(bEEG_erd, 'ERD-ERS', chs, 0, extra);
+    bEEG_erd = epochs_apply( @power_eeg, bEEG );
+    plot_bands_overlap_task(bEEG_erd, 'ERD-ERS', chs, 0, extra, @erd_ers, bEEG(1).srate, floor(bEEG(1).srate/5));
     
     %% Processing
     if config.do_first_level

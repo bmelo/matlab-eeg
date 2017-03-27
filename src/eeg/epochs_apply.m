@@ -23,7 +23,7 @@ for nE = 1:length(EEG)
             for nCh = 1:size(signal.(cond)(p).data, 1)
                 % Task
                 varargin{1} = signal.(cond)(p).data(nCh,:);
-                temp.data(nCh,:) = hFunc( varargin{:} );
+                temp.data(nCh,:) = utils.apply_func( hFunc, varargin );
             end
             % adjusting resize
             perc = size(temp.data,2) / size(signal.(cond)(p).data,2);
@@ -40,4 +40,3 @@ end
 secs = toc;
 fprintf('Finished after %.2f s\n\n', secs);
 end
-

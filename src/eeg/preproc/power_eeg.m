@@ -1,5 +1,5 @@
 function signal = power_eeg(signal)
-% SYNC_DESYNC
+% POWER_EEG
 % Details
 
 signal = signal .^2;

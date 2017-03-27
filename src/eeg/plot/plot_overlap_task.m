@@ -1,10 +1,13 @@
-function plot_overlap_task( EEG, folder_save, channels, remove_mean, varargin )
+function plot_overlap_task( EEG, folder_save, channels, remove_mean, mean_func, varargin )
 %PLOT_OVERLAP_TASK Summary of this function goes here
 %   Detailed explanation goes here
 
 if nargin < 3, channels = 1:length(EEG.chanlocs); end
 if nargin < 4, remove_mean = 0; end
+if nargin < 5, mean_func = []; end
 EEG.ext.only_before = utils.Var.arg_exist(varargin, 'before');
+EEG.ext.mean_func.handle = mean_func;
+EEG.ext.mean_func.args = varargin;
 
 % Checking if needs generate output
 save_img = (nargin > 1) && ~isempty(folder_save);
@@ -61,6 +64,13 @@ for nC = 1:length(conds)
     if( remove_mean )
         % To remove, both matrix need match in size
         signal = signal- repmat(signal_mean, 1, size(signal,2));
+    end
+    
+    % Apply function only to mean
+    if isa(EEG.ext.mean_func.handle, 'function_handle')
+        mean_func = EEG.ext.mean_func;
+        args = [signal_mean, mean_func.args];
+        signal_mean = utils.apply_func(mean_func.handle, args);
     end
     
     % Plotting

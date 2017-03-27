@@ -1,10 +1,13 @@
-function plot_bands_overlap_task( EEG, folder_save, channels, remove_mean, varargin )
-%PLOT_OVERLAP_TASK Summary of this function goes here
+function plot_bands_overlap_task( EEG, folder_save, channels, remove_mean, mean_func, varargin )
+%PLOT_BANDS_OVERLAP_TASK Summary of this function goes here
 %   Detailed explanation goes here
 
 if nargin < 3, channels = 1:length(EEG.chanlocs); end
 if nargin < 4, remove_mean = 0; end
-EEG(1).ext.only_before = utils.Var.arg_exist(varargin, 'before');
+if nargin < 5, mean_func = []; end
+EEG.ext.only_before = utils.Var.arg_exist(varargin, 'before');
+EEG.ext.mean_func.handle = mean_func;
+EEG.ext.mean_func.args = varargin;
 
 % Checking if needs generate output
 save_img = (nargin > 1) && ~isempty(folder_save);
@@ -22,7 +25,7 @@ for chan_num = channels
         extra = '';
         if EEG(1).ext.only_before
             extra = '_before';
-        end        
+        end
         file_name = sprintf('%s_%03d_%s%s.png', EEG(1).subject, chan_num, chan_name, extra);
         utils.imgs.print_fig( fullfile(save_dir, file_name) );
     end
@@ -69,6 +72,13 @@ for nB = 1:n_bands
             signal = signal- repmat(signal_mean, 1, size(signal,2));
         end
         
+        % Apply function only to mean
+        if isa(EEG.ext.mean_func.handle, 'function_handle')
+            mean_func = EEG.ext.mean_func;
+            args = [signal_mean, mean_func.args];
+            signal_mean = utils.apply_func(mean_func.handle, args);
+        end
+        
         % Plotting
         subplot( n_bands, n_conds, nC+((nB-1)*n_conds) );
         title( sprintf('%s [%d-%d]', cond, band(1), band(2)) );
@@ -82,10 +92,10 @@ for nC = 1:n_conds
     cond = conds{nC};
     n_pts = length(epochsM.(cond));
     for nP = nC:2:(n_bands*n_conds)
-        subplot(n_bands, n_conds, nP);    
+        subplot(n_bands, n_conds, nP);
         hold on;
         xlim([1,n_pts]);
-%         datetick('x', 'MM:SS', 'keeplimits', 'keepticks');
+        %         datetick('x', 'MM:SS', 'keeplimits', 'keepticks');
         hold off;
     end
     first = first + length( epochs.(cond) );
