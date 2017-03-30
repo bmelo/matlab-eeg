@@ -1,11 +1,13 @@
-function plot_overlap_task( EEG, folder_save, channels, remove_mean, mean_func, varargin )
+function plot_overlap_task( EEG, folder_save, channels, remove_mean, before, mean_func, varargin )
 %PLOT_OVERLAP_TASK Summary of this function goes here
 %   Detailed explanation goes here
 
 if nargin < 3, channels = 1:length(EEG.chanlocs); end
 if nargin < 4, remove_mean = 0; end
-if nargin < 5, mean_func = []; end
-EEG.ext.only_before = utils.Var.arg_exist(varargin, 'before');
+if nargin < 5, before = 0; end
+if nargin < 6, mean_func = []; end
+
+EEG.ext.only_before = before;
 EEG.ext.mean_func.handle = mean_func;
 EEG.ext.mean_func.args = varargin;
 
@@ -42,6 +44,8 @@ conds = {'TASK_T' 'TASK_A'};
 
 epochs = EEG.ext.epochs;
 epochsM = matrices(epochs);
+yLims = [];
+yLimsMean = [];
 
 % Plots each condition
 for nC = 1:length(conds)
@@ -71,6 +75,7 @@ for nC = 1:length(conds)
         mean_func = EEG.ext.mean_func;
         args = [signal_mean, mean_func.args];
         signal_mean = utils.apply_func(mean_func.handle, args);
+        lims_mean = lims * length(signal_mean)/length(signal);
     end
     
     % Plotting
@@ -80,20 +85,24 @@ for nC = 1:length(conds)
     
     subplot( 2, 2, nC+2 );
     title( sprintf('%s (mean)', cond) );
-    plot_task( signal_mean, lims, mult );
+    plot_task( signal_mean, lims_mean, mult );
 end
 
 %% Adjusting plots
 first = 1;
 for nC = 1:length(conds)
     cond = conds{nC};
-    n_pts = length(epochsM.(cond));
     for nP = 1:4
-        subplot(2, 2, nP);    
-        hold on;
-        xlim([1,n_pts]);
-%         datetick('x', 'MM:SS', 'keeplimits', 'keepticks');
-        hold off;
+        subplot(2, 2, nP);
+        if nP < 3
+            xlim([0 length(signal)]);
+            ylim([0 2000]);
+            set(gca, 'XTick', [0 lims(1) lims(2) length(signal)], 'XTickLabel', [0 10 56 66]);
+        else
+            xlim([0 length(signal_mean)]);
+            ylim([-100 300]);
+            set(gca, 'XTick', [0 lims_mean(1) lims_mean(2) length(signal_mean)], 'XTickLabel', [0 10 56 66]);
+        end
     end
     first = first + length( epochs.(cond) );
 end

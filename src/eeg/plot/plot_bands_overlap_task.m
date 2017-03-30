@@ -1,13 +1,15 @@
-function plot_bands_overlap_task( EEG, folder_save, channels, remove_mean, mean_func, varargin )
+function plot_bands_overlap_task( EEG, folder_save, channels, remove_mean, before, mean_func, varargin )
 %PLOT_BANDS_OVERLAP_TASK Summary of this function goes here
 %   Detailed explanation goes here
 
 if nargin < 3, channels = 1:length(EEG.chanlocs); end
 if nargin < 4, remove_mean = 0; end
-if nargin < 5, mean_func = []; end
-EEG.ext.only_before = utils.Var.arg_exist(varargin, 'before');
-EEG.ext.mean_func.handle = mean_func;
-EEG.ext.mean_func.args = varargin;
+if nargin < 5, before = 0; end
+if nargin < 6, mean_func = []; end
+
+EEG(1).ext.only_before = before;
+EEG(1).ext.mean_func.handle = mean_func;
+EEG(1).ext.mean_func.args = varargin;
 
 % Checking if needs generate output
 save_img = (nargin > 1) && ~isempty(folder_save);
@@ -73,10 +75,11 @@ for nB = 1:n_bands
         end
         
         % Apply function only to mean
-        if isa(EEG.ext.mean_func.handle, 'function_handle')
-            mean_func = EEG.ext.mean_func;
+        if isa(EEG(1).ext.mean_func.handle, 'function_handle')
+            mean_func = EEG(1).ext.mean_func;
             args = [signal_mean, mean_func.args];
             signal_mean = utils.apply_func(mean_func.handle, args);
+            lims = lims*length(signal_mean)/length(signal);
         end
         
         % Plotting
@@ -90,7 +93,7 @@ end
 first = 1;
 for nC = 1:n_conds
     cond = conds{nC};
-    n_pts = length(epochsM.(cond));
+    n_pts = length(signal_mean);
     for nP = nC:2:(n_bands*n_conds)
         subplot(n_bands, n_conds, nP);
         hold on;
