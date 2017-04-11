@@ -13,7 +13,7 @@ EEG(1).ext.mean_func.args = varargin;
 
 % Checking if needs generate output
 save_img = (nargin > 1) && ~isempty(folder_save);
-save_dir = fullfile( EEG(1).ext.config.outdir_base, EEG(1).subject, 'imgs', folder_save );
+save_dir = fullfile( EEG(1).ext.config.imgsexport_dir, EEG(1).subject, 'imgs', folder_save );
 
 figure;
 for chan_num = channels
@@ -28,7 +28,8 @@ for chan_num = channels
         if EEG(1).ext.only_before
             extra = '_before';
         end
-        file_name = sprintf('%s_%03d_%s%s.png', EEG(1).subject, chan_num, chan_name, extra);
+        file_name = sprintf('%s_%s%s.png', EEG(1).subject, chan_name, extra);
+        fprintf('Saving "%s" ...\n', fullfile(save_dir, file_name));
         utils.imgs.print_fig( fullfile(save_dir, file_name) );
     end
 end

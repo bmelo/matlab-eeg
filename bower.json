@@ -15,7 +15,7 @@
     "data"
   ],
   "dependencies": {
-	  "matlab-utils": "git://github.com/bmelo/matlab-utils.git",
+	  "matlab-utils": "*",
       "eeglab": "https://bmelo@bitbucket.org/bmelo/eeglab.git#14.0.0-beta",
 	  "cosmomvpa": "git://github.com/InstitutoDOr/CoSMoMVPA.git#1.2.0-beta"
   }

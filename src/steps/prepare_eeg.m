@@ -2,13 +2,13 @@ function [EEG, AUX] = prepare_eeg( config, subject, srate )
 
 outdir = fullfile(config.outdir_base, subject);
 eeg_file_resample = fullfile(outdir, sprintf('eeg_%d.mat', srate));
-
+chs_AUX = [32 65:68];
 %% Loading EEG and AUX
 [EEG, AUX] = load_data(config, subject, eeg_file_resample);
 % Splitting EEG and AUX, if necessary
 if isempty(AUX)
     disp('splitting EEG -> EEG and AUX');
-    labelsAUX = {EEG.chanlocs([32 65:68]).labels}; %ECG, GSR, ACC_x, ACC_y, ACC_z
+    labelsAUX = {EEG.chanlocs(chs_AUX).labels}; %ECG, GSR, ACC_x, ACC_y, ACC_z
     AUX = pop_select( EEG, 'channel', labelsAUX);
     EEG = pop_select( EEG, 'nochannel', labelsAUX);
     save( fullfile(outdir, 'eeg.mat'), 'EEG', 'AUX', '-v7.3');
@@ -48,7 +48,16 @@ if( exist( alt_file, 'file' ) )
     fprintf('loading data: %s\n', alt_file);
     load( alt_file );
     EEG.ext.config = config;
-    AUX.ext.config = config;
+    AUX.ext = EEG.ext;
+    if( isempty(EEG.subject) )
+        EEG.subject = subj;
+        EEG.filename = basename(alt_file);
+        EEG.filepath = rawdir;
+        EEG.ext.config = config;
+        EEG.ext.type = 'raw_data';
+        AUX.ext = EEG.ext;
+        save(alt_file, 'EEG', 'AUX', '-v7.3');
+    end
 else
     fname = resolve_names( fullfile(rawdir, '*.vhdr') );
     fprintf('loading data: %s\n', fname{1});
