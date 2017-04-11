@@ -28,7 +28,8 @@ for chan_num = channels
         if EEG.ext.only_before
             extra = '_before';
         end        
-        file_name = sprintf('%s_%03d_%s%s.png', EEG.subject, chan_num, chan_name, extra);
+        file_name = sprintf('%s_%s%s.png', EEG.subject, chan_name, extra);
+        fprintf('Saving "%s" ...\n', fullfile(save_dir, file_name));
         utils.imgs.print_fig( fullfile(save_dir, file_name) );
     end
 end
