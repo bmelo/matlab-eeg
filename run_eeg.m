@@ -8,8 +8,8 @@ includeDeps;
 
 %% Setup of processing
 close all; clc;
-config = setup('subjs', 1:14, 'neutral_length', 10);
-chs = 1:33;
+config = setup('subjs', 2:14, 'neutral_length', 10);
+chs = 34:63;
 only_before = 0;
 %bands = [8 10; 10 13; 13 20; 20 26; 26 30; 30 45];
 bands = [8 13; 13 26; 26 45];
@@ -27,7 +27,7 @@ for subjN = config.subjs
         [EEG, AUX] = prepare_eeg(config, subj, 500);
         % removing some channels
         EEG = pop_select( EEG, 'channel', chs);
-        chs = 1:length(chs);
+        chs_new = 1:length(chs);
         
         EEG.ext.epochs = epocas_v2( EEG );
         
@@ -43,13 +43,13 @@ for subjN = config.subjs
     %% Characteristics
     % POWER
     EEG_pow = epochs_apply(@power_eeg, cEEG);
-    plot_overlap_task(EEG_pow, 'power', chs, 0, only_before, @erd_ers, EEG.srate, floor(EEG.srate/5));
+    plot_overlap_task(EEG_pow, 'power', chs_new, 0, only_before, @erd_ers, EEG.srate, floor(EEG.srate/5));
 
     % ERD/ERS
     %EEG_erd = epochs_apply( @erd_ers, EEG, EEG.srate, floor(EEG.srate/5) );
     %plot_overlap_task(EEG_erd, 'ERD-ERS', chs, 0, extra);
     bEEG = epochs_apply( @power_eeg, bEEG );
-    plot_bands_overlap_task(bEEG, 'ERD-ERS bands', chs, 0, only_before, @erd_ers, bEEG(1).srate, floor(bEEG(1).srate/5));
+    plot_bands_overlap_task(bEEG, 'ERD-ERS bands', chs_new, 0, only_before, @erd_ers, bEEG(1).srate, floor(bEEG(1).srate/5));
     
     %% Processing
     if config.do_first_level
