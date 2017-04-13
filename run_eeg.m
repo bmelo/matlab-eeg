@@ -9,7 +9,7 @@ includeDeps;
 %% Setup of processing
 close all; clc;
 config = setup('subjs', 2:14, 'neutral_length', 10);
-chs = 34:63;
+chs = 46;
 only_before = 0;
 %bands = [8 10; 10 13; 13 20; 20 26; 26 30; 30 45];
 bands = [8 13; 13 26; 26 45];
