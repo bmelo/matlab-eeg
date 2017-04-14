@@ -88,6 +88,6 @@ for nC = 1:length(conds)
     plot_task( signal_mean, lims_mean, mult );
 end
 
-fix_columns( hPlots, 66);
+fix_columns( hPlots, 66 );
 
 end

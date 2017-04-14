@@ -2,7 +2,7 @@ function plot_task( signal, lims, mult )
 %PLOT_TASK Summary of this function goes here
 %   Detailed explanation goes here
 
-import utils.plot.lines.vline;
+%import utils.plot.lines.vline;
 
 % Plotting signals of one channel
 data = squeeze( signal );
