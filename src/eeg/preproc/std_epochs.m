@@ -1,4 +1,4 @@
-function std( epochs )
+function std_epochs( epochs )
 
 canais = [1 2 46 47];
 win_size = 500;

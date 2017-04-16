@@ -46,6 +46,7 @@ only_before = EEG(1).ext.only_before;
 n_bands = length(EEG);
 conds = {'TASK_T' 'TASK_A'};
 n_conds = length(conds);
+hPlots = zeros(1, length(conds)*n_bands);
 
 for nB = 1:n_bands
     epochs = EEG(nB).ext.epochs;
@@ -84,26 +85,13 @@ for nB = 1:n_bands
         end
         
         % Plotting
-        subplot( n_bands, n_conds, nC+((nB-1)*n_conds) );
+        nP = nC+((nB-1)*n_conds);
+        hPlots(nP) = subplot( n_bands, n_conds, nP );
         title( sprintf('%s [%d-%d]', cond, band(1), band(2)) );
         plot_task( signal_mean, lims, mult );
     end
 end
 
-
-%% Adjusting plots
-first = 1;
-for nC = 1:n_conds
-    cond = conds{nC};
-    n_pts = length(signal_mean);
-    for nP = nC:2:(n_bands*n_conds)
-        subplot(n_bands, n_conds, nP);
-        hold on;
-        xlim([1,n_pts]);
-        % datetick('x', 'MM:SS', 'keeplimits', 'keepticks');
-        hold off;
-    end
-    first = first + length( epochs.(cond) );
-end
+fix_columns( hPlots, 66 );
 
 end

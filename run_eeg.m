@@ -10,6 +10,9 @@ includeDeps;
 close all; clc;
 config = setup('subjs', 1:14, 'neutral_length', 10);
 chs = 1:33;
+%chs = 34:63;
+%chs = 46;
+%config.subjs = 7;
 only_before = 0;
 %bands = [8 10; 10 13; 13 20; 20 26; 26 30; 30 45];
 bands = [8 13; 13 26; 26 45];
@@ -42,8 +45,8 @@ for subjN = config.subjs
     
     %% Characteristics
     % POWER
-    EEG_pow = epochs_apply(@power_eeg, cEEG);
-    plot_overlap_task(EEG_pow, 'power', chs_new, 0, only_before, @erd_ers, EEG.srate, floor(EEG.srate/5));
+    %EEG_pow = epochs_apply(@power_eeg, cEEG);
+    %plot_overlap_task(EEG_pow, 'power', chs_new, 0, only_before, @erd_ers, EEG.srate, floor(EEG.srate/5));
 
     % ERD/ERS
     %EEG_erd = epochs_apply( @erd_ers, EEG, EEG.srate, floor(EEG.srate/5) );

@@ -4,7 +4,7 @@ function fix_columns( hAxes, duration )
 
 %% Putting same YLims
 for k = 1:2:length(hAxes)
-    ylim_equal( hAxes(k), hAxes(k+1) );
+    ylim_equal( hAxes(k), hAxes(k+1), 'data' );
 end
 
 %% Adjusting XAxes plots
