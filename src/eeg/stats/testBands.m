@@ -1,8 +1,8 @@
-function results = testBands( epochs, test )
-%%%
+function results = testBands( EEG, test )
 % JUNTA TODOS OS EVENTOS E TESTA COMO SE FOSSEM UMA SÉRIE CORRIDA
 % NÃO SEPARA BANDAS
-%%%
+
+epochs = EEG.ext.epochs;
 if( ~exist('test', 'var') ); test = 'testF'; end;
 switch( test )
     case 'testF'
@@ -11,26 +11,14 @@ switch( test )
         testH = @ranksum;
 end
 
-nRuns = 2;
-posT = []; posA = []; posNT = []; posNA = [];
-for nR = 1:nRuns
-    pos = (nR-1)*4+1;
-    posN = (nR-1)*8 + 1;
-    posT = [posT pos:pos+3];
-    posNT = [posNT posN:posN+3];
-    posA = [posA pos:pos+3];
-    posNA = [posNA posN+4:posN+7];
-end
 taskT = cEEG.join( epochs.TASK_T(posT) );
-neutroT = cEEG.join( epochs.NEUTRAL(posNT) );
 taskA = cEEG.join( epochs.TASK_A(posA) );
-neutroA = cEEG.join( epochs.NEUTRAL(posNA) );
 results.TERNURA = testar( testH, cEEG.janelas( taskT, 1000 ), cEEG.janelas( neutroT, 1000 ) );
-results.ANGUSTIA = testar( testH, cEEG.janelas( taskA,1000) , cEEG.janelas( neutroA, 1000 ) );
+results.ANGUSTIA = testar( testH, cEEG.janelas( taskA, 1000) , cEEG.janelas( neutroA, 1000 ) );
 
 end
 
-%Testando com Test F
+%% Testando com Test F
 function h = testar( fH, cond1, cond2 )
 
 [~,f] = spectral_density( squeeze( cond1(1,1,:) ) );
