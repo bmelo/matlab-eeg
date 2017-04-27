@@ -47,6 +47,7 @@ for subjN = config.subjs
         first_level;
     end
     
+    
     %input('[Enter] para continuar...');
     fprintf('\n\n');
     clear EEG AUX cEEG bEEG bEEG_erd;
