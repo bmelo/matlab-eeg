@@ -34,6 +34,7 @@ for nE = 1:length(EEG)
         end
     end
     % putting return value
+    EEG(nE).srate = EEG(nE).srate * perc;
     EEG(nE).ext.epochs = signal;
 end
 

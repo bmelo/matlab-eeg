@@ -20,7 +20,7 @@ else
 end
 
 %% Including component matlab-utils
-run( fullfile(config.vendors_dir, 'matlab-utils/init.m'));
+run( fullfile(config.vendors_dir, 'matlab-utils/setup.m'));
 
 %% Primeiro os vendors, para poderem ser sobrescritos pela aplica��o
 utils.path.includeSubdirs({

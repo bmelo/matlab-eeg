@@ -1,8 +1,8 @@
 only_before = 0;
 
-plot_overlap_task(EEG, 'raw', chs, 0, only_before);
-plot_overlap_task(EEG, 'raw-mean', chs, 1, only_before);
-plot_overlap_task(cEEG, 'high-low filtered', chs, 1, only_before);
+plot_overlap_task(EEG, 'raw', config.chs, 0, only_before);
+plot_overlap_task(EEG, 'raw-mean', config.chs, 1, only_before);
+plot_overlap_task(cEEG, 'high-low filtered', config.chs, 1, only_before);
 
 %% Characteristics
 % POWER
