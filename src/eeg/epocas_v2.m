@@ -40,6 +40,7 @@ for k=1:nEvts
     catch e
         epochs.( codes{type,1} ) = epoca;
     end
+    epoca = [];
 end
 
 end

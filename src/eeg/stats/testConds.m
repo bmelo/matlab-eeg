@@ -31,7 +31,7 @@ for nB = 1:length(EEG)
         results.A_N = testH( A', nA');
         results.T_A = testH( T', A' );
     end
-    out{nB} = results;
+    out(nB) = results;
 end
 
 end

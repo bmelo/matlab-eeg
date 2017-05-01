@@ -3,10 +3,7 @@ if( ~isdir(outdir) )
     mkdir(outdir)
 end
 
-
-if( ~load_results(config, subj) )
+results = load_results(config, subj);
+if( isempty(results) )
     do_stats;
 end
-results_SL.(subj) = results;
-
-%do_report;

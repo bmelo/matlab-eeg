@@ -15,7 +15,6 @@ if debug
     config.chs = 1:63;
 end
 
-
 % Do the same for each subject
 for subjN = config.subjs
     close all;
@@ -25,18 +24,7 @@ for subjN = config.subjs
     
     %% Preproc
     if config.do_preproc
-        % Loading EEG/AUX - downsample to 500Hz
-        [EEG, AUX] = prepare_eeg(config, subj, 500);
-        % removing some channels
-        EEG = pop_select( EEG, 'channel', config.chs);
-        chs_new = 1:length(config.chs);
-        
-        EEG.ext.epochs = epocas_v2( EEG );
-        
-        % Manipulating signal
-        EEG = epochs_match_all(EEG);
-        cEEG = epochs_apply(@filter_bands, EEG, EEG.srate, [7 45]);
-        %bEEG = break_bands(EEG, config.bands);
+        preproc;
     end
     
     %% Visual Check
@@ -48,7 +36,6 @@ for subjN = config.subjs
     if config.do_first_level
         first_level;
     end
-    
     
     %input('[Enter] para continuar...');
     fprintf('\n\n');
