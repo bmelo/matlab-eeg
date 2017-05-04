@@ -1,14 +1,17 @@
 function visual_check(config)
 
-only_before = utils.Var.get(config, 'visual_check');
+only_before = utils.Var.get(config, 'only_before', 0);
 
 % Do the same for each subject
 for subjN = config.subjs
     close all;
     
     subj = sprintf('%s%03d', config.subj_prefix, subjN);
+    subjdir = fullfile( config.outdir_base, subj );
+    
     fprintf('\n####   VISUAL CHECK - %s   ####\n\n', subj);
     
+    EEG = eeg_load( subjdir, 'pEEG_global' );
     plot_overlap_task(EEG, 'raw', config.chs, 0, only_before);
     plot_overlap_task(EEG, 'raw-mean', config.chs, 1, only_before);
     plot_overlap_task(cEEG, 'high-low filtered', config.chs, 1, only_before);

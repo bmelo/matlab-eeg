@@ -1,5 +1,6 @@
-function EEG = epochs_match_all(EEG)
-% MATCH_ALL_LENGTH Leaves each piece with the same size
+function EEG = epochs_shrink( EEG, duracao )
+%EPOCHS_SHRINK Summary of this function goes here
+%   Detailed explanation goes here
 
 if nargin<2, duracao=0; end
 
@@ -12,3 +13,4 @@ signal.TASK_A = match_length(signal.TASK_A, 0, duracao);
 EEG.ext.epochs = signal;
 
 end
+

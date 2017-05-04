@@ -1,10 +1,12 @@
-function signal = match_length(signal, direction)
+function signal = match_length(signal, direction, duracao)
 % MATCH_LENGTH Leaves each piece with the same size
 % Parameters: signal, direction (0 - right remove, 1 - left remove)
 
-if ~exist('direction', 'var'), direction = 0; end
+if nargin < 2, direction = 0; end
+if nargin < 3 || duracao == 0
+    duracao = min([signal(:).duracao]); 
+end
 
-duracao = min([signal(:).duracao]);
 % Each piece
 for p=1:length(signal)
     start_pt = signal(p).idx_data(1);
