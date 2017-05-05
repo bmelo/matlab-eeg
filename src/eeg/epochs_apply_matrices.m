@@ -1,60 +1,62 @@
-function [ EEG ] = epochs_apply_matrices( hFunc, varargin )
+function [ matEEG ] = epochs_apply_matrices( hFunc, varargin )
 %EPOCHS_APPLY Apply function to each epoch
 %   Detailed explanation goes here
+global handle;
+handle = hFunc;
+
 tic;
 fprintf('Applying function <a href="matlab:help %1$s">%1$s</a>\n', func2str(hFunc));
 
-EEG = varargin{1};
+matEEG = varargin{1};
 
-for nE = 1:length(EEG)
-    signal = EEG(nE).ext.epochs;
-    conds = fields(signal);
+for nE = 1:length(matEEG)
+    matEEG = matEEG(nE);
+    conds = fields(matEEG);
+    
     % Each condition
     for nCond = 1:length(conds)
         cond = conds{nCond};
         
-        varargin{1} = signal;
-        if ndims(signal.(cond)) == 3
-            treat_all_pieces();
+        varargin{1} = matEEG.(cond);
+        if ndims( matEEG.(cond) ) == 3
+            matEEG(nE) = treat_all_pieces();
         else
-            treat_signal(varargin{:});
+            matEEG(nE).(cond) = treat_signal(varargin{:});
         end
     end
 end
 
 secs = toc;
 fprintf('Finished after %.2f s\n\n', secs);
+clear handle;
 end
 
 
 %% Auxiliar function
-function treat_signal(varargin)
-
+function signal = treat_signal(varargin)
+global handle;
 signal = varargin{1};
-temp = signal.(cond)(p);
-temp.data = [];
+temp = [];
 
 % Each channel
-for nCh = 1:size(signal.(cond)(p), 1)
+for nCh = 1:size(signal, 1)
     % Task
-    varargin{1} = signal.(cond)(p)(nCh,:);
-    temp.data(nCh,:) = utils.apply_func( hFunc, varargin );
+    varargin{1} = signal(nCh,:);
+    temp(nCh,:) = utils.apply_func( handle, varargin );
 end
-% adjusting resize
-perc = size(temp.data,2) / size(signal.(cond)(p).data,2);
-temp.duracao = floor( temp.duracao * perc );
-temp.idx_data = floor( temp.idx_data(1) * perc ) : ceil(temp.idx_data(end) * perc);
 
-signal.(cond)(p) = temp;
+% adjusting resize
+signal = temp;
 
 end
 
 
 %% Another auxiliar function
-function treat_all_pieces(signal, varargin)
+function signal = treat_all_pieces(varargin)
+
 % Each piece
-for p = 1:size(signal.(cond),2)
-    treat_signal();
+for p = 1:size(varargin{1},2)
+    signal(p) = treat_signal( varargin{:} );
 end
 
 end
