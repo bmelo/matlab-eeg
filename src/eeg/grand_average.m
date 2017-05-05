@@ -5,6 +5,9 @@ fprintf('\n####   GRAND AVERAGE - %s   ####\n\n', filename);
 totalN = length(config.subjs);
 
 srate = [];
+channels = [];
+lims = [10 56]; % Time in seconds
+save_dir = '';
 close all;
 
 % Extracting values
@@ -15,12 +18,14 @@ for k = 1:totalN
     subjdir = fullfile( config.outdir_base, subj );
         
     EEG = eeg_load( subjdir, filename );
-       
     % Validation
-    if ~isempty(srate) && srate ~= EEG.srate
+    if k == 1
+        srate = EEG.srate;
+        channels = {EEG.chanlocs(:).labels};
+        save_dir = fullfile( config.imgsexport_dir, 'imgs', 'grand_avg' );
+    elseif srate ~= EEG.srate
         error('Sample rate not matching!');
     end
-    srate = EEG.srate;
     
     EEG = epochs_shrink( EEG, 46*srate );
     epochs = matrices(EEG);
@@ -34,19 +39,75 @@ for k = 1:totalN
     clear EEG;
 end
 
-sizeT = size(pw_mean(1).TASK_T);
-merge.TASK_T = reshape( [pw_mean(:).TASK_T], sizeT(1), sizeT(2), []);
-pw_grand.TASK_T = squeeze( mean(merge.TASK_T, 3)  );
+pw_mean = str2mat( pw_mean );
+sync_mean = str2mat( sync_mean );
 
-sizeA = size(pw_mean(1).TASK_A);
-merge.TASK_A = reshape( [pw_mean(:).TASK_A], sizeA(1), sizeA(2), []);
-pw_grand.TASK_A = squeeze( mean(merge.TASK_A, 3)  );
+pw_grand.TASK_T = squeeze( mean(pw_mean.TASK_T, 1)  );
+pw_grand.TASK_A = squeeze( mean(pw_mean.TASK_A, 1)  );
 
 sync_grand = epochs_apply_matrices( @erd_ers, pw_grand, srate, srate/5 );
+perc = size(sync_grand.TASK_T,2)/size(pw_grand.TASK_T,2);
 
-%data;
-plot(sync_grand.TASK_T(1,:));
-%grand_mean = squeeze(mean(pw_mean.TASK_T));
-%plot( squeeze(mean(pw_mean.TASK_T))' );
+% Trying to export all images
+plot_title = 'Grand Average ERD/ERS';
+figure;
+for chan_num = 1:length(channels)
+    chan_name = channels{chan_num};
+    plot_channel( sync_mean, sync_grand );
 
+    % Putting title
+    suptitle( sprintf('%s - %s', plot_title, chan_name) );
+    
+    file_name = sprintf('grand_avg_erders_%s.png', chan_name);
+    fprintf('Saving "%s" ...\n', fullfile(save_dir, file_name));
+    utils.imgs.print_fig( fullfile(save_dir, file_name) );
+end
+
+%%%%%%%%%%%%%%%%%%%%%%
+%% Sub-Functions
+%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%
+function matvals = str2mat( strvals )
+    conds = fields(strvals);
+    for cond=conds'
+        cond = cond{1};
+        sizeV = size(strvals(1).(cond));
+        matvals.(cond) = reshape( [strvals(:).(cond)], sizeV(1), sizeV(2), []);
+        matvals.(cond) = permute(matvals.(cond), [3 1 2]);
+    end
+end
+
+%%%%%%%%%%%%%%%%%%%%
+% Plot each channel
+%%%%%%%%%%%%%%%%%%%%
+function plot_channel( epochs, epochs_mean )
+clf('reset'); % Clear current figure
+conds = {'TASK_T' 'TASK_A'};
+
+hPlots = zeros(1, length(conds));
+
+% Plots each condition
+for nC = 1:length(conds)
+    % preparing vars
+    cond = conds{nC};
+    
+    signal = squeeze(epochs.(cond)(:,chan_num,:));
+    signal_mean = epochs_mean.(cond)(chan_num,:);
+    
+    % Plotting
+    hPlots(nC) = subplot( 1, 2, nC );
+    title( sprintf('%s', cond) );
+    plot_task( signal, lims*srate*perc );
+    hold on;
+    plot( signal_mean, 'LineWidth', 3 );
+    hold off;
+    
+end
+
+fix_columns( hPlots, 66 );
+
+end
+
+% Ending main function
 end

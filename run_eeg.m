@@ -6,7 +6,7 @@ function run_eeg()
 % Preparing components (eeglab, matlab-utils)
 includeDeps;
 clc;
-debug = 1;
+debug = 0;
 
 %% Setup of processing
 config = setup('neutral_length', 10);
