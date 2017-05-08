@@ -1,15 +1,16 @@
-function ylim_equal( varargin )
+function ylim_equal( fhandles, param )
 %YLIM_EQUAL Summary of this function goes here
 %   Detailed explanation goes here
 
-param = 'YLim';
-if strcmp(varargin{end}, 'data')
+if nargin < 2, param = 'YLim'; end
+
+if strcmp(param, 'data')
     param = 'YData';
 end
 
 all_v = [];
-for nA = 1:length(varargin)
-    hgca = varargin{nA};
+for nA = 1:length(fhandles)
+    hgca = fhandles(nA);
     if ischar(hgca)
         break;
     end
@@ -25,7 +26,7 @@ end
 
 % Chaging YLim with default values
 for nA = 1:(length(all_v)/2)
-    set(varargin{nA}, 'YLim', [ min(all_v) max(all_v) ]);
+    set(fhandles(nA), 'YLim', [ min(all_v) max(all_v) ]);
 end
 
 end

@@ -6,17 +6,17 @@ if Var.get(config, 'do_preproc')
     preproc(config);
 end
 
+%% Visual Check
+if Var.get(config, 'do_visual_check')
+    visual_check(config);
+end
+
 %% Grand Average
 if Var.get(config, 'do_grand_average')
     files = config.gavg_files;
     for nF = 1 : length(files)
         grand_average( config, files{nF} );
     end
-end
-
-%% Visual Check
-if Var.get(config, 'do_visual_check')
-    visual_check(config);
 end
 
 %% FIRST LEVEL

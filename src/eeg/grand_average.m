@@ -22,7 +22,7 @@ for k = 1:totalN
     if k == 1
         srate = EEG.srate;
         channels = {EEG.chanlocs(:).labels};
-        save_dir = fullfile( config.imgsexport_dir, 'imgs', 'grand_avg' );
+        save_dir = fullfile( config.imgsexport_dir, 'grand_avg' );
     elseif srate ~= EEG.srate
         error('Sample rate not matching!');
     end
@@ -58,7 +58,7 @@ for chan_num = 1:length(channels)
     % Putting title
     suptitle( sprintf('%s - %s', plot_title, chan_name) );
     
-    file_name = sprintf('grand_avg_erders_%s.png', chan_name);
+    file_name = sprintf('grand_avg_ERD-ERS_%s.png', chan_name);
     fprintf('Saving "%s" ...\n', fullfile(save_dir, file_name));
     utils.imgs.print_fig( fullfile(save_dir, file_name) );
 end
@@ -96,9 +96,9 @@ for nC = 1:length(conds)
     signal_mean = epochs_mean.(cond)(chan_num,:);
     
     % Plotting
-    hPlots(nC) = subplot( 1, 2, nC );
+    hPlots(nC) = subplot( 2, 1, nC );
     title( sprintf('%s', cond) );
-    plot_task( signal, lims*srate*perc );
+    plot_task( signal', lims*srate*perc );
     hold on;
     plot( signal_mean, 'LineWidth', 3 );
     hold off;

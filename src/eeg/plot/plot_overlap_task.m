@@ -89,6 +89,8 @@ for nC = 1:length(conds)
     plot_task( signal_mean, lims_mean, mult );
 end
 
-fix_columns( hPlots, 66 );
+ylim_equal( hPlots(1:2) );
+ylim_equal( hPlots(3:end), 'data' );
+adjust_x_time( hPlots, 66 );
 
 end

@@ -17,12 +17,12 @@ for subjN = config.subjs
     
     %% Characteristics
     % POWER
-    %EEG = eeg_load( subjdir, 'pEEG_global' );
-    %plot_overlap_task(EEG, 'power', config.chs, 0, only_before, @erd_ers, EEG.srate, floor(EEG.srate/5));
+    EEG = eeg_load( subjdir, 'pEEG_global' );
+    plot_overlap_task(EEG, 'ERD-ERS', config.chs, 0, only_before, @erd_ers, EEG.srate, floor(EEG.srate/5));
     
     % ERD/ERS
-    EEG = eeg_load( subjdir, 'pEEG_8_13', 'pEEG_13_26', 'pEEG_26_45' );
-    plot_bands_overlap_task(EEG, 'ERD-ERS bands', config.chs, 0, only_before, @erd_ers, EEG(1).srate, floor(EEG(1).srate/5));
+    %EEG = eeg_load( subjdir, 'pEEG_8_13', 'pEEG_13_26', 'pEEG_26_45' );
+    %plot_bands_overlap_task(EEG, 'ERD-ERS bands', config.chs, 0, only_before, @erd_ers, EEG(1).srate, floor(EEG(1).srate/5));
     
     %input('[Enter] para continuar...');
     
