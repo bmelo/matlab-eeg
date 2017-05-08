@@ -9,7 +9,7 @@ data = squeeze( signal );
 
 % Plotting each piece
 hold on;
-plot( data' );
+plot( data );
 
 % Putting lines
 vline(lims(1), '--g', 'start');

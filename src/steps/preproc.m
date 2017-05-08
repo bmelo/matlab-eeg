@@ -21,22 +21,23 @@ for subjN = config.subjs
     EEG.data = [];
     
     % Manipulating signal
-    EEG = epochs_shrink(EEG);
+    EEG = epochs_shrink(EEG); % Same size for all epochs
     cEEG = epochs_apply(@filter_bands, EEG, EEG.srate, [7 45]);
+    cEEG = epochs_apply(@remove_outliers, cEEG, cEEG.srate, 200);
     pEEG = epochs_apply(@power_eeg, cEEG);
-    erdEEG = epochs_apply(@erd_ers, cEEG, cEEG.srate, floor(cEEG.srate/5) );
+    erdEEG = epochs_apply(@erd_ers, cEEG, cEEG.srate, floor(cEEG.srate/5), cEEG.srate*5 );
     
     % Saving global
     eeg_save( subjdir, 'pEEG_global', pEEG );
     eeg_save( subjdir, 'syncEEG_global', erdEEG );
     
-    
     %% Working separated by bands (alpha, beta, gamma)
     clear pEEG erdEEG cEEG;
     bEEG = break_bands(EEG, config.bands);
+    bEEG = epochs_apply(@remove_outliers, bEEG, bEEG(1).srate, 200);
     clear EEG;
     pEEG = epochs_apply(@power_eeg, bEEG);
-    erdEEG = epochs_apply(@erd_ers, bEEG, bEEG(1).srate, floor(bEEG(1).srate/5) );
+    erdEEG = epochs_apply(@erd_ers, bEEG, bEEG(1).srate, floor(bEEG(1).srate/5), bEEG(1).srate*5 );
     
     % Saving bands
     for nB = 1:length(config.bands)

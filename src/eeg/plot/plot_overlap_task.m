@@ -53,6 +53,7 @@ for nC = 1:length(conds)
     cond = conds{nC};
     ref = epochs.(cond)(1);
     lims = [ref.idx_data(1) ref.idx_data(end)];
+    lims_mean = lims;
     % Check if only needs neutral that comes before main task
     if EEG.ext.only_before
         epochsM.(cond)(:,:,lims(end)+1:end) = [];
@@ -75,7 +76,7 @@ for nC = 1:length(conds)
         mean_func = EEG.ext.mean_func;
         args = [signal_mean, mean_func.args];
         signal_mean = utils.apply_func(mean_func.handle, args);
-        lims_mean = lims * length(signal_mean)/length(signal);
+        lims_mean = lims_mean * length(signal_mean)/length(signal);
     end
     
     % Plotting

@@ -6,13 +6,13 @@ function run_eeg()
 % Preparing components (eeglab, matlab-utils)
 includeDeps;
 clc;
-debug = 0;
+debug = 1;
 
 %% Setup of processing
 config = setup('neutral_length', 10);
 if debug
-    config.subjs = [1 8];
-    config.chs = 1:63;
+    config.subjs = 1;
+    config.chs = 1:2;
 end
 
 % Configuring Grand Average
