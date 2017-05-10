@@ -1,10 +1,10 @@
-function signalERD = erd_ers(signal, window, overlap, window_rel, same_density)
+function signalERD = erd_ers(signal, window, overlap, window_ref, same_density)
 % ERD_ERS
 % Details
-if nargin < 4, window_rel = window; end;
+if nargin < 4, window_ref = window; end;
 if nargin < 5, same_density = 0; end;
 
-relative_power = mpow( signal(1:window_rel) );
+relative_power = mpow( signal(window_ref(1):window_ref(2)) );
 
 win_overlap = window-overlap;
 

@@ -47,7 +47,7 @@ for k = 1:n_deletes
     out_signal(idxs) = mean_adjs;
 end
 
-debug = 1;
+debug = 0;
 if debug && n_deletes > 0
     close all;
     fprintf('!! Removed %d outliers !!\n', n_deletes);

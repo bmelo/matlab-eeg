@@ -31,14 +31,13 @@ config.ignore = {
 % Executing according to config variable
 run_procs(config);
 
-
 %{
 Canais com problema:
 
 SUBJ001 - C5
 SUBJ002 - C5, Cz
 SUBJ003 - C6
-SUBJ004 - O1,O2,Oz,PO2,PO3,PO8,FT7
+SUBJ004 - O1,O2,Oz,PO2,PO3,PO4,PO8,FT7
 SUBJ005 - C1,POz*
 SUBJ006 - CPz, F1, FC4*
 SUBJ007 - nada
