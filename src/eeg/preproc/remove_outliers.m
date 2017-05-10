@@ -47,8 +47,9 @@ for k = 1:n_deletes
     out_signal(idxs) = mean_adjs;
 end
 
-debug = 0;
+debug = 1;
 if debug && n_deletes > 0
+    close all;
     fprintf('!! Removed %d outliers !!\n', n_deletes);
     plot(signal); hold on; for k=outliers, plot(intervs(k), signal(intervs(k))); end, hold off;
     figure, plot(out_signal); hold on; for k=outliers, plot(intervs(k), out_signal(intervs(k)), 'r'); end, hold off;
