@@ -22,7 +22,7 @@ for subjN = config.subjs
     
     % ERD/ERS
     EEG = eeg_load( subjdir, 'pEEG_8_13', 'pEEG_13_26', 'pEEG_26_45' );
-    plot_bands_overlap_task(EEG, 'ERD-ERS bands', config.chs, 0, only_before, @erd_ers, EEG(1).srate, floor(EEG(1).srate/5), EEG(1).srate*5);
+    plot_bands_overlap_task(EEG, 'ERD-ERS bands', config.chs, 0, only_before, @erd_ers, EEG(1).srate, floor(EEG(1).srate/5), [EEG(1).srate*5 EEG(1).srate*10]);
     
     %input('[Enter] para continuar...');
     
