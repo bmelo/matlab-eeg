@@ -24,9 +24,16 @@ fprintf('\n####   GRAND AVERAGE   ####\n\n');
 for k = 1:nFiles
     file = filepatt{k};
     group(k) = group_matrix(config, file);
+    
+    % Plotting matrices
+    plot_matrix(group(k).mean.TASK_T, group(k).srate, group(k).channels);
+    suptitle( sprintf('TASK_T - %s', file) );
+    export_img(save_dir, sprintf('TASK_T - %s.png', file));
+    
+    plot_matrix(group(k).mean.TASK_A, group(k).srate, group(k).channels);
+    suptitle( sprintf('TASK_A - %s', file) );
+    export_img(save_dir, sprintf('TASK_A - %s.png', file));
 end
-
-plot_matrix(group(1).mean.TASK_T, group(1).srate, group(1).channels);
 
 close all;
 figure;

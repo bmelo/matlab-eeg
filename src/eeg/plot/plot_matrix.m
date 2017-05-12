@@ -72,29 +72,27 @@ positions = {
     'P10' 86
     'O1' 93
     'Oz' 94
-    'O2' 94
+    'O2' 95
     };
 
 %%%%%%%%%%%
 figure;
-title( 'TESTE' );
+set(gcf, 'Position', get(0,'Screensize')); % Maximize figure.
 for chan_num = 1:length(channels)
     chan_name = channels{chan_num};
     chan_pos = strcmp({positions{:,1}}, chan_name);
-    if sum(chan_pos) ~= 1
-        disp(chan_name);
-    end
     
     pC = positions{ chan_pos, 2 };
     axes(chan_num) = subplot( 9, 11, pC );
     
+    title( sprintf('%s', chan_name) );
     plot_task( signal(chan_num, :), [10 56] * srate );
-    %suptitle( sprintf('%s', chan_name) );
 end
-disp(length(axes));
 
-ylim_equal( axes, [-100 200] );
+ylim_equal( axes );
 adjust_x_time( axes, 66 );
+
+set(axes(:), 'XTick',[], 'YTick',[]);
 
 end
 

@@ -8,6 +8,7 @@ if nargin < 2, param = 'YLim'; end
 if ~ischar(param)
     all_v = param;
 else
+    all_v = [];
     if strcmp(param, 'data')
         param = 'YData';
     end
