@@ -12,9 +12,9 @@ hold on;
 plot( data );
 
 % Putting lines
-vline(lims(1), '--g', 'start');
+vline(lims(1), '--g', '');
 if length(lims) == 2
-    vline(lims(2), '--r', 'end');
+    vline(lims(2), '--r', '');
 end
 
 % % Plotting experimental design

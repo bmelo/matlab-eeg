@@ -26,6 +26,8 @@ for k = 1:nFiles
     group(k) = group_matrix(config, file);
 end
 
+plot_matrix(group(1).mean.TASK_T, group(1).srate, group(1).channels);
+
 close all;
 figure;
 for chan_num = 1:length(group(1).channels)

@@ -12,7 +12,8 @@ config = setup('neutral_length', 10);
 
 % Configuring Grand Average
 %config.gavg_files = {'pEEG_global', {'pEEG_8_13' 'pEEG_13_26' 'pEEG_26_45'}};
-config.gavg_files = {{'pEEG_8_13' 'pEEG_13_26' 'pEEG_26_45'}};
+%config.gavg_files = {{'pEEG_8_13' 'pEEG_13_26' 'pEEG_26_45'}};
+config.gavg_files = {'pEEG_global'};
 config.gavg_filter = @erd_ers;
 config.gavg_filter_params = {};
 
