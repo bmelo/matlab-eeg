@@ -89,7 +89,7 @@ for chan_num = 1:length(channels)
     plot_task( signal(chan_num, :), [10 56] * srate );
 end
 
-ylim_equal( axes );
+ylim_equal( axes, [-80 180] );
 adjust_x_time( axes, 66 );
 
 set(axes(:), 'XTick',[], 'YTick',[]);
