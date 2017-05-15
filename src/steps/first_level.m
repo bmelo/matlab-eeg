@@ -5,11 +5,12 @@ for subjN = config.subjs
     close all;
     
     subj = sprintf('%s%03d', config.subj_prefix, subjN);
+    subjdir = fullfile( config.outdir_base, subj );
+    
     fprintf('\n####   FIRST LEVEL - %s   ####\n\n', subj);
     
-    outdir = fullfile( config.outdir_base, subj );
-    if( ~isdir(outdir) )
-        mkdir(outdir)
+    if( ~isdir(subjdir) )
+        mkdir(subjdir)
     end
     
     results = load_results(config, subj);
@@ -17,6 +18,7 @@ for subjN = config.subjs
         do_stats;
     end
     
+    do_report;
     fprintf('\n\n');
     clear EEG AUX cEEG bEEG bEEG_erd;
 end

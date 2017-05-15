@@ -1,23 +1,24 @@
 disp('Computing ...');
 
-results.channels = {cEEG.chanlocs(:).labels};
+EEG = eeg_load(subjdir, 'pEEG_global');
+results.channels = {EEG.chanlocs(:).labels};
+srate = EEG.srate;
 
 %% ALL bands
-pEEG = epochs_apply(@power_eeg, cEEG);
-erdEEG = epochs_apply(@erd_ers, cEEG, cEEG.srate, floor(cEEG.srate/5) );
+erdEEG = epochs_apply(@erd_ers, EEG, srate, floor(srate/5), [srate*5 srate*10] );
 
-results.stats.global.power = testConds( pEEG, 'testF' );
+results.stats.global.power = testConds( EEG, 'testF' );
 results.stats.global.sync  = testConds( erdEEG, 'testF' );
-clear pEEG erdEEG;
+clear EEG erdEEG;
+
 
 %% Separating bands
-bEEG = break_bands(EEG, config.bands);
-pEEG = epochs_apply(@power_eeg, bEEG);
-erdEEG = epochs_apply(@erd_ers, bEEG, bEEG(1).srate, floor(bEEG(1).srate/5) );
+EEG = eeg_load( subjdir, 'pEEG_8_13', 'pEEG_13_26', 'pEEG_26_45' );
+erdEEG = epochs_apply(@erd_ers, EEG, srate, floor(srate/5), [srate*5 srate*10] );
 
-results.stats.bands.power = testConds( pEEG, 'testF' );
+results.stats.bands.power = testConds( EEG, 'testF' );
 results.stats.bands.sync  = testConds( erdEEG, 'testF' );
-clear EEG bEEG pEEG erdEEG;
+clear EEG erdEEG;
 
 % Saving
 results_file = fullfile( config.outdir_base, subj, 'results.mat' );
