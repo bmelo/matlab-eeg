@@ -1,5 +1,5 @@
 function out = testChannels( matrixEEG, srate, test )
-%Testa Épocas
+%Testa ï¿½pocas
 if nargin < 2, test = 'friedman'; end
 
 switch( test )
@@ -21,12 +21,12 @@ end
 
 if strcmp( test, 'friedman' )
     for nchan = 1:size(T,1)
-        results(nchan) = friedman( [T(nchan, :)' A(nchan, :)' nA(nchan, :)' nT(nchan, :)'], 1, 'off' );
+        [results.resp(nchan) results.p(nchan)] = friedman( [T(nchan, :)' A(nchan, :)' nA(nchan, :)' nT(nchan, :)'], 1, 'off' );
     end
 else
-    results.T_N = testH( T', nT');
-    results.A_N = testH( A', nA');
-    results.T_A = testH( T', A' );
+    [results.T_N results.T_N_p] = testH(T, nT);
+    [results.A_N results.A_N_p] = testH(A, nA);
+    [results.T_A results.T_A_p] = testH(T, A );
 end
 out = results;
 
