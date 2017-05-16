@@ -6,21 +6,21 @@
 
 %% Printing report
 fprintf('\n\nPower Global')
-print_report( results.stats.global.power{1}, results.channels );
-disp('\n\nERD/ERS Global')
-print_report( results.stats.global.sync{1}, results.channels );
+print_report( results.stats.global.power, results.channels );
+fprintf('\n\nERD/ERS Global')
+print_report( results.stats.global.sync, results.channels );
 
 fprintf('\n\nPower [8-13]')
-print_report( results.stats.bands.power{1}, results.channels );
+print_report( results.stats.bands.power(1), results.channels );
 fprintf('\n\nERD/ERS [8-13]')
-print_report( results.stats.bands.sync{1}, results.channels );
+print_report( results.stats.bands.sync(1), results.channels );
 
 fprintf('\n\nPower [13-26]')
-print_report( results.stats.bands.power{2}, results.channels );
+print_report( results.stats.bands.power(2), results.channels );
 fprintf('\n\nERD/ERS [13-26]')
-print_report( results.stats.bands.sync{2}, results.channels );
+print_report( results.stats.bands.sync(2), results.channels );
 
 fprintf('\n\nPower [26-45]')
-print_report( results.stats.bands.power{3}, results.channels );
+print_report( results.stats.bands.power(3), results.channels );
 fprintf('\n\nERD/ERS [26-45]')
-print_report( results.stats.bands.sync{3}, results.channels );
+print_report( results.stats.bands.sync(3), results.channels );

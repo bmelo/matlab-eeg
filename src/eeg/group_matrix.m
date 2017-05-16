@@ -1,5 +1,5 @@
 function [ out ] = group_matrix( config, filename )
-%COMPUTE_GROUP Summary of this function goes here
+%GROUP_MATRIX Summary of this function goes here
 %   Detailed explanation goes here
 
 totalN = length(config.subjs);

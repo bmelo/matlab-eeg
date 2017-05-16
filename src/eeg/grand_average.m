@@ -37,7 +37,6 @@ for k = 1:nFiles
 end
 
 close all;
-exit;
 figure;
 for chan_num = 1:length(group(1).channels)
     % Preparing figure

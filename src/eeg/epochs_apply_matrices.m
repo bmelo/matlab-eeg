@@ -19,7 +19,7 @@ for nE = 1:length(matEEG)
         
         varargin{1} = matEEG.(cond);
         if ndims( matEEG.(cond) ) == 3
-            matEEG(nE) = treat_all_pieces();
+            matEEG(nE).(cond) = treat_all_pieces( varargin{:} );
         else
             matEEG(nE).(cond) = treat_signal(varargin{:});
         end
@@ -54,9 +54,11 @@ end
 %% Another auxiliar function
 function signal = treat_all_pieces(varargin)
 
+matrixEEG = varargin{1};
 % Each piece
-for p = 1:size(varargin{1},2)
-    signal(p) = treat_signal( varargin{:} );
+for p = 1:size(matrixEEG,2)
+    varargin{1} = squeeze(matrixEEG(:,p,:));
+    signal(:, p, :) = treat_signal( varargin{:} );
 end
 
 end
