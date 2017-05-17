@@ -16,7 +16,7 @@
   ],
   "dependencies": {
 	  "matlab-utils": "*",
-      "eeglab": "https://bmelo@bitbucket.org/bmelo/eeglab.git#14.0.0-beta",
+      "eeglab-14.1": "https://bmelo@bitbucket.org/sccn_eeglab/eeglab.git#14.1.0b",
 	  "cosmomvpa": "git://github.com/InstitutoDOr/CoSMoMVPA.git#1.2.0-beta",
       "xlwrite": "https://bmelo@bitbucket.org/instituto-dor/matlab-xlwrite.git#^1.9.0"
   }

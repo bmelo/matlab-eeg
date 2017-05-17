@@ -1,32 +1,44 @@
-function out = testChannels( matrixEEG, srate, test )
+function out = testChannels( mEEG, test )
 %Testa �pocas
 if nargin < 2, test = 'friedman'; end
 
 switch( test )
+    case 'testT'
+        testH = @ttest2;
     case 'testF'
         testH = @vartest2;
     case 'wilcoxon'
         testH = @ranksum;
 end
 
-intN = floor( [0 10] * srate );
-intC = floor( [20 46] * srate );
-% Only works with equal number of conditions
-for nC = 1:size(matrixEEG.TASK_T,1)
-    nT(:, nC) = mean( matrixEEG.TASK_T(nC, :, intN(1)+1:intN(2)), 3);
-    T(:, nC)  = mean( matrixEEG.TASK_T(nC, :, intC(1)+1:intC(2)), 3);
-    nA(:, nC) = mean( matrixEEG.TASK_A(nC, :, intN(1)+1:intN(2)), 3);
-    A(:, nC)  = mean( matrixEEG.TASK_A(nC, :, intC(1)+1:intC(2)), 3);
-end
-
+nChans = size(mEEG.T,2);
 if strcmp( test, 'friedman' )
-    for nchan = 1:size(T,1)
-        [results.resp(nchan) results.p(nchan)] = friedman( [T(nchan, :)' A(nchan, :)' nA(nchan, :)' nT(nchan, :)'], 1, 'off' );
+    for nC = 1:nChans
+        means = [mEEG.T(:, nC) mEEG.A(:, nC) mEEG.nA(:, nC) mEEG.nT(:, nC)];
+        %removing nans
+        means = means(~any(isnan(means),2),:);
+        % computing
+        [results(nC).p, results(nC).table, results(nC).stats] = friedman( means, 1, 'off' );
     end
+elseif strcmp( test, 'wilcoxon' )
+    for nC = 1:nChans
+        means = [mEEG.T(:, nC) mEEG.A(:, nC) mEEG.nT(:, nC) mEEG.nA(:, nC)];
+        %removing nans
+        means = means(~any(isnan(means),2),:);
+        % computing
+        [results(nC).T_N_p, results(nC).T_N_h, results(nC).T_N_stats] = testH( means(:,1),  means(:,3));
+        [results(nC).A_N_p, results(nC).A_N_h, results(nC).A_N_stats] = testH( means(:,2),  means(:,4));
+        [results(nC).T_A_p, results(nC).T_A_h, results(nC).T_A_stats] = testH( means(:,1),  means(:,2));
+    end
+    results = struct(...
+        'T_N_p', [results(:).T_N_p], 'T_N', [results(:).T_N_h],...
+        'A_N_p', [results(:).A_N_p], 'A_N', [results(:).A_N_h],...
+        'T_A_p', [results(:).T_A_p], 'T_A', [results(:).T_A_h] ...
+        );
 else
-    [results.T_N results.T_N_p] = testH(T, nT);
-    [results.A_N results.A_N_p] = testH(A, nA);
-    [results.T_A results.T_A_p] = testH(T, A );
+    [results.T_N, results.T_N_p] = testH(mEEG.T, mEEG.nT);
+    [results.A_N, results.A_N_p] = testH(mEEG.A, mEEG.nA);
+    [results.T_A, results.T_A_p] = testH(mEEG.T, mEEG.A );
 end
 out = results;
 

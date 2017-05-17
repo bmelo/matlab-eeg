@@ -20,11 +20,11 @@ else
 end
 
 %% Including component matlab-utils
-run( fullfile(config.vendors_dir, 'matlab-utils/setup.m'));
+run( fullfile(config.vendors_dir, 'matlab-utils/libsetup.m'));
 
 %% Primeiro os vendors, para poderem ser sobrescritos pela aplica��o
 utils.path.includeSubdirs({
-    'vendors/eeglab'
+    'vendors/eeglab-14.1'
     'vendors/cosmomvpa'
     'src'
 });
