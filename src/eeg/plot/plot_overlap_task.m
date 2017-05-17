@@ -13,7 +13,7 @@ EEG.ext.mean_func.args = varargin;
 
 % Checking if needs generate output
 save_img = (nargin > 1) && ~isempty(folder_save);
-save_dir = fullfile( EEG.ext.config.outdir_base, EEG.subject, 'imgs', folder_save );
+save_dir = fullfile( EEG.ext.config.imgsexport_dir, EEG.subject, 'imgs', folder_save );
 
 figure;
 for chan_num = channels
@@ -45,8 +45,7 @@ conds = {'TASK_T' 'TASK_A'};
 
 epochs = EEG.ext.epochs;
 epochsM = matrices(epochs);
-yLims = [];
-yLimsMean = [];
+hPlots = zeros(1, length(conds)*2);
 
 % Plots each condition
 for nC = 1:length(conds)
@@ -54,6 +53,7 @@ for nC = 1:length(conds)
     cond = conds{nC};
     ref = epochs.(cond)(1);
     lims = [ref.idx_data(1) ref.idx_data(end)];
+    lims_mean = lims;
     % Check if only needs neutral that comes before main task
     if EEG.ext.only_before
         epochsM.(cond)(:,:,lims(end)+1:end) = [];
@@ -76,67 +76,21 @@ for nC = 1:length(conds)
         mean_func = EEG.ext.mean_func;
         args = [signal_mean, mean_func.args];
         signal_mean = utils.apply_func(mean_func.handle, args);
-        lims_mean = lims * length(signal_mean)/length(signal);
+        lims_mean = lims_mean * length(signal_mean)/length(signal);
     end
     
     % Plotting
-    subplot( 2, 2, nC );
+    hPlots(nC) = subplot( 2, 2, nC );
     title( sprintf('%s', cond) );
     plot_task( signal, lims, mult );
     
-    subplot( 2, 2, nC+2 );
+    hPlots(nC+2) = subplot( 2, 2, nC+2 );
     title( sprintf('%s (mean)', cond) );
     plot_task( signal_mean, lims_mean, mult );
 end
 
-%% Adjusting plots
-first = 1;
-for nC = 1:length(conds)
-    cond = conds{nC};
-    for nP = 1:4
-        subplot(2, 2, nP);
-        if nP < 3
-            xlim([0 length(signal)]);
-            ylim([0 2000]);
-            set(gca, 'XTick', [0 lims(1) lims(2) length(signal)], 'XTickLabel', [0 10 56 66]);
-        else
-            xlim([0 length(signal_mean)]);
-            ylim([-100 300]);
-            set(gca, 'XTick', [0 lims_mean(1) lims_mean(2) length(signal_mean)], 'XTickLabel', [0 10 56 66]);
-        end
-    end
-    first = first + length( epochs.(cond) );
-end
+ylim_equal( hPlots(1:2) );
+ylim_equal( hPlots(3:end), 'data' );
+adjust_x_time( hPlots, 66 );
 
-end
-
-
-%%%%%%%%%%%%%%%%%%
-% Plot conditions
-%%%%%%%%%%%%%%%%%%
-function plot_task( signal, lims, mult )
-import utils.plot.lines.vline;
-
-% Plotting signals of one channel
-data = squeeze( signal );
-
-% Plotting each piece
-hold on;
-plot( data );
-
-% Putting lines
-vline(lims(1), '--g', 'start');
-if length(lims) == 2
-    vline(lims(2), '--r', 'end');
-end
-
-% % Plotting experimental design
-% ampA = (max( data(:) ) - min( data(:) )) / 2;
-
-% task_x = lims(1):lims(2);
-% interv = linspace(-pi/2, 5.5*pi, length(task_x));
-% interv = -pi/2 : (6*pi/(length(task_x)-1)) : (6*pi - pi/2);
-% plot( task_x, mult* ( sin(interv)*ampA+(ampA/2) ), '--k', 'LineWidth', .5 )
-
-hold off;
 end

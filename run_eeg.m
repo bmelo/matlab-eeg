@@ -5,63 +5,53 @@ function run_eeg()
 
 % Preparing components (eeglab, matlab-utils)
 includeDeps;
+clc;
 
 %% Setup of processing
-close all; clc;
-config = setup('subjs', 1:14, 'neutral_length', 10);
-chs = 41:63;
-only_before = 0;
-%bands = [8 10; 10 13; 13 20; 20 26; 26 30; 30 45];
-bands = [8 13; 13 26; 26 45];
+config = setup('neutral_length', 10);
 
-% Do the same for each subject
-for subjN = config.subjs
-    close all;
-    
-    subj = sprintf('%s%03d', config.subj_prefix, subjN);
-    fprintf('\n####    %s   ####\n\n', subj);
-    
-    %% Preproc
-    if config.do_preproc
-        % Loading EEG/AUX - downsample to 500Hz
-        [EEG, AUX] = prepare_eeg(config, subj, 500);
-        % removing some channels
-        EEG = pop_select( EEG, 'channel', chs);
-        chs = 1:length(chs);
-        
-        EEG.ext.epochs = epocas_v2( EEG );
-        
-        % Manipulating signal
-        EEG = epochs_match_all(EEG);
-        cEEG = epochs_apply(@filter_bands, EEG, EEG.srate, [7 45]);
-        bEEG = break_bands(EEG, bands);
-    end
-    %plot_overlap_task(EEG, 'raw', chs, 0, only_before);
-    %plot_overlap_task(EEG, 'raw-mean', chs, 1, only_before);
-    %plot_overlap_task(cEEG, 'high-low filtered', chs, 1, only_before);
-    
-    %% Characteristics
-    % POWER
-    %EEG_pow = epochs_apply(@power_eeg, cEEG);
-    %plot_overlap_task(EEG_pow, 'power', chs, 0, only_before, @erd_ers, EEG.srate, floor(EEG.srate/5));
+% Configuring Grand Average
+config.prefix = 'p';
+%config.gavg_files = {'pEEG_global', {'pEEG_8_13' 'pEEG_13_26' 'pEEG_26_45'}};
+%config.gavg_files = {{'pEEG_8_13' 'pEEG_13_26' 'pEEG_26_45'}};
+%config.gavg_files = {'pEEG_global'};
+config.gavg_files = {'pEEG_global', {'pEEG_8_13' 'pEEG_13_26' 'pEEG_26_45'}};
+config.gavg_filter = @erd_ers;
+config.gavg_filter_params = {};
 
-    % ERD/ERS
-    %EEG_erd = epochs_apply( @erd_ers, EEG, EEG.srate, floor(EEG.srate/5) );
-    %plot_overlap_task(EEG_erd, 'ERD-ERS', chs, 0, extra);
-    bEEG = epochs_apply( @power_eeg, bEEG );
-    plot_bands_overlap_task(bEEG, 'ERD-ERS bands', chs, 0, only_before, @erd_ers, bEEG(1).srate, floor(bEEG(1).srate/5));
-    
-    %% Processing
-    if config.do_first_level
-        %first_level;
-    end
-    
-    %input('[Enter] para continuar...');
-    fprintf('\n\n');
-    clear EEG AUX cEEG bEEG bEEG_erd;
-end
+config.ignore = {
+    1,  [48]
+    2,  [18 48]
+    3,  [49]
+    4,  [9 10 20 31 44 45 54 59]
+    5,  [31 34]
+    6,  [32 41 63]
+    9,  [48]
+    10, [13 59]
+    13, [27]
+    14, [29 56]
+};
 
-%% Group processing
-if( config.do_second_level )
-    %second_level;
-end
+% Executing according to config variable
+run_procs(config);
+
+%{
+Canais com problema:
+
+SUBJ001 - C5
+SUBJ002 - C5, Cz
+SUBJ003 - C6
+SUBJ004 - O1,O2,Oz,PO2,PO3,PO4,PO8,FT7
+SUBJ005 - C1,POz*
+SUBJ006 - CPz, F1, FC4*
+SUBJ007 - nada
+SUBJ008 - nada
+SUBJ009 - C5*
+SUBJ010 - T7*, PO8*
+SUBJ011 - nada
+SUBJ012 - nada
+SUBJ013 - CP5*
+SUBJ014 - TP9, TP7
+
+* canais que começaram bem, mas ficaram ruins no decorrer da tarefa
+%}

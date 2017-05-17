@@ -1,13 +1,101 @@
 config.vendors_dir = 'vendors';
+config.debug = 0;
 
-config.rawdir_base = '/dados2/PROJETOS/PRJ1411_NFB_VR/03_PROCS/RAW_DATA/EEG';
-config.outdir_base = '/dados2/PROJETOS/PRJ1411_NFB_VR/03_PROCS/PROC_DATA/EEG';
+config.rawdir_base = '../DATA/raw_data';
+config.outdir_base = '../DATA/PROC_DATA';
+config.imgsexport_dir = fullfile( config.outdir_base, 'IMGS' );
 config.subj_prefix = 'SUBJ';
 
-config.neutral_length = 4;
+config.neutral_length = 10;
+config.srate = 500;
 
-config.compute_results = 0;
+config.compute_results = 1;
 
+% Chosing subjects, channels...
+config.subjs = 1:14;
+config.chs = 1:63;
+%bands = [8 10; 10 13; 13 20; 20 26; 26 30; 30 45];
+config.bands = [8 13; 13 26; 26 45];
+
+% What will be done
 config.do_preproc = 1;
 config.do_first_level = 1;
 config.do_second_level = 1;
+config.do_visual_check = 1;
+
+config.do_grand_average = 1;
+config.ga_files = {'pEEG_global'};
+
+% For debugging
+if config.debug
+    config.subjs = 1;
+    config.chs = 1:2;
+end
+
+%{
+Channels
+
+1 - Fp1
+2 - Fp2
+3 - F3
+4 - F4
+5 - C3
+6 - C4
+7 - P3
+8 - P4
+9 - O1
+10 - O2
+11 - F7
+12 - F8
+13 - T7
+14 - T8
+15 - P7
+16 - P8
+17 - Fz
+18 - Cz
+19 - Pz
+20 - Oz
+21 - FC1
+22 - FC2
+23 - CP1
+24 - CP2
+25 - FC5
+26 - FC6
+27 - CP5
+28 - CP6
+29 - TP9
+30 - TP10
+31 - POz
+32 - F1
+33 - F2
+34 - C1
+35 - C2
+36 - P1
+37 - P2
+38 - AF3
+39 - AF4
+40 - FC3
+41 - FC4
+42 - CP3
+43 - CP4
+44 - PO3
+45 - PO4
+46 - F5
+47 - F6
+48 - C5
+49 - C6
+50 - P5
+51 - P6
+52 - AF7
+53 - AF8
+54 - FT7
+55 - FT8
+56 - TP7
+57 - TP8
+58 - PO7
+59 - PO8
+60 - FT9
+61 - FT10
+62 - Fpz
+63 - CPz
+%}

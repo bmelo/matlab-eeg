@@ -5,9 +5,14 @@ tic;
 fprintf('Applying function <a href="matlab:help %1$s">%1$s</a>\n', func2str(hFunc));
 
 EEG = varargin{1};
+is_main_struct = isfield(EEG, 'ext');
 
 for nE = 1:length(EEG)
-    signal = EEG(nE).ext.epochs;
+    if is_main_struct
+        signal = EEG(nE).ext.epochs;
+    else
+        signal = EEG;
+    end
     conds = fields(signal);
     % Each condition
     for nCond = 1:length(conds)
@@ -33,8 +38,12 @@ for nE = 1:length(EEG)
             signal.(cond)(p) = temp;
         end
     end
-    % putting return value
-    EEG(nE).ext.epochs = signal;
+    
+    if is_main_struct
+        % putting return value
+        EEG(nE).srate = EEG(nE).srate * perc;
+        EEG(nE).ext.epochs = signal;
+    end
 end
 
 secs = toc;

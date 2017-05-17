@@ -1,9 +1,10 @@
-function signalERD = erd_ers(signal, window, overlap, same_density)
+function signalERD = erd_ers(signal, window, overlap, window_ref, same_density)
 % ERD_ERS
 % Details
-if nargin < 4, same_density = 0; end;    
+if nargin < 4, window_ref = window; end;
+if nargin < 5, same_density = 0; end;
 
-relative_power = mpow( signal(1:window) );
+relative_power = mpow( signal(window_ref(1):window_ref(2)) );
 
 win_overlap = window-overlap;
 
@@ -21,7 +22,7 @@ for k = 1:win_overlap:length(signal)
     end
     
     mean_window = mpow( signal(intervM) );
-    perc_change = (mean_window - relative_power) / relative_power * 100;
+    perc_change = 100 * (mean_window - relative_power) / relative_power;
     
     % Checking if needs replicate value along the window lenght
     if same_density
