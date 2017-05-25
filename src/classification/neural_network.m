@@ -16,19 +16,20 @@ for k = 1:length(files)
     syncEEG = epochs_apply_matrices(@erd_ers, pEEG, srate, srate/5, [srate*5 srate*10] );
     perc = size(syncEEG.TASK_T,3) / size(pEEG.TASK_T,3);
     pEEG = epochs_apply_matrices( @window_func, pEEG, srate, srate/5, @mean );
-    clear pEEG;
     
     srate = srate * perc;
     
-    %@TODO
     % Preparing matrix to use in classifier
-    x = prepare_matrix( pEEG, srate );
-    x = [x prepare_matrix( syncEEG, srate )];
+    mFeats = prepare_matrix( pEEG, srate );
+    mFeats = [mFeats prepare_matrix( syncEEG, srate )];
+    features = prepare_features(mFeats);
+    
+    % Testing neural network
+    net = patternnet(10);
+    net = train(net, features.data, features.classes);
+    view(net);
 end
 
-net = patternnet(10);
-net = train(net, features.data, features.classes);
-view(net)
 %y = net( features.data );
 %perf = perform(net, features.classes, y);
 %classes = vec2ind( y );
