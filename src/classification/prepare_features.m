@@ -18,5 +18,24 @@ out.classes(1, 1:numN) = 1;
 out.classes(2, numN+1:numN+numT) = 1;
 out.classes(3, end-numA+1:end) = 1;
 
+%% Blocks
+n_blocks = 16;
+lenN = numN / (16 * 2);
+lenT = numT / 16;
+lenA = numA / 16;
+for nB=1:n_blocks
+    firstNT = (nB-1) * lenN + 1;
+    firstNA = (nB-1) * lenN + 1 + numN/2;
+    firstT = numN + (nB-1) * lenT + 1;
+    firstA = numN + numA + (nB-1) * lenT + 1;
+    idxB = [
+        firstNT : (firstNT + lenN -1) ...
+        firstNA : (firstNA + lenN -1) ...
+        firstT  : (firstT  + lenT -1) ...
+        firstA  : (firstA  + lenA -1) ...
+        ];
+    out.block(idxB) = nB;
+end
+
 end
 
