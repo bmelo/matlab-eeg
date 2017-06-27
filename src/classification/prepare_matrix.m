@@ -2,9 +2,10 @@ function [ out ] = prepare_matrix( mEEG, srate )
 %PREPARE_MATRIX Summary of this function goes here
 %   Detailed explanation goes here
 
-intN  = floor( [0 10] * srate );
-intNF = floor( [56 66] * srate );
-intC  = floor( [20 46] * srate );
+% Neutral condition is doubled (excerpt for Tenderness and Anguish)
+intN  = floor( [3 10] * srate ); % 7s
+intNF = floor( [56 62] * srate ); % 6s
+intC  = floor( [20 46] * srate ); % 26s
 
 idxN = [intN(1)+1:intN(2)  intNF(1)+1:intNF(2)];
 idxC = intC(1)+1:intC(2);

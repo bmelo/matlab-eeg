@@ -1,6 +1,6 @@
 function neural_network(config)
 
-files = {'pEEG_global' 'pEEG_8_13' 'pEEG_13_26' 'pEEG_26_45'};
+files = {'pEEG_8_13' 'pEEG_13_26' 'pEEG_26_45'};
 subjs = config.subjs;
 
 accs = [];
@@ -11,7 +11,7 @@ for nS = subjs
     featFile = fullfile(config.outdir_base, subjid, 'feats.mat');
     
     % Check if need generate feat file
-    if( ~exist(featFile, 'file') )
+    if( ~exist(featFile, 'file') || utils.Var.get( config, 'force_features') )
         for k = 1:length(files)
             file  = files{k};
             
@@ -25,6 +25,7 @@ for nS = subjs
             
             syncEEG = epochs_apply_matrices(@erd_ers, pEEG, srate, srate/5, [srate*5 srate*10] );
             perc = size(syncEEG.TASK_T,3) / size(pEEG.TASK_T,3);
+            densEEG = epochs_apply_matrices( @window_func, pEEG, srate, srate/5, @sum );
             pEEG = epochs_apply_matrices( @window_func, pEEG, srate, srate/5, @mean );
             
             srate = srate * perc;
@@ -36,17 +37,19 @@ for nS = subjs
                 mFeats = [mFeats prepare_matrix( pEEG, srate )];
             end
             mFeats = [mFeats prepare_matrix( syncEEG, srate )];
+            mFeats = [mFeats prepare_matrix( densEEG, srate )];
         end
         save( featFile, 'mFeats' );
     else
-        mFeats = load(featFile);
+        load(featFile, 'mFeats');
     end
     
+    % Removing density
+    mFeats(3:3:end) = [];
     % Testing neural network
     feats = prepare_features(mFeats);
     
     % Leave one paired-block out
-    acc = [];
     for nB = 1:16
         s_idx = feats.block == nB;
         
@@ -55,18 +58,17 @@ for nS = subjs
         out_test = net( feats.features(:, s_idx));
         er = confusion( feats.classes(:, s_idx), out_test);
         acc = 1-er;
-        accs(nB) = acc;
+        accs(nS, nB) = acc;
         %utils.imgs.print_fig( fullfile( config.imgsexport_dir, sprintf('SUBJ%03d.png', nS) ) );
         fprintf('SUBJ%03d [%d] \t %.2f%% \t %d \t %d\n', nS, nB, acc*100, sum(s_idx), sum(~s_idx));
         clear net;
     end
-    means(nS) = mean(accs);
+    means(nS) = mean(accs(nS,:));
     fprintf('SUBJ%03d [mean] \t %.2f%%\n', nS, means(nS)*100 );
     
     clear mFeats net y feats pEEG syncEEG;
 end
-feats = prepare_features_group(mFeatsGlobal, length(config.subjs) );
 
-fprintf('\nMEAN: \t %.2f%%\n', mean(accs)*100);
+save('accs', 'accs');
 
 end

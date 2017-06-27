@@ -23,5 +23,5 @@ config.ignore = {
     14, [29 56]
 };
 
-%neural_network(config);
-neural_network_intersubjs(config);
+neural_network(config);
+%neural_network_intersubjs(config);
