@@ -4,7 +4,7 @@ function export_SL_excel( config, statsfile )
 
 load(statsfile, 'results', 'channels');
 
-files = {'pEEG_global' 'pEEG_8_13' 'pEEG_13_26' 'pEEG_26_45'};
+files = {'pEEG_8_13' 'pEEG_13_26' 'pEEG_26_45'};
 
 % Exporting excel
 utils.run('vendors/xlwrite/libsetup.m');

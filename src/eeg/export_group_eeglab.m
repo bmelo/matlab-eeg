@@ -16,7 +16,7 @@ for nC = 1:length(conds)
     % Filtering data, if necessary
     if ~isempty( lims )
         lims = floor( lims * p.srate );
-        p.data = p.data(:, lims(1):lims(2));
+        p.data = p.data(:, lims(1)+1:lims(2));
     end
     
     % Exporting

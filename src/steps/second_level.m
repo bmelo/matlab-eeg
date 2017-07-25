@@ -1,6 +1,6 @@
 function second_level(config)
 
-files = {'pEEG_global' 'pEEG_8_13' 'pEEG_13_26' 'pEEG_26_45'};
+files = {'pEEG_8_13' 'pEEG_13_26' 'pEEG_26_45'};
 for k = 1:length(files)
     file  = files{k};
     
@@ -33,6 +33,6 @@ end
 outfile = fullfile( config.outdir_base, 'results-SL.mat' );
 save(outfile, 'results', 'channels');
 
-export_SL_excel( outfile );
+export_SL_excel( config, outfile );
 
 end

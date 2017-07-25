@@ -26,6 +26,7 @@ config.ignore = {
     10, [13 59]
     13, [27]
     14, [29 56]
+    15, [27]
 };
 
 % Executing according to config variable

@@ -34,7 +34,6 @@ for k = 1:nFiles
     plot_matrix(group(k).mean.TASK_A, group(k).srate, group(k).channels);
     suptitle( sprintf('%s - TASK_A', label) );
     export_img(save_dir, sprintf('%s - TASK_A.png', file));
-    export_group_eeglab( group, [20 46], filepatt{k});
 end
 
 close all;

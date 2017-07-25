@@ -56,9 +56,9 @@ if debug && n_deletes > 0
     input('[Enter]');
 end
 
-%#####################
-%# SUBFUNCTIONS
-%#####################
+% #####################
+% # SUBFUNCTIONS
+% #####################
 
 %% Subfunction to calculate idxs of windows
     function idxs = intervs( pos  )
