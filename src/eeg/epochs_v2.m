@@ -1,4 +1,4 @@
-function epochs = epocas_v2( EEG )
+function epochs = epochs_v2( EEG )
 % EPOCHS_V2 splitting moods putting 6s before of NEUTRAL and 6s after of NEUTRAL
 
 codes = {
@@ -17,30 +17,30 @@ for k=1:nEvts
         continue
     end
     
-    epoca.inicio = ceil(evt.latency);
-    epoca.end = ceil(EEG.event(k+1).latency);
-    epoca.duracao = (epoca.end - epoca.inicio)+1;
-    epoca.raw = epoca;
+    epoch.inicio = ceil(evt.latency);
+    epoch.end = ceil(EEG.event(k+1).latency);
+    epoch.duracao = (epoch.end - epoch.inicio)+1;
+    epoch.raw = epoch;
     
-    first_pt = epoca.inicio - durNeutral;
-    last_pt = epoca.end + durNeutral;
-    epoca.data = EEG.data(:, first_pt:last_pt );
+    first_pt = epoch.inicio - durNeutral;
+    last_pt = epoch.end + durNeutral;
+    epoch.data = EEG.data(:, first_pt:last_pt );
     
-    if epoca.duracao < 10
+    if epoch.duracao < 10
         continue;
     end
-    epoca.evt = evt;
+    epoch.evt = evt;
     
     % Neutrals
-    epoca.idx_data = (epoca.inicio:epoca.end) - first_pt+1;
+    epoch.idx_data = (epoch.inicio:epoch.end) - first_pt+1;
     
     % Add or create structure
     try
-        epochs.( codes{type,1} )(end+1) = epoca;
+        epochs.( codes{type,1} )(end+1) = epoch;
     catch e
-        epochs.( codes{type,1} ) = epoca;
+        epochs.( codes{type,1} ) = epoch;
     end
-    epoca = [];
+    epoch = [];
 end
 
 end

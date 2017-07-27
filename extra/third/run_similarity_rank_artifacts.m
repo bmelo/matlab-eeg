@@ -2,10 +2,6 @@ if isunix
     addpath( '/dados3/USERS/sebastian/My Documents/MATLAB/toolboxes/eeglab_svn' );
     rdir = '/dados1/PROJETOS/PRJ1210_EMOCODE/03_PROCS/EEG_GSR/WKSP/Raw Files';
     destdir = '/dados1/PROJETOS/PRJ1210_EMOCODE/03_PROCS/EEG_GSR/Trabalho_COB860/DADOS_DEMEAN_250';
-else
-    addpath( '\\10.36.4.201\dados3\Users\sebastian\My Documents\MATLAB\toolboxes\eeglab_svn' );
-    rdir = 'Z:\PRJ1210_EMOCODE\03_PROCS\EEG_GSR\WKSP\Raw Files';
-    destdir = 'Z:\PRJ1210_EMOCODE\03_PROCS\EEG_GSR\Trabalho_COB860\DADOS_DEMEAN_250';
 end
 
 fn_base  = 'PRJ1210_EMOCODE_20140214_SUBJ012_RUN';

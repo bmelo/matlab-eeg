@@ -1,11 +1,13 @@
-function signalERD = window_func(signal, window, overlap, hfunc, varargin)
-% ERD_ERS
-% Details
+function signalWin = window_func(signal, window, overlap, hfunc, varargin)
+% WINDOW_FUNC -> Do windowing in the signal
+
+if nargin < 4, hfunc = @mean; end
+if nargin < 5, varargin = {}; end
 
 win_overlap = window-overlap;
 
 % Filling all values
-signalERD = [];
+signalWin = [];
 for k = 1:win_overlap:length(signal)
     last = k+win_overlap-1;
     
@@ -15,7 +17,7 @@ for k = 1:win_overlap:length(signal)
         intervM = k:last+overlap;
     end
     
-    signalERD(end+1) = hfunc( signal(intervM), varargin{:} );
+    signalWin(end+1) = hfunc( signal(intervM), varargin{:} );
 end
 
 end

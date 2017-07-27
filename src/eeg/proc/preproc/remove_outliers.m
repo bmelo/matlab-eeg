@@ -36,15 +36,26 @@ n_deletes = size(replace,1);
 for k = 1:n_deletes
     idxs = intervs( replace(k,:) );
     
-    idx_adjs = [];
+    % before mean
+    before_mean = [];
     if (idxs(1)-window-1) > 1
-        idx_adjs = (idxs(1)-window) : idxs(1)-1;
+        idxs = (idxs(1)-window) : idxs(1)-1;
+        before_mean = mean( signal(idxs) );
     end
+    
+    % after mean
+    after_mean = [];
     if (idxs(end)+window+1) < length(signal)
-        idx_adjs = [idx_adjs idxs(end)+1 : (idxs(end)+window)];
+        idxs = idxs(end)+1 : (idxs(end)+window);
+        after_mean = mean( signal(idxs) );
     end
-    mean_adjs = mean( signal(idx_adjs) );
-    out_signal(idxs) = mean_adjs;
+    
+    % Replicating mean, if necessary
+    means = [before_mean after_mean];
+    if length(means) == 1, means(2) = means(1); end
+    
+    % Doing interpolation between means
+    out_signal(idxs) = interp1(1:2, means, 1:1/(window-1):2, 'spline');
 end
 
 debug = 0;

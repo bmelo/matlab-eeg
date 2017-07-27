@@ -1,5 +1,6 @@
 utils.path.includeSubdirs({
     'stats'
     'plot'
-    'preproc'
+    'proc'
+    'proc/preproc'
 });

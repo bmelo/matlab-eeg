@@ -1,4 +1,4 @@
-function run_eeg()
+function run_procs_eeg()
 % Scripts to manipulate EEG data
 %
 % by Bruno Melo (bruno.raphael@gmail.com)
