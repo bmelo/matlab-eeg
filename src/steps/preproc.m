@@ -19,6 +19,9 @@ for subjN = config.subjs
     % rereference to Cz
     EEG = pop_reref( EEG, 18 );
     
+    % Filtering to stay with bands 7-45
+    EEG = bands_apply(@filter_bands, EEG, EEG.srate, [7 45]);
+    
     % Epoching signal - using markers
     EEG.ext.epochs = epochs_v2( EEG );
     EEG.times = [];
@@ -37,15 +40,25 @@ for subjN = config.subjs
     bEEG = break_bands(EEG, config.bands);
     
     %% PROC
-    pEEG = epochs_apply(@power_eeg, bEEG);
+    % power
+    pEEG = epochs_apply(@power_eeg, bEEG); 
+    
+    % ERD/ERS
     erdEEG = epochs_apply(@erd_ers, bEEG, [srate*5 srate*10] );
     erdEEG = epochs_apply(@window_func, erdEEG, srate, floor(srate/5));
+    
+    % Spectral Density
+    for nB = 1:length(config.bands)
+        densEEG(nB) = epochs_apply(@window_func, EEG, srate, srate*.6, ...
+            @spectral_density, srate, srate, [], config.bands(nB, :));
+    end
     
     % Saving bands
     for nB = 1:length(config.bands)
         sband = sprintf('%d_%d', config.bands(nB, :));
         eeg_save( subjdir, ['pEEG_' sband], pEEG(nB) );
         eeg_save( subjdir, ['syncEEG_' sband], erdEEG(nB) );
+        eeg_save( subjdir, ['densEEG_' sband], densEEG(nB) );
     end
     
     fprintf('\n\n');

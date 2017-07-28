@@ -1,5 +1,7 @@
 function out_signal = remove_outliers(signal, window, overlap)
-% REMOVE_OUTLIERS - Details
+% REMOVE_OUTLIERS
+% This function replaces bad intervals with the mean of siblings intervals
+% Chg: Now applies spline filter in replaced value instead repeated mean
 
 slide_size = window - overlap;
 out_signal = signal;
