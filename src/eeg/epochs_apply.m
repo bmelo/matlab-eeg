@@ -33,7 +33,7 @@ for nE = 1:length(EEG)
             % adjusting resize
             perc = size(temp.data,2) / size(signal.(cond)(p).data,2);
             temp.duracao = floor( temp.duracao * perc );
-            temp.idx_data = floor( temp.idx_data(1) * perc ) : ceil(temp.idx_data(end) * perc);
+            temp.lims_data = [floor( temp.lims_data(1) * perc ) ceil(temp.lims_data(2) * perc)];
             
             signal.(cond)(p) = temp;
         end

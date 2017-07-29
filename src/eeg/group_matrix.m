@@ -34,7 +34,7 @@ for k = 1:totalN
     pw_mean(k).TASK_T(:,:) = squeeze(mean(epochs.TASK_T,2));
     pw_mean(k).TASK_A(:,:) = squeeze(mean(epochs.TASK_A,2));
     
-    sync_mean(k) = epochs_apply_matrices(@erd_ers, pw_mean(k), srate, srate/5, [srate*5 srate*10] );
+    sync_mean(k) = epochs_apply_matrices(@erd_ers, pw_mean(k), [srate*5 srate*10] );
     
     clear EEG;
 end

@@ -2,13 +2,13 @@ function run_procs(config )
 import utils.Var
 
 %% PREPROC
-if Var.get(config.proc.pre, 'active')
+if Var.get(config.preproc, 'active')
     preproc(config);
-    
-    %% Visual Check
-    if Var.get(config.proc.pre, 'visual_check')
-        visual_check(config);
-    end
+end
+
+%% Visual Check
+if Var.get(config.proc.features, 'active')
+    extract_features(config);
 end
 
 %% PROC

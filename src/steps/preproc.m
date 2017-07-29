@@ -32,37 +32,11 @@ for subjN = config.subjs
     EEG = epochs_shrink(EEG); % Same size for all epochs
     
     % Two pass - outlier remotion
-    EEG = epochs_apply(@remove_outliers, EEG, srate, srate*.04);
-    EEG = epochs_apply(@remove_outliers, EEG, srate, srate*.04);
+    EEG = epochs_apply(@remove_outliers, EEG, srate, srate*.4);
+    EEG = epochs_apply(@remove_outliers, EEG, srate, srate*.4);
     
-    % Working separated by bands (alpha, beta, gamma)
-    srate = EEG.srate;
-    bEEG = break_bands(EEG, config.bands);
-    
-    %% PROC
-    % power
-    pEEG = epochs_apply(@power_eeg, bEEG); 
-    
-    % ERD/ERS
-    erdEEG = epochs_apply(@erd_ers, bEEG, [srate*5 srate*10] );
-    erdEEG = epochs_apply(@window_func, erdEEG, srate, floor(srate/5));
-    
-    % Spectral Density
-    for nB = 1:length(config.bands)
-        densEEG(nB) = epochs_apply(@window_func, EEG, srate, srate*.6, ...
-            @spectral_density, srate, srate, [], config.bands(nB, :));
-    end
-    
-    % Saving bands
-    for nB = 1:length(config.bands)
-        sband = sprintf('%d_%d', config.bands(nB, :));
-        eeg_save( subjdir, ['pEEG_' sband], pEEG(nB) );
-        eeg_save( subjdir, ['syncEEG_' sband], erdEEG(nB) );
-        eeg_save( subjdir, ['densEEG_' sband], densEEG(nB) );
-    end
-    
-    fprintf('\n\n');
-    clear EEG AUX cEEG bEEG bEEG_erd;
+    % Saving clean EEG
+    eeg_save( subjdir, 'cEEG', EEG );
 end
 
 end

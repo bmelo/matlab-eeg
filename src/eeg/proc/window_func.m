@@ -15,6 +15,7 @@ for k = 1:win_overlap:length(signal)
         % Adjust to use always the window size specified. 
         % At end, will replicate the windows that are incomplete, repeating if necessary
         intervM = (length(signal)-window-1):length(signal);
+        break;
     else
         intervM = k:last+overlap;
     end

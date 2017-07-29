@@ -20,7 +20,6 @@ for k=1:nEvts
     epoch.inicio = ceil(evt.latency);
     epoch.end = ceil(EEG.event(k+1).latency);
     epoch.duracao = (epoch.end - epoch.inicio)+1;
-    epoch.raw = epoch;
     
     first_pt = epoch.inicio - durNeutral;
     last_pt = epoch.end + durNeutral;
@@ -32,7 +31,7 @@ for k=1:nEvts
     epoch.evt = evt;
     
     % Neutrals
-    epoch.idx_data = (epoch.inicio:epoch.end) - first_pt+1;
+    epoch.lims_data = [epoch.inicio epoch.end] - first_pt+1;
     
     % Add or create structure
     try
