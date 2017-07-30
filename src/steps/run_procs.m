@@ -16,7 +16,7 @@ end
 if Var.get(config.proc, 'grand_average')
     files = config.proc.gavg_files;
     for nF = 1 : length(files)
-        grand_average( config, files{nF} );
+        run_grand_averages( config, files{nF} );
     end
 end
 
