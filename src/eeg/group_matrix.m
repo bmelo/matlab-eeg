@@ -35,6 +35,7 @@ for k = 1:totalN
     pw_mean(k).TASK_A(:,:) = squeeze(mean(epochs.TASK_A,2));
     
     sync_mean(k) = epochs_apply_matrices(@erd_ers, pw_mean(k), [srate*5 srate*10] );
+    sync_mean(k) = epochs_apply_matrices(@window_func, sync_mean(k), srate, srate/5 );
     
     clear EEG;
 end
@@ -73,7 +74,8 @@ out.channels = channels;
             end
         end
         % Generating ERD/ERS
-        sync_grand = epochs_apply_matrices( @erd_ers, pw_grand, srate, srate/5, [srate*5 srate*10] );
+        sync_grand = epochs_apply_matrices( @erd_ers, pw_grand, [srate*5 srate*10] );
+        sync_grand = epochs_apply_matrices( @window_func, sync_grand, srate, srate/5 );
     end
 
 end
