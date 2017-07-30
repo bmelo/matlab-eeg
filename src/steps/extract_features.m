@@ -11,9 +11,18 @@ for subjN = config.subjs
 
     fprintf('\n####   FEATURE EXTRACTION - %s   ####\n\n', subj);
     EEG = eeg_load( subjdir, 'cEEG' );
+    srate = EEG.srate;
+    
+    % Spectral Density
+    if config.proc.features.density
+        for nB = 1:length(config.bands)
+            densEEG(nB) = epochs_apply(@window_func, EEG, srate, srate/2, ...
+                @spectral_density, srate, srate, [], config.bands(nB,:));
+            eeg_save( subjdir, ['densEEG_' sband], densEEG(nB) );
+        end
+    end
     
     % Working separated by bands (alpha, beta, gamma)
-    srate = EEG.srate;
     bEEG = break_bands(EEG, config.bands);
     
     %% PROC
@@ -24,18 +33,11 @@ for subjN = config.subjs
     erdEEG = epochs_apply(@erd_ers, bEEG, [srate*5 srate*10] );
     erdEEG = epochs_apply(@window_func, erdEEG, srate, srate/2);
     
-    % Spectral Density
-    for nB = 1:length(config.bands)
-        densEEG(nB) = epochs_apply(@window_func, EEG, srate, srate/2, ...
-            @spectral_density, srate, srate, [], config.bands(nB, :));
-    end
-    
     % Saving bands
     for nB = 1:length(config.bands)
         sband = sprintf('%d_%d', config.bands(nB, :));
         eeg_save( subjdir, ['pEEG_' sband], pEEG(nB) );
         eeg_save( subjdir, ['syncEEG_' sband], erdEEG(nB) );
-        eeg_save( subjdir, ['densEEG_' sband], densEEG(nB) );
     end
     
     fprintf('\n\n');

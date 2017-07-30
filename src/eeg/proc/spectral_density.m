@@ -5,7 +5,7 @@ warning('OFF', 'eeglab:toolbox:absent');
 [Pxx, ~] = pwelch(signal, window, overlap, [], srate);
 warning('ON', 'eeglab:toolbox:absent');
 
-out = mean( Pxx(limits(1):limits(2)) );
+out = mean( Pxx(limits(1,1):limits(1,2)) );
 
 end
 

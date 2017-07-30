@@ -21,14 +21,22 @@ for nE = 1:length(EEG)
         % Each piece
         for p = 1:length(signal.(cond))
             
+            nChs = size(signal.(cond)(p).data, 1);
             temp = signal.(cond)(p);
             temp.data = [];
             
             % Each channel
-            for nCh = 1:size(signal.(cond)(p).data, 1)
+            for nCh = 1:nChs
                 % Task
                 varargin{1} = signal.(cond)(p).data(nCh,:);
                 temp.data(nCh,:) = utils.apply_func( hFunc, varargin );
+                % Allocating data to be more fast
+                if nCh == 1
+                    aux = temp.data;
+                    nItems = size(temp.data(1,:), 2);
+                    temp.data = zeros( nChs, nItems );
+                    temp.data(nCh,:) = aux;
+                end
             end
             % adjusting resize
             perc = size(temp.data,2) / size(signal.(cond)(p).data,2);
