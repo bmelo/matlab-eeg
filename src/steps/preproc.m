@@ -17,7 +17,7 @@ for subjN = config.subjs
     EEG = pop_select( EEG, 'channel', config.chs);
     
     % rereference to Cz
-    EEG = pop_reref( EEG, 18 );
+    %EEG = pop_reref( EEG, 18 );
     
     % Filtering to stay with bands 7-45
     EEG = bands_apply(@filter_bands, EEG, EEG.srate, [7 45]);

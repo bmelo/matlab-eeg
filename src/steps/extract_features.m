@@ -18,12 +18,16 @@ for subjN = config.subjs
         for nB = 1:length(config.bands)
             densEEG(nB) = epochs_apply(@window_func, EEG, srate, srate/2, ...
                 @spectral_density, srate, srate, [], config.bands(nB,:));
+            sband = sprintf('%d_%d', config.bands(nB, :));
             eeg_save( subjdir, ['densEEG_' sband], densEEG(nB) );
         end
     end
     
     % Working separated by bands (alpha, beta, gamma)
     bEEG = break_bands(EEG, config.bands);
+    % Two pass - outlier remotion
+    bEEG = epochs_apply(@remove_outliers, bEEG, srate, srate*.4);
+    bEEG = epochs_apply(@remove_outliers, bEEG, srate, srate*.4);
     
     %% PROC
     % power

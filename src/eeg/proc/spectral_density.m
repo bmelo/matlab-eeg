@@ -1,9 +1,7 @@
 function [out] = spectral_density( signal, srate, window, overlap, limits )
 % SPECTRAL_DENSITY
 
-warning('OFF', 'eeglab:toolbox:absent');
 [Pxx, ~] = pwelch(signal, window, overlap, [], srate);
-warning('ON', 'eeglab:toolbox:absent');
 
 out = mean( Pxx(limits(1,1):limits(1,2)) );
 

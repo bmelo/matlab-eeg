@@ -19,7 +19,8 @@ for k = 1:length(files)
     results(k).stats.sl.wilcoxon.power = testChannels( mpEEG, 'wilcoxon' );
     clear mEEG;
     
-    syncEEG = epochs_apply_matrices(@erd_ers, pEEG, srate, srate/5, [srate*5 srate*10] );
+    syncEEG = epochs_apply_matrices(@erd_ers, pEEG, [srate*5 srate*10] );
+    syncEEG = epochs_apply_matrices(@window_func, syncEEG, srate, srate/5 );
     perc = size(syncEEG.TASK_T,3) / size(pEEG.TASK_T,3);
     clear pEEG;
     msEEG = mean_matrix(syncEEG, srate * perc); % mean sync
