@@ -6,6 +6,7 @@ if nargin < 2, direction = 0; end
 if nargin < 3 || duracao == 0
     duracao = min([signal(:).duracao]); 
 end
+duracao = floor( duracao );
 
 % Each piece
 for p=1:length(signal)

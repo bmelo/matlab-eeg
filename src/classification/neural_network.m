@@ -1,74 +1,67 @@
 function neural_network(config)
 
-files = {'pEEG_8_13' 'pEEG_13_26' 'pEEG_26_45'};
+patts = {'sync' 'dens'};
 subjs = config.subjs;
 
 accs = [];
 means = [];
+outdir = fullfile(config.outdir_base, 'STATS/CLASSIFICATION/ANN');
+accfilename = ['acc_featSelection_[sync_dens]_KFOLD_' datestr(now,'yymmdd.HHMMSS')];
 for nS = subjs
     config.subjs = nS;
     subjid = sprintf('SUBJ%03d', nS);
-    featFile = fullfile(config.outdir_base, subjid, 'feats.mat');
+    subjdir = fullfile(outdir, subjid);
+    if ~isdir(subjdir), mkdir(subjdir); end
+    featFile = fullfile(subjdir, 'feats.mat');
     
     % Check if need generate feat file
     if( ~exist(featFile, 'file') || utils.Var.get( config, 'force_features') )
-        for k = 1:length(files)
-            file  = files{k};
-            
-            group = group_matrix_eeg(config, file);
-            srate = group.srate;
-            %channels = group.channels;
-            
-            pEEG.TASK_T = [group.data(:).TASK_T];
-            pEEG.TASK_A = [group.data(:).TASK_A];
-            clear group;
-            
-            syncEEG = epochs_apply_matrices(@erd_ers, pEEG, srate, srate/5, [srate*5 srate*10] );
-            perc = size(syncEEG.TASK_T,3) / size(pEEG.TASK_T,3);
-            densEEG = epochs_apply_matrices( @window_func, pEEG, srate, srate/5, @sum );
-            pEEG = epochs_apply_matrices( @window_func, pEEG, srate, srate/5, @mean );
-            
-            srate = srate * perc;
-            
-            % Preparing matrix to use in classifier
-            if ~exist('mFeats', 'var')
-                mFeats = prepare_matrix( pEEG, srate );
-            else
-                mFeats = [mFeats prepare_matrix( pEEG, srate )];
+        for nP = 1:length(patts)
+            for nB = 1:length(config.bands)
+                file  = sprintf('%sEEG_%d_%d', patts{nP}, config.bands(nB,:));
+                
+                group = group_matrix_eeg(config, file);
+                srate = group.srate;
+                channels = group.channels;
+                
+                % Feature selection - selecting channels
+                [~, nchs] = intersect(channels, config.channels{nB, 2});
+                nchs = sort(nchs);
+                
+                % Preparing data
+                featEEG.TASK_T = group.data(:).TASK_T(nchs, :, :);
+                featEEG.TASK_A = group.data(:).TASK_A(nchs, :, :);
+                clear group;
+                
+                fileFeats = prepare_matrix( featEEG, srate );
+                % Preparing matrix to use in classifier
+                if ~exist('mFeats', 'var')
+                    mFeats = fileFeats;
+                else
+                    mFeats = [mFeats fileFeats];
+                end                
             end
-            mFeats = [mFeats prepare_matrix( syncEEG, srate )];
-            mFeats = [mFeats prepare_matrix( densEEG, srate )];
         end
         save( featFile, 'mFeats' );
     else
         load(featFile, 'mFeats');
     end
     
-    % Removing density
-    mFeats(3:3:end) = [];
     % Testing neural network
+    net = patternnet(20);
     feats = prepare_features(mFeats);
     
-    % Leave one paired-block out
-    for nB = 1:16
-        s_idx = feats.block == nB;
-        
-        net = patternnet(20);
-        net = train(net, feats.features( :, ~s_idx), feats.classes(:, ~s_idx));
-        out_test = net( feats.features(:, s_idx));
-        er = confusion( feats.classes(:, s_idx), out_test);
-        acc = 1-er;
-        accs(nS, nB) = acc;
-        %utils.imgs.print_fig( fullfile( config.imgsexport_dir, sprintf('SUBJ%03d.png', nS) ) );
-        fprintf('SUBJ%03d [%d] \t %.2f%% \t %d \t %d\n', nS, nB, acc*100, sum(s_idx), sum(~s_idx));
-        clear net;
-    end
+    % Leave one block out
+    acctxt = fullfile(subjdir, [accfilename '.txt']);
+    %accs = [accs; loocv(feats, net, acctxt)];
+    accs = [accs; kfold_cv(4, 100, feats, net, acctxt)];
+    
     means(nS) = mean(accs(nS,:));
-    fprintf('SUBJ%03d [mean] \t %.2f%%\n', nS, means(nS)*100 );
+    utils.file.txt_write(acctxt, sprintf('SUBJ%03d [mean] \t %.2f%%\n', nS, means(nS)*100), 0, 1 );
     
     clear mFeats net y feats pEEG syncEEG;
 end
 
-save('accs', 'accs');
+save( fullfile(outdir, [accfilename '.mat']), 'accs');
 
 end

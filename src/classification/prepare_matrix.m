@@ -3,8 +3,8 @@ function [ out ] = prepare_matrix( mEEG, srate )
 %   Detailed explanation goes here
 
 % Neutral condition is doubled (excerpt for Tenderness and Anguish)
-intN  = floor( [3 10] * srate ); % 7s
-intNF = floor( [56 62] * srate ); % 6s
+intN  = floor( [2 10] * srate ); % 8s - selected to have the same size of the condition
+intNF = floor( [57 62] * srate ); % 5s - selected to have the same size of the condition
 intC  = floor( [20 46] * srate ); % 26s
 
 idxN = [intN(1)+1:intN(2)  intNF(1)+1:intNF(2)];
