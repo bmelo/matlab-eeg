@@ -29,6 +29,7 @@ config.channels = {
     [13 26], {'P3' 'O1' 'O2' 'T7' 'T8' 'P7' 'P8' 'Pz' 'Oz' 'TP9' 'POz' 'P1' 'PO3' 'PO4' 'P5' 'P6' 'TP7' 'TP8' 'PO7' 'PO8' 'FT9' 'CPz'}
     [26 45], {'FT9' 'FT10'}
 };
+config.featsel = 0;
 
 neural_network(config);
 %neural_network_intersubjs(config);

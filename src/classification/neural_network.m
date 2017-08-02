@@ -6,7 +6,7 @@ subjs = config.subjs;
 accs = [];
 means = [];
 outdir = fullfile(config.outdir_base, 'STATS/CLASSIFICATION/ANN');
-accfilename = ['acc_featSelection_[sync_dens]_KFOLD_' datestr(now,'yymmdd.HHMMSS')];
+accfilename = ['acc_[sync_dens]_KFOLD_' datestr(now,'yymmdd.HHMMSS')];
 for nS = subjs
     config.subjs = nS;
     subjid = sprintf('SUBJ%03d', nS);
@@ -25,8 +25,12 @@ for nS = subjs
                 channels = group.channels;
                 
                 % Feature selection - selecting channels
-                [~, nchs] = intersect(channels, config.channels{nB, 2});
-                nchs = sort(nchs);
+                if config.featsel
+                    [~, nchs] = intersect(channels, config.channels{nB, 2});
+                    nchs = sort(nchs);
+                else
+                    nchs = 1:length(channels);
+                end
                 
                 % Preparing data
                 featEEG.TASK_T = group.data(:).TASK_T(nchs, :, :);
@@ -54,10 +58,11 @@ for nS = subjs
     % Leave one block out
     acctxt = fullfile(subjdir, [accfilename '.txt']);
     %accs = [accs; loocv(feats, net, acctxt)];
-    accs = [accs; kfold_cv(4, 100, feats, net, acctxt)];
+    accs_subj = kfold_cv(4, 100, feats, net, acctxt);
+    accs = [accs; accs_subj];
     
-    means(nS) = mean(accs(nS,:));
-    utils.file.txt_write(acctxt, sprintf('SUBJ%03d [mean] \t %.2f%%\n', nS, means(nS)*100), 0, 1 );
+    utils.file.txt_write(acctxt, sprintf('SUBJ%03d [mean] \t %.2f%%\n', nS, mean(accs_subj)*100), 0, 1 );
+    utils.file.txt_write(acctxt, sprintf('SUBJ%03d [median] \t %.2f%%\n', nS, median(accs_subj)*100), 0, 1 );
     
     clear mFeats net y feats pEEG syncEEG;
 end
