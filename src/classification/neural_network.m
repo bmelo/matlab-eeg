@@ -1,6 +1,6 @@
 function neural_network(config)
 
-patts = {'sync' 'dens'};
+patts = config.patts;
 subjs = config.subjs;
 
 accs = [];
@@ -52,7 +52,11 @@ for nS = subjs
     end
     
     % Testing neural network
-    net = patternnet(20);
+    nHidden = max( [10 length(config.bands)*length(patts)] ); % 10 or num of features
+    net = patternnet(nHidden);
+    %net.divideParam.trainRatio=0.8;
+    %net.divideParam.valRatio=0.2;
+    %net.divideParam.testRatio=0.0;
     feats = prepare_features(mFeats);
     
     % Leave one block out
