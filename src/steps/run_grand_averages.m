@@ -7,22 +7,14 @@ conds = {'TASK_T' 'TASK_A'};
 plot_title = 'Grand Average ERD/ERS';
 
 % Preparing number of plots
-if ischar(filepatt)
-    nFiles = 1;
-    nRows = 2;
-    nCols = 1;
-    filepatt = {filepatt};
-    suffix = '';
-elseif iscell(filepatt)
-    nRows = length(filepatt);
-    nCols = 2;
-    nFiles = nRows;
-    suffix = 'bands';
-end
+nBands = length(config.bands);
+nRows = nBands;
+nCols = 2;
+suffix = 'bands';
 
 fprintf('\n####   GRAND AVERAGE   ####\n\n');
-for k = 1:nFiles
-    file = filepatt{k};
+for k = 1:nBands
+    file = gen_filename( filepatt, config.bands(k,:) );
     group(k) = group_matrix(config, file);
     
     % Plotting matrices
@@ -30,7 +22,7 @@ for k = 1:nFiles
     plot_matrix(group(k).mean.TASK_T, group(k).srate, group(k).channels);
     suptitle( sprintf('%s - TASK_T', label) );
     export_img(save_dir, sprintf('%s - TASK_T.png', file));
-        
+    
     plot_matrix(group(k).mean.TASK_A, group(k).srate, group(k).channels);
     suptitle( sprintf('%s - TASK_A', label) );
     export_img(save_dir, sprintf('%s - TASK_A.png', file));
@@ -41,14 +33,14 @@ figure;
 for chan_num = 1:length(group(1).channels)
     % Preparing figure
     clf('reset');
-    for nH = 1 : (nFiles * length(conds))
+    for nH = 1 : (nBands * length(conds))
         hPlots(nH) = subplot( nRows, nCols, nH );
     end
     
     % Trying to export all images
     chan_name = group(1).channels{chan_num};
-    for nF = 1:nFiles
-        plot_channel( group(nF).matrix, group(nF).mean );
+    for nB = 1:nBands
+        plot_channel( group(nB).matrix, group(nB).mean );
     end
     suptitle( sprintf('%s - %s', plot_title, chan_name) );
     
@@ -64,8 +56,8 @@ end
     function plot_channel( epochs, epochs_mean )
         % General parameters
         nConds = length(conds);
-        label = extract_label(filepatt{nF});
-        start = (nF-1)*nConds + 1;
+        label = extract_label('', config.bands(nB,:));
+        start = (nB-1)*nConds + 1;
         axes = hPlots(start:start+1);
         
         % Plots each condition
@@ -78,7 +70,7 @@ end
             % Plotting
             set(gcf,'CurrentAxes',axes(nC));
             title( sprintf('%s - %s', cond, label) );
-            plot_task( signal', lims * group(nF).srate );
+            plot_task( signal', lims * group(nB).srate );
             hold on;
             plot( signal_mean, 'LineWidth', 3 );
             hold off;

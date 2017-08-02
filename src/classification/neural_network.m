@@ -18,7 +18,7 @@ for nS = subjs
     if( ~exist(featFile, 'file') || utils.Var.get( config, 'force_features') )
         for nP = 1:length(patts)
             for nB = 1:length(config.bands)
-                file  = sprintf('%sEEG_%d_%d', patts{nP}, config.bands(nB,:));
+                file  = gen_filename(patts{nP}, config.bands(nB,:)); % Generates filename
                 
                 group = group_matrix_eeg(config, file);
                 srate = group.srate;

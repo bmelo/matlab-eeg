@@ -11,7 +11,6 @@ clc;
 config = setup('neutral_length', 10);
 
 % Configuring Grand Average
-config.prefix = 'p';
 config.gavg_filter = @erd_ers;
 config.gavg_filter_params = {};
 

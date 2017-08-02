@@ -14,9 +14,9 @@ end
 %% PROC
 % Grand Average
 if Var.get(config.proc, 'grand_average')
-    files = config.proc.gavg_files;
-    for nF = 1 : length(files)
-        run_grand_averages( config, files{nF} );
+    prefixes = config.proc.gavg_prefix;
+    for nF = 1 : length(prefixes)
+        run_grand_averages( config, prefixes{nF} );
     end
 end
 
