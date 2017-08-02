@@ -5,7 +5,7 @@ subjs = config.subjs;
 
 accs = [];
 outdir = fullfile(config.outdir_base, 'STATS/CLASSIFICATION/ANN');
-accfilename = ['acc_[sync_dens]_KFOLD_' datestr(now,'yymmdd.HHMMSS')];
+accfilename = ['acc_[sync]_kfold_' datestr(now,'yymmdd.HHMMSS')];
 for nS = subjs
     config.subjs = nS;
     subjid = sprintf('SUBJ%03d', nS);
@@ -59,10 +59,15 @@ for nS = subjs
     
     feats = prepare_features(mFeats);
     
-    % Leave one block out
     acctxt = fullfile(subjdir, [accfilename '.txt']);
-    accs_subj = [accs; loocv(feats, net, acctxt)];
-    %accs_subj = kfold_cv(4, 100, feats, net, acctxt);
+    
+    % KFOLD
+    if strcmp( config.cross, 'kfold' )
+        accs_subj = kfold_cv(4, 100, feats, net, acctxt);
+    else
+        % Leave one block out
+        accs_subj = [accs; loocv(feats, net, acctxt)];
+    end
     accs = [accs; accs_subj];
     
     utils.file.txt_write(acctxt, sprintf('SUBJ%03d [mean] \t %.2f%%', nS, mean(accs_subj)*100), 0, 1 );

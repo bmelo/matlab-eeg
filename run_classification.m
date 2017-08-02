@@ -24,6 +24,7 @@ config.ignore = {
 };
 
 config.patts = {'sync'};
+config.cross = 'kfold';
 
 % For feature selection
 config.channels = {
