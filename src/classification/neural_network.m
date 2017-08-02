@@ -4,7 +4,6 @@ patts = config.patts;
 subjs = config.subjs;
 
 accs = [];
-means = [];
 outdir = fullfile(config.outdir_base, 'STATS/CLASSIFICATION/ANN');
 accfilename = ['acc_[sync_dens]_KFOLD_' datestr(now,'yymmdd.HHMMSS')];
 for nS = subjs
@@ -62,12 +61,12 @@ for nS = subjs
     
     % Leave one block out
     acctxt = fullfile(subjdir, [accfilename '.txt']);
-    accs = [accs; loocv(feats, net, acctxt)];
+    accs_subj = [accs; loocv(feats, net, acctxt)];
     %accs_subj = kfold_cv(4, 100, feats, net, acctxt);
     accs = [accs; accs_subj];
     
-    utils.file.txt_write(acctxt, sprintf('SUBJ%03d [mean] \t %.2f%%\n', nS, mean(accs_subj)*100), 0, 1 );
-    utils.file.txt_write(acctxt, sprintf('SUBJ%03d [median] \t %.2f%%\n', nS, median(accs_subj)*100), 0, 1 );
+    utils.file.txt_write(acctxt, sprintf('SUBJ%03d [mean] \t %.2f%%', nS, mean(accs_subj)*100), 0, 1 );
+    utils.file.txt_write(acctxt, sprintf('SUBJ%03d [median] \t %.2f%%', nS, median(accs_subj)*100), 0, 1 );
     
     clear mFeats net y feats pEEG syncEEG;
 end
