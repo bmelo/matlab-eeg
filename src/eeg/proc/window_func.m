@@ -1,7 +1,7 @@
 function signalWin = window_func(signal, window, overlap, hfunc, varargin)
 % WINDOW_FUNC -> Do windowing in the signal
 
-if nargin < 4, hfunc = @mean; end
+if nargin < 4, hfunc = @median; end
 if nargin < 5, varargin = {}; end
 
 win_overlap = window-overlap;

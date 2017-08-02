@@ -7,7 +7,7 @@ for subjN = config.subjs
     close all;
     
     subj = sprintf('%s%03d', config.subj_prefix, subjN);
-    subjdir = fullfile( config.outdir_base, subj );
+    subjdir = fullfile( config.preproc_dir, subj );
 
     fprintf('\n####   FEATURE EXTRACTION - %s   ####\n\n', subj);
     EEG = eeg_load( subjdir, 'cEEG' );

@@ -54,15 +54,16 @@ for nS = subjs
     % Testing neural network
     nHidden = max( [10 length(config.bands)*length(patts)] ); % 10 or num of features
     net = patternnet(nHidden);
-    %net.divideParam.trainRatio=0.8;
-    %net.divideParam.valRatio=0.2;
-    %net.divideParam.testRatio=0.0;
+    net.divideParam.trainRatio=0.8;
+    net.divideParam.valRatio=0.199;
+    net.divideParam.testRatio=0.001;
+    
     feats = prepare_features(mFeats);
     
     % Leave one block out
     acctxt = fullfile(subjdir, [accfilename '.txt']);
-    %accs = [accs; loocv(feats, net, acctxt)];
-    accs_subj = kfold_cv(4, 100, feats, net, acctxt);
+    accs = [accs; loocv(feats, net, acctxt)];
+    %accs_subj = kfold_cv(4, 100, feats, net, acctxt);
     accs = [accs; accs_subj];
     
     utils.file.txt_write(acctxt, sprintf('SUBJ%03d [mean] \t %.2f%%\n', nS, mean(accs_subj)*100), 0, 1 );
