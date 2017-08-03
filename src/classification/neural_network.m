@@ -1,11 +1,14 @@
 function neural_network(config)
+import utils.strjoin;
 
 patts = config.patts;
 subjs = config.subjs;
 
 accs = [];
 outdir = fullfile(config.outdir_base, 'STATS/CLASSIFICATION/ANN');
-accfilename = ['acc_[sync]_kfold_' datestr(now,'yymmdd.HHMMSS')];
+strdate = datestr(now,'yymmdd.HHMMSS');
+feats = strjoin(patts, '_');
+accfilename = sprintf('acc_[%s]_%s_%s', feats, config.cross.type, strdate);
 for nS = subjs
     config.subjs = nS;
     subjid = sprintf('SUBJ%03d', nS);
@@ -62,18 +65,18 @@ for nS = subjs
     acctxt = fullfile(subjdir, [accfilename '.txt']);
     
     % KFOLD
-    if strcmp( config.cross, 'kfold' )
-        accs_subj = kfold_cv(4, 100, feats, net, acctxt);
+    if strcmp( config.cross.type, 'montecarlo' )
+        accs_subj = montecarlo(config.cross.k, config.cross.repetitions, feats, net, acctxt);
     else
         % Leave one block out
-        accs_subj = [accs; loocv(feats, net, acctxt)];
+        accs_subj = kfold(config.cross.k, config.cross.repetitions, feats, net, acctxt);
     end
     accs = [accs; accs_subj];
     
     utils.file.txt_write(acctxt, sprintf('SUBJ%03d [mean] \t %.2f%%', nS, mean(accs_subj)*100), 0, 1 );
     utils.file.txt_write(acctxt, sprintf('SUBJ%03d [median] \t %.2f%%', nS, median(accs_subj)*100), 0, 1 );
     
-    clear mFeats net y feats pEEG syncEEG;
+    clear mFeats net feats;
 end
 
 save( fullfile(outdir, [accfilename '.mat']), 'accs');

@@ -1,4 +1,4 @@
-function [ accs ] = kfold_cv( k, repetitions, feats, net, acctxt )
+function [ accs ] = montecarlo( k, repetitions, feats, net, acctxt )
 %KFOLD_CV - k-fold cross-validation
 % Detailed explanation goes here
 
