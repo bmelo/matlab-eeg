@@ -13,7 +13,7 @@ config = struct(...
 
 % Reload config vars with local_params.m script
 if( ~exist( fullfile(pwd, 'local_params.m'), 'file') )
-    error('Informe os parâmetros com o arquivo ''local_params.m''');
+    error('Setup parameters using file ''local_params.m''');
 end
 local_params;
 

@@ -4,11 +4,19 @@ function signalWin = window_func(signal, window, overlap, hfunc, varargin)
 if nargin < 4, hfunc = @median; end
 if nargin < 5, varargin = {}; end
 
+size_data = length(signal);
+% is generating so many plots and wasting a lot of time
+%{
+fprintf('width: %1$d, overlap: %2$d, data size: %3$d, function <a href="matlab:help %4$s">%4$s</a>\n',...
+    window, overlap, size_data, func2str(hfunc) ...
+);
+%}
+
 win_overlap = window-overlap;
 
 % Filling all values
 signalWin = [];
-for k = 1:win_overlap:length(signal)
+for k = 1:win_overlap:size_data
     last = k+win_overlap-1;
     
     if last+overlap > length(signal)

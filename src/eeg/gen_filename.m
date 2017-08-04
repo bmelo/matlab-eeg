@@ -1,7 +1,9 @@
-function outname = gen_filename( prefix, band )
+function outname = gen_filename( suffix, band )
 %GEN_FILENAME
-%   GEnerates filename to be used in this tool
-outname = sprintf('%sEEG_%d_%d', prefix, band);
+%   Generates filename to be used in this tool
+
+if ~isempty(suffix), suffix = ['_' suffix]; end
+
+outname = [sprintf('%d_%d', band) suffix];
 
 end
-

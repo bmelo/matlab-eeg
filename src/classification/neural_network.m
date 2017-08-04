@@ -19,33 +19,38 @@ for nS = subjs
     % Check if need generate feat file
     if( ~exist(featFile, 'file') || utils.Var.get( config, 'force_features') )
         for nP = 1:length(patts)
+            % Each band
             for nB = 1:length(config.bands)
                 file  = gen_filename(patts{nP}, config.bands(nB,:)); % Generates filename
                 
-                group = group_matrix_eeg(config, file);
+                group = group_matrix_features(config, file);
                 srate = group.srate;
                 channels = group.channels;
                 
-                % Feature selection - selecting channels
-                if config.featsel
-                    [~, nchs] = intersect(channels, config.channels{nB, 2});
-                    nchs = sort(nchs);
-                else
-                    nchs = 1:length(channels);
+                % Each feature
+                for nFeat = 1:length(config.features)
+                    feat = config.features{nFeat};
+                    % Feature selection - selecting channels
+                    if config.featselection
+                        [~, nchs] = intersect(channels, config.channels{nB, 2});
+                        nchs = sort(nchs);
+                    else
+                        nchs = 1:length(channels);
+                    end
+                    
+                    % Preparing data
+                    featEEG.TASK_T = group.(feat).data(:).TASK_T(nchs, :, :);
+                    featEEG.TASK_A = group.(feat).data(:).TASK_A(nchs, :, :);
+                    clear group;
+                    
+                    fileFeats = prepare_matrix( featEEG, srate );
+                    % Preparing matrix to use in classifier
+                    if ~exist('mFeats', 'var')
+                        mFeats = fileFeats;
+                    else
+                        mFeats = [mFeats fileFeats];
+                    end
                 end
-                
-                % Preparing data
-                featEEG.TASK_T = group.data(:).TASK_T(nchs, :, :);
-                featEEG.TASK_A = group.data(:).TASK_A(nchs, :, :);
-                clear group;
-                
-                fileFeats = prepare_matrix( featEEG, srate );
-                % Preparing matrix to use in classifier
-                if ~exist('mFeats', 'var')
-                    mFeats = fileFeats;
-                else
-                    mFeats = [mFeats fileFeats];
-                end                
             end
         end
         save( featFile, 'mFeats' );

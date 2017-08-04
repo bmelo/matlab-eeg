@@ -23,8 +23,12 @@ config.ignore = {
     14, [29 56]
 };
 
-config.patts = {'sync'};
-config.cross = 'kfold';
+config.patts = {'power_feats'};
+config.features = {'median'};
+
+config.cross.type = 'montecarlo';
+config.cross.k = 4; % used in monte carlo
+config.cross.repetitions = 100;
 
 % For feature selection
 config.channels = {
@@ -32,7 +36,7 @@ config.channels = {
     [13 26], {'P3' 'O1' 'O2' 'T7' 'T8' 'P7' 'P8' 'Pz' 'Oz' 'TP9' 'POz' 'P1' 'PO3' 'PO4' 'P5' 'P6' 'TP7' 'TP8' 'PO7' 'PO8' 'FT9' 'CPz'}
     [26 45], {'FT9' 'FT10'}
 };
-config.featsel = 0;
+config.featselection = 0;
 
 neural_network(config);
 %neural_network_intersubjs(config);

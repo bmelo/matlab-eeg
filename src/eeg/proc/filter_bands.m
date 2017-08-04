@@ -6,7 +6,7 @@ function signal = filter_bands( signal, srate, bands )
 [b,a] = butter(4, bands/(srate/2));
 
 % Filtering
-signal = filtfilt(b,a, double(signal));
+signal = filtfilt(b, a, double(signal));
 
 end
 
