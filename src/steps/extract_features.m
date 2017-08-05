@@ -10,49 +10,41 @@ for subjN = config.subjs
     subjdir = fullfile( config.preproc_dir, subj );
     
     fprintf('\n####   FEATURE EXTRACTION - %s   ####\n\n', subj);
-    EEG = eeg_load( subjdir, 'cEEG' );
-    srate = EEG.srate;
     
     %% Spectral Density
     if config.proc.features.density
+        EEG = eeg_load( subjdir, 'cEEG' );
+        srate = EEG.srate;
         for nB = 1:length(config.bands)
             densEEG(nB) = epochs_apply(@window_func, EEG, srate, srate/2, ...
                 @spectral_density, srate, srate, [], config.bands(nB,:));
             sband = sprintf('%d_%d', config.bands(nB, :));
             eeg_save( subjdir, ['densEEG_' sband], densEEG(nB) );
         end
-    end
-    
-    % Working separated by bands (alpha, beta, gamma)
-    bEEG = break_bands(EEG, config.bands);
-    % Two pass - outlier remotion
-    if ~config.debug
-        bEEG = epochs_apply(@remove_outliers, bEEG, srate, srate*.5);
-        bEEG = epochs_apply(@remove_outliers, bEEG, srate, srate*.5);
+        clear EEG;
     end
     
     % Separating each band
+    EEG = eeg_load( subjdir, 'bcEEG' );
+    srate = EEG(1).srate;
     for nB = 1:length(config.bands)
         band = config.bands(nB, :);
         
         %% Electrical activity (EEG)
         overlap  = srate/2;
-        EEGfeats = prepare_features( bEEG(nB), srate, overlap );
+        EEGfeats = prepare_features( EEG(nB), srate, overlap );
         eeg_save( subjdir, gen_filename('eeg_feats', band), EEGfeats );
         
         %% POWER
-        pEEG      = epochs_apply(@power_eeg, bEEG(nB));
+        pEEG      = epochs_apply(@power_eeg, EEG(nB));
         pEEGfeats = prepare_features( pEEG, srate, overlap );
         eeg_save( subjdir, gen_filename('power_feats', band), pEEGfeats );
         
         %% ERD/ERS
-        erdEEG      = epochs_apply(@erd_ers, bEEG, [srate*5 srate*10] );
+        erdEEG      = epochs_apply(@erd_ers, EEG(nB), [srate*5 srate*10] );
         erdEEGfeats = prepare_features( erdEEG, srate, overlap );
         eeg_save( subjdir, gen_filename('erders_feats', band), erdEEGfeats );
     end
-    
-    fprintf('\n\n');
-    clear EEG AUX cEEG bEEG bEEG_erd;
 end
 
 end

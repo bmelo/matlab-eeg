@@ -11,7 +11,7 @@ catch e
 end
 
 % Apply filter
-signal = filtfilt(d, signal);
+signal = filtfilt(d, double(signal));
 
 end
 

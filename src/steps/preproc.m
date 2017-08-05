@@ -7,6 +7,7 @@ for subjN = config.subjs
     
     subj = sprintf('%s%03d', config.subj_prefix, subjN);
     subjdir = fullfile( config.preproc_dir, subj );
+    if ~isdir(subjdir), mkdir(subjdir); end
     
     fprintf('\n####   PREPROC - %s   ####\n\n', subj);
     
@@ -43,6 +44,16 @@ for subjN = config.subjs
     
     % Saving clean EEG
     eeg_save( subjdir, 'cEEG', EEG );
+    
+    % Working separated by bands (alpha, beta, gamma)
+    bEEG = break_bands(EEG, config.bands);
+    % Two pass - outlier remotion
+    if ~config.debug
+        bEEG = epochs_apply(@remove_outliers, bEEG, srate, srate*.5);
+        bEEG = epochs_apply(@remove_outliers, bEEG, srate, srate*.5);
+    end
+    % Saving EEG bands
+    eeg_save( subjdir, 'bcEEG', bEEG );
 end
 
 end
