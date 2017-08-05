@@ -23,7 +23,7 @@ config.ignore = {
     14, [29 56]
 };
 
-config.patts = {'power_feats'};
+config.patts = {'erders_feats'};
 config.features = {'median'};
 
 config.cross.type = 'montecarlo';
