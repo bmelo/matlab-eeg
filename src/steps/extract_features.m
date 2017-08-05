@@ -7,25 +7,26 @@ for subjN = config.subjs
     close all;
     
     subj = sprintf('%s%03d', config.subj_prefix, subjN);
-    subjdir = fullfile( config.preproc_dir, subj );
+    subjdir_in = fullfile( config.preproc_dir, subj );
+    subjdir_out = fullfile( config.outdir_base, 'FEATS', subj );
     
     fprintf('\n####   FEATURE EXTRACTION - %s   ####\n\n', subj);
     
     %% Spectral Density
     if config.proc.features.density
-        EEG = eeg_load( subjdir, 'cEEG' );
+        EEG = eeg_load( subjdir_in, 'cEEG' );
         srate = EEG.srate;
         for nB = 1:length(config.bands)
             densEEG(nB) = epochs_apply(@window_func, EEG, srate, srate/2, ...
                 @spectral_density, srate, srate, [], config.bands(nB,:));
-            sband = sprintf('%d_%d', config.bands(nB, :));
-            eeg_save( subjdir, ['densEEG_' sband], densEEG(nB) );
+            band = config.bands(nB, :);
+            eeg_save( subjdir_out, gen_filename('dens_feats', band), densEEG(nB) );
         end
         clear EEG;
     end
     
     % Separating each band
-    EEG = eeg_load( subjdir, 'bcEEG' );
+    EEG = eeg_load( subjdir_in, 'bcEEG' );
     srate = EEG(1).srate;
     for nB = 1:length(config.bands)
         band = config.bands(nB, :);
@@ -33,17 +34,17 @@ for subjN = config.subjs
         %% Electrical activity (EEG)
         overlap  = srate/2;
         EEGfeats = prepare_features( EEG(nB), srate, overlap );
-        eeg_save( subjdir, gen_filename('eeg_feats', band), EEGfeats );
+        eeg_save( subjdir_out, gen_filename('eeg_feats', band), EEGfeats );
         
         %% POWER
         pEEG      = epochs_apply(@power_eeg, EEG(nB));
         pEEGfeats = prepare_features( pEEG, srate, overlap );
-        eeg_save( subjdir, gen_filename('power_feats', band), pEEGfeats );
+        eeg_save( subjdir_out, gen_filename('power_feats', band), pEEGfeats );
         
         %% ERD/ERS
         erdEEG      = epochs_apply(@erd_ers, EEG(nB), [srate*5 srate*10] );
         erdEEGfeats = prepare_features( erdEEG, srate, overlap );
-        eeg_save( subjdir, gen_filename('erders_feats', band), erdEEGfeats );
+        eeg_save( subjdir_out, gen_filename('erders_feats', band), erdEEGfeats );
     end
 end
 

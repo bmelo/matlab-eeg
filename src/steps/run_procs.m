@@ -14,10 +14,7 @@ end
 %% PROC
 % Grand Average
 if Var.get(config.proc, 'grand_average')
-    prefixes = config.proc.gavg_prefix;
-    for nF = 1 : length(prefixes)
-        run_grand_averages( config, prefixes{nF} );
-    end
+    grand_averages( config, prefixes );
 end
 
 %% STATS
