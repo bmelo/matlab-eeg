@@ -34,12 +34,12 @@ config.cross.repetitions = 100;
 config.featselection = 1;
 
 config.subjs = [1 2 3 8 9];
-config.outdir = 'STATS/CLASSIFICATION/ANN/BANDS';
+config.outdir = 'STATS/CLASSIFICATION/ANN/CHANNELS';
 
 auxchs = load('channels');
 auxchs = auxchs.channels;
-for k=1:length(auxchs)
-    config.prefix = sprintf('%02d_%s_', k, auxchs{k})
+for k=4:31
+    config.prefix = sprintf('%02d_%s_', k, auxchs{k});
     
     config.channels = {
         [8 13],  {auxchs{k}}
