@@ -38,5 +38,11 @@ config.channels = {
 };
 config.featselection = 0;
 
+config.subjs = [1 2 3 8 9];
+config.outdir = 'STATS/CLASSIFICATION/ANN/FEATS';
+config.prefix = '';
+
 neural_network(config);
 %neural_network_intersubjs(config);
+
+

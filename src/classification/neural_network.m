@@ -5,11 +5,11 @@ patts = config.patts;
 subjs = config.subjs;
 
 accs = [];
-outdir = fullfile(config.outdir_base, 'STATS/CLASSIFICATION/ANN');
+outdir = fullfile(config.outdir_base, config.outdir);
 strdate = datestr(now,'yymmdd.HHMMSS');
 strpatts = strjoin(patts, '_');
 feats = strjoin(config.features, '_');
-accfilename = sprintf('acc_[%s]_[%s]_%s_%s', strpatts, feats, config.cross.type, strdate);
+accfilename = sprintf('acc_%s[%s]_[%s]_%s_%s', strpatts, config.prefix, feats, config.cross.type, strdate);
 for nS = subjs
     config.subjs = nS;
     subjid = sprintf('SUBJ%03d', nS);
@@ -19,7 +19,7 @@ for nS = subjs
     % Check if need generate feat file
     for nP = 1:length(patts)
         % Each band
-        for nB = 1:length(config.bands)
+        for nB = 1:size(config.bands, 1)
             file  = gen_filename(patts{nP}, config.bands(nB,:)); % Generates filename
             
             group = group_matrix_features(config, file);
