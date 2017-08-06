@@ -23,11 +23,11 @@ config.ignore = {
     14, [29 56]
 };
 
-config.patts = {'erders_feats'};
-config.features = {'median'};
+config.patts = {'eeg_feats' 'power_feats' 'erders_feats' 'dens_feats'};
+config.features = {'median' 'max' 'min' 'rms' 'std'};
 
 config.cross.type = 'montecarlo';
-config.cross.k = 4; % used in monte carlo
+config.cross.k = 4;
 config.cross.repetitions = 100;
 
 % For feature selection
