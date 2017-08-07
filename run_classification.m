@@ -45,7 +45,9 @@ config.subjs = [14];
 config.outdir = 'STATS/CLASSIFICATION/ANN/FEATS';
 config.prefix = '';
 
-neural_network(config);
+measures = config.measures;
+for nM = 2:length(measures)
+    config.measures = measures(nM);
+    neural_network(config);
+end
 %neural_network_intersubjs(config);
-
-

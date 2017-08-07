@@ -16,8 +16,8 @@ for k = 1:totalN
     
     if ~isfield( EEGfeats, 'data' )
         
-        for nF = 1:length(config.features)
-            feat = config.features{nF};
+        for nF = 1:length(config.measures)
+            feat = config.measures{nF};
             EEG = EEGfeats.(feat);
             adjust_eeg();
             out.(feat).data(k) = matrices(EEG);

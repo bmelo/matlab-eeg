@@ -1,14 +1,14 @@
 function neural_network(config)
 import utils.strjoin;
 
-patts = config.patts;
+patts = config.features;
 subjs = config.subjs;
 
 accs = [];
 outdir = fullfile(config.outdir_base, config.outdir);
 strdate = datestr(now,'yymmdd.HHMMSS');
 strpatts = strjoin(patts, '_');
-feats = strjoin(config.features, '_');
+feats = strjoin(config.measures, '_');
 accfilename = sprintf('acc_%s[%s]_[%s]_%s_%s', config.prefix, strpatts, feats, config.cross.type, strdate);
 for nS = subjs
     config.subjs = nS;
@@ -26,13 +26,13 @@ for nS = subjs
             srate = group.srate;
             channels = group.channels;
             
-            % Each feature
-            for nFeat = 1:length(config.features)
-                feat = config.features{nFeat};
+            % Each measure
+            for nFeat = 1:length(config.measures)
+                feat = config.measures{nFeat};
                 
                 % When feature doesnt exist in a setup
                 if ~isfield( group,  feat)
-                    warning( 'Feature %s not found! Ignoring.', feat );
+                    warning( 'Measure %s not found! Ignoring.', feat );
                     continue
                 end
                 
