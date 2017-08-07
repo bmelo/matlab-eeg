@@ -65,7 +65,7 @@ for nS = subjs
     net.divideParam.trainRatio = .8;
     net.divideParam.valRatio   = .2;
     net.divideParam.testRatio  = 0;
-    net.trainParam.max_fail    = 10;
+    net.trainParam.max_fail    = utils.Var.get( config, 'max_fail', 10);
     net.trainParam.showWindow  = utils.Var.get( config, 'show_window', 1 );
     
     random_classes = utils.Var.get(config, 'random_classes');

@@ -26,9 +26,9 @@ config.ignore = {
 config.patts = {'eeg_feats' 'power_feats' 'erders_feats' 'dens_feats'};
 config.features = {'median' 'max' 'min' 'rms' 'std'};
 
-config.cross.type = 'montecarlo';
-config.cross.k = 4;
-config.cross.repetitions = 100;
+config.cross.type = 'kfold';
+config.cross.k = 16;
+config.cross.repetitions = 6;
 
 % For feature selection
 config.channels = {
@@ -37,12 +37,13 @@ config.channels = {
     [26 45], {'FT9' 'FT10'}
 };
 config.featselection = 0;
-config.random_classes = 1;
+config.random_classes = 0;
 config.show_window = 0;
+config.max_fail = 18;
 
-config.subjs = [1 2 3 8 9];
+config.subjs = [14];
 config.outdir = 'STATS/CLASSIFICATION/ANN/FEATS';
-config.prefix = 'randomized_';
+config.prefix = '';
 
 neural_network(config);
 %neural_network_intersubjs(config);

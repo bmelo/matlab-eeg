@@ -1,4 +1,4 @@
-function run_classification()
+function run_classification_channels()
 % Scripts to manipulate EEG data
 %
 % by Bruno Melo (bruno.raphael@gmail.com)
@@ -30,15 +30,18 @@ config.cross.type = 'montecarlo';
 config.cross.k = 4;
 config.cross.repetitions = 100;
 
-% For feature selection
+config.random_classes = 0;
+config.show_window = 0;
+config.max_fail = 10;
+
+% For feature selection - don't change in this file!
 config.featselection = 1;
 
-config.subjs = [1 2 3 8 9];
 config.outdir = 'STATS/CLASSIFICATION/ANN/CHANNELS';
 
 auxchs = load('channels');
 auxchs = auxchs.channels;
-for k=38:39
+for k=1:63
     config.prefix = sprintf('%02d_%s_', k, auxchs{k});
     
     config.channels = {

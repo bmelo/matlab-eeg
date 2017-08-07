@@ -50,7 +50,7 @@ end
 EEG = epochs_shrink( EEG, 46*srate );
 
 % Removing bad channels
-p_ignore = find( [config.ignore{:,1}] == k );
+p_ignore = find( [config.ignore{:,1}] == subjN );
 if p_ignore
     EEG = ignore_bad_channels( EEG, config.ignore{ p_ignore, 2 } );
 end
