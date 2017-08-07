@@ -21,13 +21,14 @@ for k=1:nEvts
     epoch.end = ceil(EEG.event(k+1).latency);
     epoch.duracao = (epoch.end - epoch.inicio)+1;
     
+    if epoch.duracao < 10
+        continue;
+    end
+    
     first_pt = epoch.inicio - durNeutral;
     last_pt = epoch.end + durNeutral;
     epoch.data = EEG.data(:, first_pt:last_pt );
     
-    if epoch.duracao < 10
-        continue;
-    end
     epoch.evt = evt;
     
     % Neutrals

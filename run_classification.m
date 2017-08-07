@@ -23,8 +23,8 @@ config.ignore = {
     14, [29 56]
 };
 
-config.patts = {'eeg_feats' 'power_feats' 'erders_feats' 'dens_feats'};
-config.features = {'median' 'max' 'min' 'rms' 'std'};
+config.features = {'eeg_feats' 'power_feats' 'erders_feats' 'dens_feats'};
+config.measures = {'median' 'max' 'min' 'rms' 'std'};
 
 config.cross.type = 'kfold';
 config.cross.k = 16;
