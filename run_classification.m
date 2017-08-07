@@ -37,6 +37,7 @@ config.channels = {
     [26 45], {'FT9' 'FT10'}
 };
 config.featselection = 0;
+config.random_classes = 1;
 
 config.subjs = [1 2 3 8 9];
 config.outdir = 'STATS/CLASSIFICATION/ANN/FEATS';

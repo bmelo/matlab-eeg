@@ -38,7 +38,7 @@ config.outdir = 'STATS/CLASSIFICATION/ANN/CHANNELS';
 
 auxchs = load('channels');
 auxchs = auxchs.channels;
-for k=4:31
+for k=38:39
     config.prefix = sprintf('%02d_%s_', k, auxchs{k});
     
     config.channels = {

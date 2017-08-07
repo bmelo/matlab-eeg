@@ -63,11 +63,12 @@ for nS = subjs
     nHidden = max( [10 length(config.bands)*length(patts)] ); % 10 or num of features
     net = patternnet(nHidden);
     net.divideParam.trainRatio = .8;
-    net.divideParam.valRatio   = .199;
-    net.divideParam.testRatio  = .001;
+    net.divideParam.valRatio   = .2;
+    net.divideParam.testRatio  = 0;
     net.trainParam.max_fail    = 10;
     
-    feats = prepare_features(mFeats);
+    random_classes = utils.Var.get(config, 'random_classes');
+    feats = prepare_features(mFeats, random_classes);        
     
     acctxt = fullfile(subjdir, [accfilename '.txt']);
     

@@ -1,4 +1,4 @@
-function [ out ] = prepare_features( data )
+function [ out ] = prepare_features( data, random )
 %PREPARE_FEATURES Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -14,9 +14,19 @@ numN = size(data(1).N, 2);
 numT = size(data(1).T, 2);
 numA = size(data(1).A, 2);
 
-out.classes(1, 1:numN) = 1;
-out.classes(2, numN+1:numN+numT) = 1;
-out.classes(3, end-numA+1:end) = 1;
+% Random class, to see chance result
+if random
+   for rK = 1:3:length(out.classes)
+       randP = randperm(3);
+       out.classes( randP(1), rK ) = 1;
+       out.classes( randP(2), rK+1 ) = 1;
+       out.classes( randP(3), rK+2 ) = 1;
+   end
+else
+    out.classes(1, 1:numN) = 1;
+    out.classes(2, numN+1:numN+numT) = 1;
+    out.classes(3, end-numA+1:end) = 1;
+end
 
 %% Blocks
 n_blocks = 16;
