@@ -7,6 +7,9 @@ out.features = [data(1).N data(1).T data(1).A];
 for nF = 2:length(data)
     out.features = vertcat( out.features, [data(nF).N data(nF).T data(nF).A]);
 end
+% removing NaN values
+lines_notNaN = ~any(isnan(out.features),2);
+out.features = out.features( lines_notNaN,:);
 
 %% Classes
 out.classes = zeros(3, size(out.features,2));
