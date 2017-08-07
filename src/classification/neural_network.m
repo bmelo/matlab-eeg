@@ -66,6 +66,7 @@ for nS = subjs
     net.divideParam.valRatio   = .2;
     net.divideParam.testRatio  = 0;
     net.trainParam.max_fail    = 10;
+    net.trainParam.showWindow  = utils.Var.get( config, 'show_window', 1 );
     
     random_classes = utils.Var.get(config, 'random_classes');
     feats = prepare_features(mFeats, random_classes);        

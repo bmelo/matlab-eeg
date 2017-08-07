@@ -38,6 +38,7 @@ config.channels = {
 };
 config.featselection = 0;
 config.random_classes = 1;
+config.show_window = 0;
 
 config.subjs = [1 2 3 8 9];
 config.outdir = 'STATS/CLASSIFICATION/ANN/FEATS';
