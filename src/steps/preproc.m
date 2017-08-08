@@ -1,5 +1,6 @@
 function preproc(config)
 %PREPROC
+outlier_sd = utils.Var.get(config, 'outlier_sd', 2);
 
 % Do the same for each subject
 for subjN = config.subjs
@@ -39,21 +40,21 @@ for subjN = config.subjs
     EEG = epochs_shrink(EEG); % Same size for all epochs
     
     % Two pass - outlier remotion
-    EEG = epochs_apply(@remove_outliers, EEG, srate, srate*.5);
-    EEG = epochs_apply(@remove_outliers, EEG, srate, srate*.5);
+    EEG = epochs_apply(@remove_outliers, EEG, outlier_sd, srate, srate*.5);
+    EEG = epochs_apply(@remove_outliers, EEG, outlier_sd, srate, srate*.5);
     
     % Saving clean EEG
-    eeg_save( subjdir, 'cEEG', EEG );
+    eeg_save( subjdir, sprintf('cEEG_%d', srate), EEG );
     
     % Working separated by bands (alpha, beta, gamma)
     bEEG = break_bands(EEG, config.bands);
     % Two pass - outlier remotion
     if ~config.debug
-        bEEG = epochs_apply(@remove_outliers, bEEG, srate, srate*.5);
-        bEEG = epochs_apply(@remove_outliers, bEEG, srate, srate*.5);
+        bEEG = epochs_apply(@remove_outliers, bEEG, outlier_sd, srate, srate*.5);
+        bEEG = epochs_apply(@remove_outliers, bEEG, outlier_sd, srate, srate*.5);
     end
     % Saving EEG bands
-    eeg_save( subjdir, 'bcEEG', bEEG );
+    eeg_save( subjdir, sprintf('bcEEG_%d', srate), bEEG );
 end
 
 end

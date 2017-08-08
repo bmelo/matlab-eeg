@@ -17,7 +17,7 @@ for subjN = config.subjs
     
     %% Spectral Density
     if config.proc.features.density
-        EEG = eeg_load( subjdir_in, 'cEEG' );
+        EEG = eeg_load( subjdir_in, sprintf('cEEG_%d', config.srate) );
         srate = EEG.srate;
         for nB = 1:length(config.bands)
             densEEG(nB) = epochs_apply(@window_func, EEG, srate, srate/2, ...
@@ -30,7 +30,7 @@ for subjN = config.subjs
     
     % Separating each band
     if config.proc.features.erders
-        EEG = eeg_load( subjdir_in, 'bcEEG' );
+        EEG = eeg_load( subjdir_in, sprintf('bcEEG_%d', config.srate) );
         srate = EEG(1).srate;
         for nB = 1:length(config.bands)
             band = config.bands(nB, :);
