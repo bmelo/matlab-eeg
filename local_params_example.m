@@ -30,8 +30,12 @@ config.preproc.filter = [6 48];
 
 % Proc steps
 config.proc.features.active = 1;
-config.proc.features.erders = 1;
-config.proc.features.density = 1;
+config.proc.features.erders = 0;
+config.proc.features.power = 0;
+config.proc.features.power_rel = 1;
+config.proc.features.eeg = 0;
+config.proc.features.density = 0;
+
 config.proc.grand_average = 0;
 config.proc.gavg_prefix = {'p'};
 

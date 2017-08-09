@@ -10,25 +10,28 @@ clc;
 %% Setup of processing
 config = setup('neutral_length', 10);
 
+%all_ignore = [1 2 13 14 15 16 26 30 38 49 52 55 56 57 59 61];
+%all_ignore = [];
 config.ignore = {
-    1,  [48]
-    2,  [18 48]
+    1,  [all_ignore 48]
+    2,  [all_ignore 18 48]
     3,  [49]
     4,  [9 10 20 31 44 45 54 59]
     5,  [31 34]
     6,  [32 41 63]
-    9,  [48]
+    8,  [all_ignore]
+    9,  [all_ignore 48]
     10, [13 59]
     13, [27]
     14, [29 56]
 };
 
-config.features = {'eeg_feats' 'power_feats' 'erders_feats' 'dens_feats'};
-config.measures = {'median' 'max' 'min' 'rms' 'std'};
+config.patts = {'power_rel_feats' 'erders_feats' 'dens_feats'};
+config.features = {'median'};
 
 config.cross.type = 'kfold';
 config.cross.k = 16;
-config.cross.repetitions = 6;
+config.cross.repetitions = 5;
 
 % For feature selection
 config.channels = {
@@ -39,9 +42,9 @@ config.channels = {
 config.featselection = 0;
 config.random_classes = 0;
 config.show_window = 0;
-config.max_fail = 18;
+config.max_fail = 10;
 
-config.subjs = [14];
+config.subjs = [1 2 8 9];
 config.outdir = 'STATS/CLASSIFICATION/ANN/FEATS';
 config.prefix = '';
 

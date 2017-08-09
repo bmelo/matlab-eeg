@@ -29,26 +29,40 @@ for subjN = config.subjs
     end
     
     % Separating each band
-    if config.proc.features.erders
+    feats = config.proc.features;
+    if feats.erders || feats.power || feats.power_rel || feats.eeg
         EEG = eeg_load( subjdir_in, sprintf('bcEEG_%d', config.srate) );
         srate = EEG(1).srate;
         for nB = 1:length(config.bands)
             band = config.bands(nB, :);
+            overlap  = srate/2;
 
             %% Electrical activity (EEG)
-            overlap  = srate/2;
-            EEGfeats = prepare_features( EEG(nB), srate, overlap );
-            eeg_save( subjdir_out, gen_filename('eeg_feats', band), EEGfeats );
+            if feats.eeg
+                EEGfeats = prepare_measures( EEG(nB), srate, overlap );
+                eeg_save( subjdir_out, gen_filename('eeg_feats', band), EEGfeats );
+            end
 
             %% POWER
-            pEEG      = epochs_apply(@power_eeg, EEG(nB));
-            pEEGfeats = prepare_features( pEEG, srate, overlap );
-            eeg_save( subjdir_out, gen_filename('power_feats', band), pEEGfeats );
+            if feats.power
+                pEEG      = epochs_apply(@power_eeg, EEG(nB));
+                pEEGfeats = prepare_measures( pEEG, srate, overlap );
+                eeg_save( subjdir_out, gen_filename('power_feats', band), pEEGfeats );
+            end
+            
+            %% POWER
+            if feats.power_rel
+                pEEG      = epochs_apply(@power_rel_eeg, EEG(nB));
+                pEEGfeats = prepare_measures( pEEG, srate, overlap );
+                eeg_save( subjdir_out, gen_filename('power_rel_feats', band), pEEGfeats );
+            end
 
             %% ERD/ERS
-            erdEEG      = epochs_apply(@erd_ers, EEG(nB), [srate*5 srate*10] );
-            erdEEGfeats = prepare_features( erdEEG, srate, overlap );
-            eeg_save( subjdir_out, gen_filename('erders_feats', band), erdEEGfeats );
+            if feats.erders
+                erdEEG      = epochs_apply(@erd_ers, EEG(nB), [srate*5 srate*10] );
+                erdEEGfeats = prepare_measures( erdEEG, srate, overlap );
+                eeg_save( subjdir_out, gen_filename('erders_feats', band), erdEEGfeats );
+            end
         end
     end
 end
@@ -56,13 +70,13 @@ end
 end
 
 % Preparing features
-function feats = prepare_features( EEG, srate, overlap )
+function feature = prepare_measures( EEG, srate, overlap )
 
-feats.median = epochs_apply(@window_func, EEG, srate, overlap);
-feats.mean   = epochs_apply(@window_func, EEG, srate, overlap, @mean);
-feats.rms    = epochs_apply(@window_func, EEG, srate, overlap, @utils.math.rms);
-feats.max    = epochs_apply(@window_func, EEG, srate, overlap, @max);
-feats.min    = epochs_apply(@window_func, EEG, srate, overlap, @min);
-feats.std    = epochs_apply(@window_func, EEG, srate, overlap, @std);
+feature.median = epochs_apply(@window_func, EEG, srate, overlap);
+feature.mean   = epochs_apply(@window_func, EEG, srate, overlap, @mean);
+feature.rms    = epochs_apply(@window_func, EEG, srate, overlap, @utils.math.rms);
+feature.max    = epochs_apply(@window_func, EEG, srate, overlap, @max);
+feature.min    = epochs_apply(@window_func, EEG, srate, overlap, @min);
+feature.std    = epochs_apply(@window_func, EEG, srate, overlap, @std);
 
 end

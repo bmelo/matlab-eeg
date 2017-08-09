@@ -23,12 +23,15 @@ config.ignore = {
     14, [29 56]
 };
 
-config.patts = {'eeg_feats' 'power_feats' 'erders_feats' 'dens_feats'};
-config.features = {'median' 'max' 'min' 'rms' 'std'};
+config.features = {'eeg_feats' 'power_feats' 'erders_feats' 'dens_feats'};
+%config.features = {'eeg_feats'};
+config.measures = {'median' 'max' 'min' 'rms' 'std'};
+config.outdir = 'STATS/CLASSIFICATION/ANN/CHANNELS/FULL_ALLSUBJS';
+%config.outdir = 'STATS/CLASSIFICATION/ANN/CHANNELS/EEG';
 
-config.cross.type = 'montecarlo';
-config.cross.k = 4;
-config.cross.repetitions = 100;
+config.cross.type = 'kfold';
+config.cross.k = 16;
+config.cross.repetitions = 5;
 
 config.random_classes = 0;
 config.show_window = 0;
@@ -37,11 +40,10 @@ config.max_fail = 10;
 % For feature selection - don't change in this file!
 config.featselection = 1;
 
-config.outdir = 'STATS/CLASSIFICATION/ANN/CHANNELS';
-
 auxchs = load('channels');
 auxchs = auxchs.channels;
-for k=1:63
+config.subjs = 1:14;
+for k=30:63
     config.prefix = sprintf('%02d_%s_', k, auxchs{k});
     
     config.channels = {
