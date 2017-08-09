@@ -24,7 +24,7 @@ for nR = 1:repetitions
         accs(acc_idx) = acc;
         %utils.imgs.print_fig( fullfile( config.imgsexport_dir, sprintf('SUBJ%03d.png', nS) ) );
         acc_txt = sprintf('[%d] \t %.2f%% \t %d \t %d', acc_idx, acc*100, sum(s_idx), sum(~s_idx));
-        utils.file.txt_write(acctxt, acc_txt, 0, 1);
+        utils.file.txt_write(acctxt, acc_txt, 0, 0);
         clear net;
         net = base_net;
     end

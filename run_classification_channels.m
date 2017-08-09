@@ -23,11 +23,9 @@ config.ignore = {
     14, [29 56]
 };
 
-config.features = {'eeg_feats' 'power_feats' 'erders_feats' 'dens_feats'};
-%config.features = {'eeg_feats'};
-config.measures = {'median' 'max' 'min' 'rms' 'std'};
-config.outdir = 'STATS/CLASSIFICATION/ANN/CHANNELS/FULL_ALLSUBJS';
-%config.outdir = 'STATS/CLASSIFICATION/ANN/CHANNELS/EEG';
+config.features = {'power_rel_feats' 'erders_feats'};
+config.measures = {'median'};
+config.outdir = 'STATS/CLASSIFICATION/ANN/CHANNELS/POWER+ERDERS';
 
 config.cross.type = 'kfold';
 config.cross.k = 16;
@@ -43,7 +41,8 @@ config.featselection = 1;
 auxchs = load('channels');
 auxchs = auxchs.channels;
 config.subjs = 1:14;
-for k=30:63
+config.subjs = [1 2 8 9];
+for k=1:63
     config.prefix = sprintf('%02d_%s_', k, auxchs{k});
     
     config.channels = {

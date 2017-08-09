@@ -11,7 +11,7 @@ clc;
 config = setup('neutral_length', 10);
 
 %all_ignore = [1 2 13 14 15 16 26 30 38 49 52 55 56 57 59 61];
-%all_ignore = [];
+all_ignore = [];
 config.ignore = {
     1,  [all_ignore 48]
     2,  [all_ignore 18 48]
@@ -26,8 +26,8 @@ config.ignore = {
     14, [29 56]
 };
 
-config.patts = {'power_rel_feats' 'erders_feats' 'dens_feats'};
-config.features = {'median'};
+config.features = {'power_rel_feats' 'erders_feats' 'dens_feats'};
+config.measures = {'median'};
 
 config.cross.type = 'kfold';
 config.cross.k = 16;
@@ -48,9 +48,5 @@ config.subjs = [1 2 8 9];
 config.outdir = 'STATS/CLASSIFICATION/ANN/FEATS';
 config.prefix = '';
 
-measures = config.measures;
-for nM = 2:length(measures)
-    config.measures = measures(nM);
-    neural_network(config);
-end
+neural_network(config);
 %neural_network_intersubjs(config);
