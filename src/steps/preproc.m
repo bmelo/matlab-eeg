@@ -44,17 +44,24 @@ for subjN = config.subjs
     EEG = epochs_apply(@remove_outliers, EEG, outlier_sd, srate, srate*.5);
     
     % Saving clean EEG
-    eeg_save( subjdir, sprintf('cEEG_%d', srate), EEG );
+    name_srate = sprintf('cEEG_%d', srate);
+    eeg_save( subjdir, name_srate, EEG );
     
-    % Working separated by bands (alpha, beta, gamma)
-    bEEG = break_bands(EEG, config.bands);
-    % Two pass - outlier remotion
-    if ~config.debug
-        bEEG = epochs_apply(@remove_outliers, bEEG, outlier_sd, srate, srate*.5);
-        bEEG = epochs_apply(@remove_outliers, bEEG, outlier_sd, srate, srate*.5);
+    % Saving each band
+    for nB = 1:size(config.bands, 1)
+        band = config.bands(nB, :);
+        bEEG = epochs_apply( @filter_bands, EEG, EEG.srate, band );
+        bEEG.ext.bands = band;
+        
+        % Two pass - outlier remotion
+        if ~config.debug
+            bEEG = epochs_apply(@remove_outliers, bEEG, outlier_sd, srate, srate*.5);
+            bEEG = epochs_apply(@remove_outliers, bEEG, outlier_sd, srate, srate*.5);
+        end
+        
+        % Saving EEG bands
+        eeg_save( subjdir, gen_filename('cEEG', band, srate), bEEG );
     end
-    % Saving EEG bands
-    eeg_save( subjdir, sprintf('bcEEG_%d', srate), bEEG );
 end
 
 end
