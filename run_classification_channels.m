@@ -23,9 +23,10 @@ config.ignore = {
     14, [29 56]
 };
 
-config.features = {'power_rel_feats' 'erders_feats'};
-config.measures = {'median'};
-config.outdir = 'STATS/CLASSIFICATION/ANN/CHANNELS/POWER+ERDERS';
+%config.features = {'power_rel_feats' 'erders_feats'};
+config.features = {'eeg_feats'};
+config.measures = {'median' 'max' 'min' 'rms' 'std'};
+config.outdir = 'STATS/CLASSIFICATION/ANN/CHANNELS/EEG';
 
 config.cross.type = 'kfold';
 config.cross.k = 16;
