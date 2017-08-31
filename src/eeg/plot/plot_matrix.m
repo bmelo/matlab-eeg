@@ -80,6 +80,7 @@ figure;
 set(gcf, 'Position', get(0,'Screensize')); % Maximize figure.
 for chan_num = 1:length(channels)
     chan_name = channels{chan_num};
+    chan_name = regexprep(chan_name,'0(?=\d)', 'O'); % Fixing zeros placed instead letter O
     chan_pos = strcmp({positions{:,1}}, chan_name);
     
     pC = positions{ chan_pos, 2 };

@@ -1,6 +1,6 @@
 function [EEG, AUX] = prepare_eeg( config, subject, srate )
 
-outdir = fullfile(config.outdir_base, subject);
+outdir = fullfile(config.preproc_dir, subject);
 eeg_file_resample = fullfile(outdir, sprintf('eeg_%d.mat', srate));
 chs_AUX = [32 65:68];
 %% Loading EEG and AUX

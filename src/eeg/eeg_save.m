@@ -10,4 +10,3 @@ save(fullfilename, 'EEG', '-v7.3');
 print_done(s);
 
 end
-

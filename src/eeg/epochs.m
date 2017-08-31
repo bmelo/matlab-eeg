@@ -1,4 +1,4 @@
-function epochs = epocas( EEG )
+function epochs = epochs( EEG )
 
 codes = {
     'NEUTRAL_T', 'S  1'

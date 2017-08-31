@@ -1,4 +1,4 @@
-function run_eeg()
+function run_eeg_procs()
 % Scripts to manipulate EEG data
 %
 % by Bruno Melo (bruno.raphael@gmail.com)
@@ -11,11 +11,6 @@ clc;
 config = setup('neutral_length', 10);
 
 % Configuring Grand Average
-config.prefix = 'p';
-%config.gavg_files = {'pEEG_global', {'pEEG_8_13' 'pEEG_13_26' 'pEEG_26_45'}};
-%config.gavg_files = {{'pEEG_8_13' 'pEEG_13_26' 'pEEG_26_45'}};
-%config.gavg_files = {'pEEG_global'};
-config.gavg_files = {'pEEG_global', {'pEEG_8_13' 'pEEG_13_26' 'pEEG_26_45'}};
 config.gavg_filter = @erd_ers;
 config.gavg_filter_params = {};
 
@@ -30,6 +25,7 @@ config.ignore = {
     10, [13 59]
     13, [27]
     14, [29 56]
+    15, [27]
 };
 
 % Executing according to config variable

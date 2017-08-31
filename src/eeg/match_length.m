@@ -6,11 +6,12 @@ if nargin < 2, direction = 0; end
 if nargin < 3 || duracao == 0
     duracao = min([signal(:).duracao]); 
 end
+duracao = floor( duracao );
 
 % Each piece
 for p=1:length(signal)
-    start_pt = signal(p).idx_data(1);
-    end_pt   = signal(p).idx_data(end);
+    start_pt = signal(p).lims_data(1);
+    end_pt   = signal(p).lims_data(2);
     if duracao == size(signal(p).data,2)
         continue;
     end
@@ -25,5 +26,5 @@ for p=1:length(signal)
     
     %Updates duracao
     signal(p).duracao = duracao;
-    signal(p).idx_data = start_pt : (start_pt + duracao - 1);
+    signal(p).lims_data = [start_pt (start_pt + duracao - 1)];
 end

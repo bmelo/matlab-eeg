@@ -5,11 +5,6 @@
 
 
 %% Printing report
-fprintf('\n\nPower Global')
-print_report( results.stats.global.power, results.channels );
-fprintf('\n\nERD/ERS Global')
-print_report( results.stats.global.sync, results.channels );
-
 fprintf('\n\nPower [8-13]')
 print_report( results.stats.bands.power(1), results.channels );
 fprintf('\n\nERD/ERS [8-13]')

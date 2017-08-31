@@ -26,6 +26,7 @@ run( fullfile(config.vendors_dir, 'matlab-utils/libsetup.m'));
 utils.path.includeSubdirs({
     'vendors/eeglab-14.1'
     'vendors/cosmomvpa'
+    'vendors/bcilab'
     'src'
 });
 

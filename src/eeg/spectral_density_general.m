@@ -1,18 +1,17 @@
-function [varargout] = spectral_density( y, limits, label )
+function [varargout] = spectral_density( y, srate, limits, label )
+
+if nargin < 4, label = ''; end
 
 if ( ~exist('limits', 'var') || isempty(limits) )
     limits = [8 10; 10 13; 13 20; 20 26; 26 30; 30 45];
 end
 
-%Removing the mean
+% demeaning
 y = y - mean(y);
-
-%window = 128;
-Fs = 500;
 
 %%pxx = pwelch( y, 4 );
 warning('OFF', 'eeglab:toolbox:absent');
-[Pxx, f] = pwelch(y,512,[],[],Fs);
+[Pxx, f] = pwelch(y, srate, [], [], srate);
 warning('ON', 'eeglab:toolbox:absent');
 
 %Ajustando valores

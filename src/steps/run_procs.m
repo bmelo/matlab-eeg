@@ -1,31 +1,30 @@
 function run_procs(config )
 import utils.Var
 
-%% Preproc
-if Var.get(config, 'do_preproc')
+%% PREPROC
+if Var.get(config.preproc, 'active')
     preproc(config);
 end
 
 %% Visual Check
-if Var.get(config, 'do_visual_check')
-    visual_check(config);
+if Var.get(config.proc.features, 'active')
+    extract_features(config);
 end
 
-%% Grand Average
-if Var.get(config, 'do_grand_average')
-    files = config.gavg_files;
-    for nF = 1 : length(files)
-        grand_average( config, files{nF} );
-    end
+%% PROC
+% Grand Average
+if Var.get(config.proc, 'grand_average')
+    grand_averages( config, prefixes );
 end
 
-%% FIRST LEVEL
-if Var.get(config, 'do_first_level')
+%% STATS
+% FIRST LEVEL
+if Var.get(config.stats, 'first_level')
     first_level(config);
 end
 
-%% Group processing
-if Var.get(config, 'do_second_level')
+% Group processing
+if Var.get(config.stats, 'second_level')
     second_level(config);
 end
 

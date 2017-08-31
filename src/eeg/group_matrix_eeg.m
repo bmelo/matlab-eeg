@@ -10,7 +10,7 @@ for k = 1:totalN
     subjN = config.subjs(k);
     
     subj = sprintf('%s%03d', config.subj_prefix, subjN);
-    subjdir = fullfile( config.outdir_base, subj );
+    subjdir = fullfile( config.preproc_dir, subj );
     
     EEG = eeg_load( subjdir, filename );
     % Validation

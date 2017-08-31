@@ -1,54 +1,67 @@
 function preproc(config)
+%PREPROC
+outlier_sd = utils.Var.get(config, 'outlier_sd', 2);
 
 % Do the same for each subject
 for subjN = config.subjs
     close all;
     
     subj = sprintf('%s%03d', config.subj_prefix, subjN);
-    subjdir = fullfile( config.outdir_base, subj );
+    subjdir = fullfile( config.preproc_dir, subj );
+    if ~isdir(subjdir), mkdir(subjdir); end
     
     fprintf('\n####   PREPROC - %s   ####\n\n', subj);
     
-    %% EEG just filtered [7 45] Hz
     % Loading EEG/AUX - downsample to 500Hz
     [EEG, ~] = prepare_eeg(config, subj, config.srate);
     
     % removing some channels
     EEG = pop_select( EEG, 'channel', config.chs);
     
-    EEG.ext.epochs = epocas_v2( EEG );
+    % rereference to Cz
+    %EEG = pop_reref( EEG, 18 );
+    
+    % Notch filter
+    notch_fs = utils.Var.get(config.preproc, 'notch');
+    if notch_fs > 0
+        EEG = channels_apply(@notch_filter, EEG, EEG.srate, notch_fs);
+    end
+    
+    % Filtering High and Low pass filter
+    EEG = channels_apply(@filter_bands, EEG, EEG.srate, config.preproc.filter);
+    
+    % Epoching signal - using markers
+    EEG.ext.epochs = epochs_v2( EEG );
     EEG.times = [];
     EEG.data = [];
     
     % Manipulating signal
-    EEG = epochs_shrink(EEG); % Same size for all epochs
     srate = EEG.srate;
-    cEEG = epochs_apply(@filter_bands, EEG, srate, [7 45]);
-    cEEG = epochs_apply(@remove_outliers, cEEG, srate, 200);
-    pEEG = epochs_apply(@power_eeg, cEEG);
-    erdEEG = epochs_apply(@erd_ers, cEEG, srate, floor(srate/5), [srate*5 srate*10] );
+    EEG = epochs_shrink(EEG); % Same size for all epochs
     
-    % Saving global
-    eeg_save( subjdir, 'pEEG_global', pEEG );
-    eeg_save( subjdir, 'syncEEG_global', erdEEG );
+    % Two pass - outlier remotion
+    EEG = epochs_apply(@remove_outliers, EEG, outlier_sd, srate, srate*.5);
+    EEG = epochs_apply(@remove_outliers, EEG, outlier_sd, srate, srate*.5);
     
-    %% Working separated by bands (alpha, beta, gamma)
-    clear pEEG erdEEG cEEG;
-    bEEG = break_bands(EEG, config.bands);
-    bEEG = epochs_apply(@remove_outliers, bEEG, srate, 200);
-    clear EEG;
-    pEEG = epochs_apply(@power_eeg, bEEG);
-    erdEEG = epochs_apply(@erd_ers, bEEG, srate, floor(srate/5), [srate*5 srate*10] );
+    % Saving clean EEG
+    name_srate = sprintf('cEEG_%d', srate);
+    eeg_save( subjdir, name_srate, EEG );
     
-    % Saving bands
-    for nB = 1:length(config.bands)
-        sband = sprintf('%d_%d', config.bands(nB, :));
-        eeg_save( subjdir, ['pEEG_' sband], pEEG(nB) );
-        eeg_save( subjdir, ['syncEEG_' sband], erdEEG(nB) );
+    % Saving each band
+    for nB = 1:size(config.bands, 1)
+        band = config.bands(nB, :);
+        bEEG = epochs_apply( @filter_bands, EEG, EEG.srate, band );
+        bEEG.ext.bands = band;
+        
+        % Two pass - outlier remotion
+        if ~config.debug
+            bEEG = epochs_apply(@remove_outliers, bEEG, outlier_sd, srate, srate*.5);
+            bEEG = epochs_apply(@remove_outliers, bEEG, outlier_sd, srate, srate*.5);
+        end
+        
+        % Saving EEG bands
+        eeg_save( subjdir, gen_filename('cEEG', band, srate), bEEG );
     end
-    
-    fprintf('\n\n');
-    clear EEG AUX cEEG bEEG bEEG_erd;
 end
 
 end
