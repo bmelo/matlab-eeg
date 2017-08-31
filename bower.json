@@ -15,9 +15,12 @@
     "data"
   ],
   "dependencies": {
-	  "matlab-utils": "*",
+	"matlab-utils": "*",
     "eeglab-14.1": "https://bmelo@bitbucket.org/sccn_eeglab/eeglab.git#14.1.0b",
-	  "cosmomvpa": "git://github.com/InstitutoDOr/CoSMoMVPA.git#1.2.0-beta",
-    "xlwrite": "https://bmelo@bitbucket.org/instituto-dor/matlab-xlwrite.git#^1.9.0"
+	"cosmomvpa": "git://github.com/InstitutoDOr/CoSMoMVPA.git#1.2.0-beta",
+    "xlwrite": "https://bmelo@bitbucket.org/instituto-dor/matlab-xlwrite.git#^1.9.0",
+    "bcilab": "git://github.com/bmelo/BCILAB#1.2.2-dev",
+    "automagic": "git://github.com/amirrezaw/automagic#^1.4.2",
+    "prep-pipeline": "git://github.com/bmelo/EEG-Clean-Tools#^0.55"
   }
 }

@@ -36,8 +36,11 @@ for subjN = config.subjs
             band = config.bands(nB, :);
             fname = gen_filename('cEEG', band, srate);
             EEG = eeg_load( subjdir_in, fname );
+            
+            % Laplacian filter
+            EEG = laplacian_filter(EEG);            
+            
             overlap  = srate/2;
-
             %% Electrical activity (EEG)
             if feats.eeg
                 EEGfeats = prepare_measures( EEG, srate, overlap );
