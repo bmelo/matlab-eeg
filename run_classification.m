@@ -10,8 +10,10 @@ clc;
 %% Setup of processing
 config = setup('neutral_length', 10);
 
-config.subjs = [1 2 8 9];
-config.outdir = 'STATS/CLASSIFICATION/ANN/FEATS';
+%config.subjs = [1 2 8 9];
+config.features = {'l_power_rel_feats' 'l_erders_feats'};
+config.bands = [8 13; 13 26];
+config.outdir = 'STATS/CLASSIFICATION/ANN/FEATS-LAPLACE-ALPHA+BETA';
 config.prefix = '';
 
 neural_network(config);

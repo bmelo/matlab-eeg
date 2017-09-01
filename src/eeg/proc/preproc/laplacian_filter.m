@@ -1,6 +1,9 @@
-function [ EEG ] = laplacian_filter( EEG )
+function [ EEG ] = laplacian_filter( EEG, neighs )
 %LAPLACIAN_FILTER Summary of this function goes here
 %   Detailed explanation goes here
+
+if nargin < 2, neighs = 8; end
+
 load('channels_location');
 
 % Reading data
@@ -11,7 +14,7 @@ for cond = fields(EEG.ext.epochs)'
     for n = 1:length(EEG.ext.epochs.(s_cond))
         
         EEG.data = EEG.ext.epochs.(s_cond)(n).data;
-        auxEEG = flt_laplace(EEG);
+        auxEEG = flt_laplace(EEG, neighs);
         EEG.ext.epochs.(s_cond)(n).data = auxEEG.data;
         
     end
