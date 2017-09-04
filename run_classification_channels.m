@@ -10,10 +10,10 @@ clc;
 %% Setup of processing
 config = setup('neutral_length', 10);
 
-config.features = {'l_power_rel_feats' 'l_erders_feats'};
-%config.features = {'eeg_feats'};
+config.features = {'power_rel_feats' 'erders_feats'};
+%config.features = {'l_eeg_feats'};
 config.measures = {'median'};
-config.outdir = 'STATS/CLASSIFICATION/ANN/CHANNELS/EEG';
+config.outdir = 'STATS/CLASSIFICATION/ANN/CHANNELS/EEG-prev';
 
 config.bands = [8 13; 13 26];
 
@@ -21,11 +21,7 @@ config.cross.type = 'kfold';
 config.cross.k = 8;
 config.cross.repetitions = 5;
 
-config.random_classes = 0;
-config.show_window = 0;
-config.max_fail = 10;
-
-auxchs = load('channels');
+auxchs = load('extra/channels');
 auxchs = auxchs.channels;
 config.subjs = 1:14;
 config.subjs = [1 2 8 9];
@@ -35,7 +31,6 @@ for k=1:63
     config.channels = {
         [8 13],  {auxchs{k}}
         [13 26], {auxchs{k}}
-        [26 45], {auxchs{k}}
     };
     
     neural_network(config);

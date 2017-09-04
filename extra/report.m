@@ -1,6 +1,7 @@
-function medians = report()
+function medians = report( folder )
 
-files = sort( utils.resolve_names('*.mat') );
+patt_results = fullfile( folder, '*.mat' );
+files = sort( utils.resolve_names( patt_results ) );
 medians = [];
 
 for nF = 1:length(files)
@@ -29,7 +30,7 @@ figure;
 medians( medians < .34 ) = NaN;
 means = nanmean( medians, 2 );
 means(ignore) = NaN;
-limits = [.33 .55];
-load('E:\Users\Bruno\Documentos\projetos\doutorado\EEG-scripts\channels_location');
+limits =  [min(means) max(means)];
+load('channels_location');
 topoplot(means, chanlocs, 'maplimits', limits, 'electrodes', 'ptsnumbers'); 
 cbar('vert',1, limits);
