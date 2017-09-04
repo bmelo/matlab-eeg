@@ -1,5 +1,7 @@
-function neural_network(config)
+function accs = neural_network(config, save_out)
 import utils.strjoin;
+
+if nargin < 2, save_out = true; end
 
 patts = config.features;
 subjs = config.subjs;
@@ -88,6 +90,8 @@ for nS = subjs
     clear mFeats net feats;
 end
 
-save( fullfile(outdir, [accfilename '.mat']), 'accs', 'config');
+if save_out
+    save( fullfile(outdir, [accfilename '.mat']), 'accs', 'config');
+end
 
 end
