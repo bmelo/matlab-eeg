@@ -16,7 +16,7 @@ for nS = subjs
     config.subjs = nS;
     subjid = sprintf('SUBJ%03d', nS);
     subjdir = fullfile(outdir, subjid);
-    if ~isdir(subjdir), mkdir(subjdir); end
+    if ~isdir(subjdir) && save_out, mkdir(subjdir); end
     
     % Check if need generate feat file
     for nP = 1:length(patts)
@@ -84,8 +84,10 @@ for nS = subjs
     end
     accs = [accs; accs_subj];
     
-    utils.file.txt_write(acctxt, sprintf('SUBJ%03d [mean] \t %.2f%%', nS, mean(accs_subj)*100), 0, 1 );
-    utils.file.txt_write(acctxt, sprintf('SUBJ%03d [median] \t %.2f%%', nS, median(accs_subj)*100), 0, 1 );
+    if save_out
+        utils.file.txt_write(acctxt, sprintf('SUBJ%03d [mean] \t %.2f%%', nS, mean(accs_subj)*100), 0, 1 );
+        utils.file.txt_write(acctxt, sprintf('SUBJ%03d [median] \t %.2f%%', nS, median(accs_subj)*100), 0, 1 );
+    end
     
     clear mFeats net feats;
 end

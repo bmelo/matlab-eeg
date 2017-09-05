@@ -10,10 +10,10 @@ clc;
 %% Setup of processing
 config = setup('neutral_length', 10);
 
-config.features = {'l_power_rel_feats' 'l_erders_feats'};
+config.features = {'power_rel_feats' 'erders_feats'};
 %config.features = {'l_eeg_feats'};
 config.measures = {'median'};
-config.outdir = 'STATS/CLASSIFICATION/ANN/CHANNELS/EEG';
+config.outdir = 'STATS/CLASSIFICATION/ANN/CHANNELS/EEG-not-laplace';
 
 config.bands = [8 13; 13 26];
 
