@@ -1,4 +1,3 @@
-function run_classification_bands()
 % Scripts to manipulate EEG data
 %
 % by Bruno Melo (bruno.raphael@gmail.com)

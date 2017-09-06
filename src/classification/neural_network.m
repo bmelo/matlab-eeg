@@ -42,15 +42,12 @@ for nS = subjs
                 if config.featselection
                     [~, nchs] = intersect(channels, config.channels{nB, 2});
                     nchs = sort(nchs);
-                    % Checking if all channels were found
+                    
+                    % Checking if all selected channels have been found
                     if length(config.channels{nB, 2}) ~= length(nchs)
-                        selchs = sort(config.channels{nB, 2});
-                        foundchs = sort(channels(nchs));
-                        
-                        warning('ann:featselec:notfound', 'Some channels not found! [%s] vs [%s]', ...
-                        sprintf('%s ', foundchs{:}), ...
-                        sprintf('%s ', selchs{:}) ...
-                        );
+                        notfound = setdiff(config.channels{nB, 2}, channels);
+                        notfoundlist = sprintf('%s ', notfound{:});
+                        warning('ann:featselec:notfound', 'Some channels were not found: %s', notfoundlist );
                     end
                 else
                     nchs = 1:length(channels);

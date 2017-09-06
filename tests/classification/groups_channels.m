@@ -21,11 +21,11 @@ setups = {
     {'AF3' 'AF4' 'F3' 'F4' 'F7' 'F8' 'FC5' 'FC6' 'P7' 'P8'} % emotiv
     {'FC5' 'FC6' 'FC3' 'FC4' 'C5' 'C6' 'C3' 'C4' 'CP5' 'CP6' 'CP3' 'CP4' 'P7' 'P8' 'P5' 'P6' 'P3' 'P4' 'PO7' 'PO8' 'PO3' 'PO4'} % Murugappan 2010
     {'CP3' 'CP4' 'P7' 'P8' 'P5' 'P6' 'PO7' 'PO8'} % Murugappan 2010
-    {'Fp1' 'Fp2' 'F7' 'F8' 'F3' 'F4' 'FT7' 'FT8' 'FC3' 'FC4' 'C3' 'C4' 'TP7' 'TP8' 'CP3' 'CP4' 'P3' 'P4' 'P7' 'P8' 'O1' 'O2' 'Fz' 'FCz' 'Cz' 'Pz' 'Oz'} % Lin 2010 removed T7, T8 and FCz]
+    {'Fp1' 'Fp2' 'F7' 'F8' 'F3' 'F4' 'FT7' 'FT8' 'FC3' 'FC4' 'C3' 'C4' 'TP7' 'TP8' 'CP3' 'CP4' 'P3' 'P4' 'P7' 'P8' 'O1' 'O2' 'Fz' 'Cz' 'CPz' 'Pz' 'Oz'} % Lin 2010 removed T7, T8 and FCz]
     };
 
 totais = zeros(1, length(setups));
-for nS = 1:length(setups)   
+for nS = 7
     config.channels = {
         [8 13],  setups{nS}
         [13 26], setups{nS}
@@ -42,5 +42,5 @@ end
 
 disp('#################');
 disp('TOTAIS:')
-fprintf('%.2f%%\n', totais(nS)*100 );
+fprintf('%d%%\n', round(totais*100) );
 
