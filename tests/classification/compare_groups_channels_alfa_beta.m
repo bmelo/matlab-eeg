@@ -10,7 +10,7 @@ config = setup('neutral_length', 10);
 
 config.subjs = [1 2 8 9];
 config.features = {'l_power_rel_feats' 'l_erders_feats'};
-config.bands = [8 13; 13 30; 26 45];
+config.bands = [8 13; 13 30];
 config.prefix = '';
 
 config.featselection = 1;
@@ -29,10 +29,9 @@ for nS = 1:length(setups)
     config.channels = {
         [8 13],  setups{nS}
         [13 26], setups{nS}
-        [26 45], setups{nS}
-        };
+    };
     
-    config.outdir = ['STATS/CLASSIFICATION/ANN/FEATS-LAPLACE-ALPHA+BETA+GAMMA_opt' num2str(nS)];
+    config.outdir = ['STATS/CLASSIFICATION/ANN/FEATS-LAPLACE-ALPHA+BETA_opt' num2str(nS)];
     
     accs = neural_network(config);
     totais(nS) = mean( median(accs, 2) );
