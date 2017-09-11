@@ -12,10 +12,10 @@ for subjN = config.subjs
     
     fprintf('\n####   PREPROC - %s   ####\n\n', subj);
     
-    % Loading EEG/AUX - downsample to 500Hz
+    % Loading EEG/AUX - downsample
     [EEG, ~] = prepare_eeg(config, subj, config.srate);
     
-    % removing some channels
+    % removing some channels - keeping 63 EEG channels
     EEG = pop_select( EEG, 'channel', config.chs);
     
     % rereference to Cz
@@ -27,7 +27,7 @@ for subjN = config.subjs
         EEG = channels_apply(@notch_filter, EEG, EEG.srate, notch_fs);
     end
     
-    % Filtering High and Low pass filter
+    % Filtering High and band pass filter
     EEG = channels_apply(@filter_bands, EEG, EEG.srate, config.preproc.filter);
     
     % Epoching signal - using markers

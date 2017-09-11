@@ -46,6 +46,5 @@ for k=1:size(auxbands,1)
     config.bands = auxbands(k, :);
     neural_network(config);
 end
-%neural_network_intersubjs(config);
 
 

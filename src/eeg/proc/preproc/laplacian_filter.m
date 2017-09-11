@@ -4,7 +4,7 @@ function [ EEG ] = laplacian_filter( EEG, neighs )
 
 if nargin < 2, neighs = 8; end
 
-load('channels_location');
+load('extra/channels_location');
 
 % Reading data
 EEG.chanlocs = chanlocs;
