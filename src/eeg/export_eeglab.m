@@ -1,11 +1,12 @@
 function export_eeglab( params, filename )
+% EXPORT_EEGLAB (params, filename)
 
-load('example_eeg.mat');
+load('extra/example_eeg.mat');
 
 % Excluding ignored channels
-exclude = any(isnan(params.data),2);
-params.data(exclude,:) = [];
-params.channels{exclude} = [];
+%exclude = any(isnan(params.data),2);
+%params.data(exclude,:) = [];
+%params.channels{exclude} = [];
 
 chans = params.channels;
 
@@ -22,6 +23,10 @@ EEG.times = [];
 %    EEG.chanlocs(k) = get_chan( chans{k} );
 %end
 EEG.srate = params.srate;
+
+% Checking if subdirectory exists
+folder = fullfile('exports', fileparts(filename));
+if ~isdir(folder), mkdir(folder); end
 
 pop_writebva(EEG, ['exports/' filename]);
 
