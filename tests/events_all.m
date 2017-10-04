@@ -16,10 +16,10 @@ for run=1:4
             
             fprintf(fout, '%d\t%f\t%s\t%d\n', n  , last + 1, 'N', 10*srate);
             fprintf(fout, '%d\t%f\t%s\t%d\n', n+1, last + 10*srate + 1, label, 46*srate);
-            fprintf(fout, '%d\t%f\t%s\t%d\n', n+2, last + 56*srate + 1, 'N', 10*srate );
+            fprintf(fout, '%d\t%f\t%s\t%d\n', n+2, last + 56*srate + 1, 'N', 5*srate );
             
             n = n+3;
-            last = last + 66 * srate;
+            last = last + 61 * srate;
         end
     end
 end
