@@ -23,6 +23,10 @@ EEG.times = [];
 %    EEG.chanlocs(k) = get_chan( chans{k} );
 %end
 EEG.srate = params.srate;
+evnts_file = fullfile(pwd, 'extra/events.txt');
+EEG = eeg_checkset( EEG );
+EEG = pop_importevent( EEG, 'event', evnts_file,'fields',{'number' 'latency' 'type' 'duration'},'skipline',1,'timeunit',NaN);
+EEG = eeg_checkset( EEG );
 
 % Checking if subdirectory exists
 folder = fullfile('exports', fileparts(filename));

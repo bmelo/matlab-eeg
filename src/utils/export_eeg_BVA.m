@@ -5,27 +5,34 @@ function export_eeg_BVA( EEG, filename )
 mERD = matrices(EEG);
 
 conds = fields(mERD);
-for cond = conds'
-    % selecting data
-    mDATA = mERD.( cond{1} );
+allDATA = [];
+
+% Merging conditions
+for run = 1:4
+    first_E = (run-1) * 4 + 1;
+    last_E  = run * 4;
     
-    % Removing unnecessary part
-    srate = EEG.srate;
-    int_del = floor(56 * srate) + 1; % to remove end
-    mDATA(:,:,int_del:end) = []; % removing end
-    
-    % merging epochs
-    mDATA = permute(mDATA, [1,3,2]);
-    mDATA = mDATA(:,:);
-    
-    % exporting
-    p.data = mDATA;
-    p.srate = srate;
-    p.channels = {EEG.chanlocs(:).labels};
-    
-    outfilename = fullfile(cond{1}, filename);
-    export_eeglab( p, outfilename);
+    for cond = conds'
+        % selecting data
+        mDATA = mERD.( conds{1} )(:, first_E:last_E, : );
+        
+        % Removing unnecessary part
+        srate = EEG.srate;
+        int_del = floor(66 * srate) + 1; % to remove end
+        mDATA(:,:,int_del:end) = []; % removing end
+        
+        % merging epochs
+        mDATA = permute(mDATA, [1,3,2]);
+        allDATA = [allDATA mDATA(:,:)];
+    end
 end
 
-end
 
+% exporting
+p.data = [allDATA allDATA(:,end)]; % Repeating last position to use as terminator
+p.srate = srate;
+p.channels = {EEG.chanlocs(:).labels};
+
+export_eeglab( p, filename);
+
+end
