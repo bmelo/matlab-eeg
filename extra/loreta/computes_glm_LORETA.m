@@ -34,20 +34,18 @@ for nF = 1:length(files)
     corrs{nR, 3} = band_label;
     corrs{nR, 4} = 'T';
     %subplot(2,1,1);
-    %[cT pT] = correlations(data, model_T, false, false, false);
+    [cT pT] = correlations(data, model_T, false, false, false);
     %title('Ternura');
     %[cT pT] = correlations(data(model_A==0, :), model_T(model_A==0), true, false, false);
-    cT = average(data, model_T);
     corrs(nR, 5:10) = num2cell(cT);
     
     % Preparing output data for Anguish
     corrs(nR+1, 1:3) = corrs(nR, 1:3); % Same subject and band
     corrs{nR+1, 4} = 'A';
     %subplot(2,1,2);
-    %[cA pA] = correlations(data, model_A, false, false, false);
+    [cA pA] = correlations(data, model_A, false, false, false);
     %title('Angústia');
     %[cA pA] = correlations(data(model_T==0,:), model_A(model_T==0), true, false, true);
-    cA = average(data, model_A);
     corrs(nR+1, 5:10) = num2cell(cA);
 end
 
