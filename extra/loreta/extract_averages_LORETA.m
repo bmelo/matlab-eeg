@@ -1,7 +1,7 @@
 function extract_averages_LORETA( outname )
 curdir = pwd;
 
-if nargin < 1, outname = 'export_means.txt'; end
+if nargin < 1, outname = 'export_psc.txt'; end
 
 % INPUT
 input_dir = '/dados2/PROJETOS/PRJ1411_NFB_VR/03_PROCS/PROC_DATA/EEG/Exports/LORETA_EEG_SINGLE_SUBJECT';
@@ -31,7 +31,7 @@ for nF = 1:length(files)
     
     for nC = 1:length(conds)
         cond = conds{nC};
-        avgs = eval(['average(data, model_' cond ', @median);']);
+        avgs = eval(['psc(data, model_' cond ');']);
         
         for nA = 1:size(avgs,1)
             rows{nR, 1} = subjid;
