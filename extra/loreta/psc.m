@@ -19,6 +19,9 @@ for k = 2:length(model)
             baseline = median( data(neutral, nC) );
             
             psc_data = ( data(first:last,nC) - baseline ) / baseline;
+            %avgs(nR, nC) = median( psc_data(1:13*srate) );
+            %nR = nR + 1;
+            %avgs(nR, nC) = median( psc_data(13*srate+1:end) );
             avgs(nR, nC) = median( psc_data );
         end
         

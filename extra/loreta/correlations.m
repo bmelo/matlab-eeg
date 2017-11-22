@@ -1,9 +1,8 @@
 % Computes correlations between model and temporal series for each ROI
-function [corrs p] = correlations( data, model, normparam, filterSignal, toPlot )  
+function [corrs p] = correlations( data, model, normparam, filterSignal )  
 
 if nargin < 3, normparam = false; end
 if nargin < 4, filterSignal = false; end
-if nargin < 5, toPlot = false; end
 
 numCols = size(data, 2);
 
@@ -29,15 +28,6 @@ for nC = 1:numCols
         dataN = dataFN;
     end
     [corrs(nC) p(nC)] = corr( dataN', model' );
-    
-    % to check [debug]
-    if toPlot && nC ==2
-        plot(dataN/norm(dataN, Inf));
-        hold on, plot(model,'r'), hold off; 
-        ylim( [-0.1 1.1]);
-        xlim([0 length(data)]);
-        break;
-    end
 end
 
 end

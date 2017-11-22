@@ -22,6 +22,8 @@ corrs = {'SUBJID' 'BANDA' 'BANDA LABEL' 'CONDIÇÃO' 'T_OFC' 'T_SEPT' 'T_PRECUNE
 for nF = 1:length(files)
     data = csvread(files{nF}, 1, 0);
     
+    plotLORETA(data(:,6), events);
+    
     band = regexp(files{nF}, '\d{2}-\d{2}', 'match', 'once');
     band_label = regexprep(band, {'04-08' '08-13' '13-30' '30-45'}, {'theta' 'alpha' 'beta' 'gamma'});
     
@@ -33,23 +35,42 @@ for nF = 1:length(files)
     corrs{nR, 2} = band;
     corrs{nR, 3} = band_label;
     corrs{nR, 4} = 'T';
-    %subplot(2,1,1);
-    [cT pT] = correlations(data, model_T, false, false, false);
-    %title('Ternura');
-    %[cT pT] = correlations(data(model_A==0, :), model_T(model_A==0), true, false, false);
+    [cT pT] = correlations(data, model_T, false, false);
+    %[cT pT] = correlations(data(model_A==0, :), model_T(model_A==0), true, false);
     corrs(nR, 5:10) = num2cell(cT);
     
     % Preparing output data for Anguish
     corrs(nR+1, 1:3) = corrs(nR, 1:3); % Same subject and band
     corrs{nR+1, 4} = 'A';
-    %subplot(2,1,2);
-    [cA pA] = correlations(data, model_A, false, false, false);
-    %title('Angústia');
+    
+    [cA pA] = correlations(data, model_A, false, false, true);
     %[cA pA] = correlations(data(model_T==0,:), model_A(model_T==0), true, false, true);
     corrs(nR+1, 5:10) = num2cell(cA);
 end
 
 cd(curdir);
 utils.geraOut(outname, corrs);
+
+end
+
+
+% to check [debug]
+function plotLORETA(data, model)
+
+% Plotting time series
+subplot(2,1,1);
+data(end-2000:end) = [];
+plot(data/norm(data, Inf));
+ylim( [-0.1 1.1]);
+xlim([0 length(data)]);
+title('Time Series', 'FontSize', 16);
+
+% Plotting model
+subplot(2,1,2);
+model(end-2000:end) = [];
+plot(model,'r');
+ylim( [-1.1 1.1]);
+xlim([0 length(data)]);
+title('Model', 'FontSize', 16);
 
 end

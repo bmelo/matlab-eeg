@@ -78,7 +78,17 @@ for nS = subjs
     net.trainParam.showWindow  = utils.Var.get( config, 'show_window', 1 );
     
     random_classes = utils.Var.get(config, 'random_classes');
-    feats = prepare_features(mFeats, random_classes);        
+    feats = prepare_features(mFeats, random_classes);
+    
+    % Removing condition
+    rmCnd = utils.Var.get(config, 'condRemove', 0);
+    if rmCnd > 0
+        idxRm = find(feats.classes(rmCnd,:));
+        feats.features(:,idxRm) = [];
+        feats.block(idxRm) = [];
+        feats.classes(:, idxRm) = [];
+        feats.classes(rmCnd, :) = [];
+    end
     
     acctxt = fullfile(subjdir, [accfilename '.txt']);
     
