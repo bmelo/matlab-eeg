@@ -20,7 +20,9 @@
 	"cosmomvpa": "git://github.com/InstitutoDOr/CoSMoMVPA.git#1.2.0-beta",
     "xlwrite": "https://bmelo@bitbucket.org/instituto-dor/matlab-xlwrite.git#^1.9.0",
     "bcilab": "git://github.com/bmelo/BCILAB#1.2.2-dev",
+    "biosig": "https://downloads.sourceforge.net/project/biosig/BioSig%20for%20Octave%20and%20Matlab/biosig4octmat-3.3.0.zip",
     "automagic": "git://github.com/amirrezaw/automagic#^1.4.2",
-    "prep-pipeline": "git://github.com/bmelo/EEG-Clean-Tools#^0.55"
+    "prep-pipeline": "git://github.com/bmelo/EEG-Clean-Tools#^0.55",
+    "arfit": "git://github.com/bmelo/arfit#1.0.0"
   }
 }

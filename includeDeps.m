@@ -27,6 +27,7 @@ utils.path.includeSubdirs({
     'vendors/eeglab-14.1'
     'vendors/cosmomvpa'
     'vendors/bcilab'
+    'vendors/arfit'
     'src'
 });
 
