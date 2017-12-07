@@ -32,6 +32,18 @@ for subjN = config.subjs
         clear EEG;
     end
     
+    %% Connectivity
+    if config.proc.features.connectivity
+        EEG = eeg_load( subjdir_in, sprintf('cEEG_%d', srate) );      
+
+        [PDC, DTF] = pdc_dtf_eeg(EEG, srate);
+        
+        eeg_save( subjdir_out, 'l_pdc_feats', PDC );
+        eeg_save( subjdir_out, 'l_dtf_feats', DTF );
+        
+        clear EEG;
+    end
+    
     % Separating each band
     feats = config.proc.features;
     if feats.erders || feats.power || feats.power_rel || feats.eeg
