@@ -30,7 +30,7 @@ figure;
 medians( medians < .34 ) = NaN;
 means = nanmean( medians, 2 );
 means(ignore) = NaN;
-limits =  [min(means) max(means)];
+limits =  [.5 .8];
 load('channels_location');
 topoplot(means, chanlocs, 'maplimits', limits, 'electrodes', 'ptsnumbers'); 
 cbar('vert',1, limits);

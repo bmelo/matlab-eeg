@@ -82,6 +82,15 @@ for nS = subjs
     
     acctxt = fullfile(subjdir, [accfilename '.txt']);
     
+    %% TO REMOVE AFTER TESTS
+%     nFeatExclude = 2;
+%     exclude = feats.classes(nFeatExclude,:) == 1;
+%     feats.classes(nFeatExclude,:) = [];
+%     feats.block(exclude) = [];
+%     feats.features(:,exclude) = [];
+%     feats.classes(:,exclude) = [];
+    %% END REMOTION
+
     % KFOLD
     if strcmp( config.cross.type, 'montecarlo' )
         accs_subj = montecarlo(config.cross.k, config.cross.repetitions, feats, net, acctxt);
