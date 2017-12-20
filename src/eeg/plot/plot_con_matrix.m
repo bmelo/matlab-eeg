@@ -1,49 +1,31 @@
-function plot_con_matrix( signal, labels )
+function plot_con_matrix( signal, config, name )
 %PLOT_CON_MATRIX Summary of this function goes here
 %   Detailed explanation goes here
 
-%% Plot
-s1 = 0;
-signal = abs(signal);
-
-x_min = 2;
-x_max = 30;
-y_max = 1;
-Fmax = 50;
-Nf = 40;
-
-nChs = size(signal, 1);
-nChs = 10;
-for i = 1 : nChs
-    for j = 1 : nChs
-        s1 = s1 + 1;
-        h = subplot(nChs,nChs,s1); 
-        set(h,'FontSize',20,'FontWeight','bold');
-        
-        signal_tmp = squeeze(signal(i,j,:,:));        
-%         if(i==j)
-%             PDC_tmp = zeros(1,size(PDC,3));
-%         end
-        area(linspace(0,Fmax,Nf),signal_tmp,'FaceColor',[0 0 0])
-        axis([x_min x_max 0 y_max])
-        if(i<nChs && j>1)
-            set(h,'YTick',zeros(1,0),'XTick',zeros(1,0));
-        elseif(i<nChs && j==1)
-            set(h,'YTick',[0 y_max],'XTick',zeros(1,0));
-        elseif(i==nChs && j>1)
-            set(h,'YTick',zeros(1,0),'XTick',[x_min x_max]);
-        elseif(i==nChs && j==1)
-            set(h,'YTick',[0 y_max],'XTick',[x_min x_max]);
-        end
-        if(i==nChs && j==ceil(nChs/2))
-            xlabel('Frequency (Hz)','Fontsize',20,'FontWeight','bold')
-        end
-        
-        title(sprintf('CH%d',j));
-        ylabel(sprintf('CH%d',i));
-    end
+nBands = size(config.bands, 1);
+subp = 1;
+%figure('Name',name,'NumberTitle','off','units','normalized','outerposition',[0 0 10 10]);
+figure('Name',name,'NumberTitle','off','units','normalized','Position',[0 0 3840 2160]);
+for nB = 1:nBands
+    pos = config.bands(nB,1) : config.bands(nB,2);
+    N = max( signal.N(:,:,pos), [], 3 );
+    T = max( signal.T(:,:,pos), [], 3 );
+    A = max( signal.A(:,:,pos), [], 3 );
+    
+    sBand = sprintf('[%d - %d]', pos(1), pos(end));
+    subplot(nBands,3,subp);
+    imagesc(N); colorbar; caxis([0 1]);
+    title(['Neutral ' sBand]);
+    subplot(nBands,3,subp+1);
+    imagesc(T); colorbar; caxis([0 1]);
+    title(['Tenderness ' sBand]);
+    subplot(nBands,3,subp+2);
+    imagesc(A); colorbar; caxis([0 1]);
+    title(['Anguish ' sBand]);
+    
+    % Control of subplot
+    subp = subp+3;
 end
-
 
 end
 

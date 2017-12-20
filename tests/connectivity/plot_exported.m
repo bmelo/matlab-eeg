@@ -14,23 +14,39 @@ config.ignore = {
     15, [27]
 };
 
-indir = fullfile( config.outdir_base, 'FEATS' );
-files = utils.resolve_names([indir '/*/l_*']);
-
-for k=1:length(files)
-    file = files{k};
-    newfile = strrep(file, 'FEATS', 'FEATS/CON');
-    basedir = fileparts(newfile);
-    if ~isdir(basedir)
-        mkdir(basedir);
+%% Listing all subjects
+for subjN = config.subjs
+    close all;
+    subj = sprintf('%s%03d', config.subj_prefix, subjN);
+    subjdir = fullfile( config.outdir_base, 'FEATS', subj );
+    
+    %% PDC
+    load(fullfile(subjdir, 'l_pdc_feats'), 'EEG');
+    pos_exclude = find([config.ignore{:,1}] == subjN);
+    if pos_exclude
+        rm_chs = config.ignore{pos_exclude, 2};
+        EEG.N(rm_chs,:,:) = [];
+        EEG.N(:,rm_chs,:) = [];
+        EEG.T(rm_chs,:,:) = [];
+        EEG.T(:,rm_chs,:) = [];
+        EEG.A(rm_chs,:,:) = [];
+        EEG.A(:,rm_chs,:) = [];
     end
-    copyfile(file, newfile);
+    plot_con_matrix(EEG, config, [subj ' - PDC']);
+    utils.imgs.print_fig( fullfile(subjdir, 'PDC.png') )
+    
+    %% DTF
+    load(fullfile(subjdir, 'l_dtf_feats'), 'EEG');
+    pos_exclude = find([config.ignore{:,1}] == subjN);
+    if pos_exclude
+        rm_chs = config.ignore{pos_exclude, 2};
+        EEG.N(rm_chs,:,:) = [];
+        EEG.N(:,rm_chs,:) = [];
+        EEG.T(rm_chs,:,:) = [];
+        EEG.T(:,rm_chs,:) = [];
+        EEG.A(rm_chs,:,:) = [];
+        EEG.A(:,rm_chs,:) = [];
+    end
+    plot_con_matrix(EEG, config, [subj ' - DTF']);
+    utils.imgs.print_fig( fullfile(subjdir, 'DTF.png') )
 end
-
-chan_names = {EEG.chanlocs.labels};
-% ---> PDC
-figure('Name','Partial Directed Coherence (PDC)','NumberTitle','off');
-plot_con_matrix(PDC, chan_names);
-% ---> DTF
-figure('Name','Directed Transfer Function (DTF)','NumberTitle','off'); % ---> DTF
-plot_con_matrix(DTF, chan_names);
