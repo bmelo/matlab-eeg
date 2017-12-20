@@ -5,6 +5,12 @@ function signal = normalize_eeg(signal)
 meanE = mean(signal);
 varE  = var(signal);
 
-signal = (signal - meanE)/varE;
+signal = (signal - meanE);
+
+if abs(varE) > 0.1 && abs(varE) < 200
+    signal = signal / varE;
+else
+    disp(varE);
+end
 
 end

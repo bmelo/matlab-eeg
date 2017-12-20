@@ -36,16 +36,7 @@ for subjN = config.subjs
     if config.proc.features.connectivity
         EEG = eeg_load( subjdir_in, sprintf('cEEG_%d', srate) );      
 
-        [PDC, DTF] = pdc_dtf_eeg(EEG, srate);
-        
-        chan_names = {EEG.chanlocs.labels};
-        % ---> PDC
-        figure('Name','Partial Directed Coherence (PDC)','NumberTitle','off');
-        plot_con_matrix(PDC, chan_names);
-        % ---> DTF
-        figure('Name','Directed Transfer Function (DTF)','NumberTitle','off'); % ---> DTF
-        plot_con_matrix(DTF, chan_names);
-        
+        [PDC, DTF] = pdc_dtf_eeg(EEG, srate);     
         eeg_save( subjdir_out, 'l_pdc_feats', PDC );
         eeg_save( subjdir_out, 'l_dtf_feats', DTF );
         
