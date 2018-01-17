@@ -6,6 +6,7 @@ function extract_features( config )
 for subjN = config.subjs
     close all;
     
+    config.subj = subjN;
     subj = sprintf('%s%03d', config.subj_prefix, subjN);
     subjdir_in = fullfile( config.preproc_dir, subj );
     subjdir_out = fullfile( config.outdir_base, 'FEATS', subj );
@@ -23,7 +24,7 @@ for subjN = config.subjs
         % Laplacian filter
         EEG = laplacian_filter(EEG);
         
-        for nB = 1:length(config.bands)
+        for nB = 1:size(config.bands,1)
             densEEG(nB) = epochs_apply(@window_func, EEG, srate, srate/2, ...
                 @spectral_density, srate, srate, [], config.bands(nB,:));
             band = config.bands(nB, :);
@@ -36,9 +37,22 @@ for subjN = config.subjs
     if config.proc.features.connectivity
         EEG = eeg_load( subjdir_in, sprintf('cEEG_%d', srate) );      
 
-        [PDC, DTF] = pdc_dtf_eeg(EEG, srate);     
-        eeg_save( subjdir_out, 'l_pdc_feats', PDC );
-        eeg_save( subjdir_out, 'l_dtf_feats', DTF );
+        pdc_dtf_eeg(EEG, config);
+        
+        % Generating output for each band
+        tmpfiles = utils.resolve_names( fullfile(subjdir_out, 'l_conn_feats_*') );
+        for nB = 1:size(config.bands,1)
+            band = config.bands(nB,:);
+            % Reading each file (separated by conditions)
+            for nF = 1:length(tmpfiles)
+                cond = regexp(tmpfiles{nF}, '(\w)\.mat$', 'tokens', 'once');
+                connEEG = load( tmpfiles{nF} ); % Carrega todos os dados em CONN
+                connBand = connEEG.EEG.(cond{1})(:,:,band(1):band(2),:);
+                conn.(cond{1}) = squeeze( max(connBand, [], 3) );
+            end
+            eeg_save( subjdir_out, gen_filename('l_conn_feats', band), conn );
+            clear connEEG conn connBand;
+        end
         
         clear EEG;
     end
