@@ -11,26 +11,26 @@ config.Nf = 45;   % Numero de bins de frequencia para calcular a PDC
 
 SUBJDIROUT = fullfile( config.outdir_base, 'FEATS', sprintf('%s%03d', config.subj_prefix, config.subj) );
 
-[PDC.N, DTF.N] = computeCon( feats.N, config );
+PDC.N = computeCon( feats.N, config );
 eeg_save( SUBJDIROUT, 'l_conn_feats_N', PDC );
 clear PDC;
 
-[PDC.T, DTF.T] = computeCon( feats.T, config );
+PDC.T = computeCon( feats.T, config );
 eeg_save( SUBJDIROUT, 'l_conn_feats_T', PDC );
 clear PDC;
 
-[PDC.A, DTF.A] = computeCon( feats.A, config );
+PDC.A = computeCon( feats.A, config );
 eeg_save( SUBJDIROUT, 'l_conn_feats_A', PDC );
 clear PDC;
 end
 
 
-%% Computes PDC and DTF for y
-function [PDC, DTF] = computeCon( y, config )
+%% Computes PDC for y
+function [PDC] = computeCon( y, config )
 srate = config.srate;
-% Setup for PDC And DTF
+% Setup for PDC
 nchs = size(y,1);
-pmax = 20;
+pmax = 13;
 nmerge = ceil( (pmax * 1000) / srate ); % Number of windows to merge to use choosen pmax
 
 % Breaking data in small windows
@@ -43,15 +43,14 @@ f = tic;
 for nW = 1:nwins
     ymerge = permute( y(:, nW:(nW+nmerge-1), :), [1 3 2] );
     yW = reshape( ymerge, nchs, [] );
-    [~, A, ~, sbc, ~, ~] = arfit(yW', 1, 20, 'sbc'); % ---> ARFIT toolbox
+    [~, A, ~, sbc, ~, ~] = arfit(yW', 1, pmax, 'sbc'); % ---> ARFIT toolbox
     [~,p_opt] = min(sbc);
-    [PDC(:, :, :, nW), DTF(:, :, :, nW)] = PDC_DTF_matrix(A, p_opt, config.srate, config.Fmax, config.Nf);
+    PDC(:, :, :, nW) = PDC_matrix(A, p_opt, config.srate, config.Fmax, config.Nf);
     fprintf('%03d/%03d\n', nW, nwins);
     % Last windows have the same result
     if nW+nmerge > nwins
         for nnW = nW+1:nwins
             PDC(:, :, :, nnW) = PDC(:, :, :, nW);
-            DTF(:, :, :, nnW) = DTF(:, :, :, nW);
         end
         break;
     end
@@ -64,8 +63,6 @@ if ~isempty(ignorechs)
     ignchs = config.ignore{ignorechs, 2};
     PDC(ignchs, :, :, :) = NaN;
     PDC(:, ignchs, :, :) = NaN;
-    DTF(ignchs, :, :, :) = NaN;
-    DTF(:, ignchs, :, :) = NaN;
 end
 
 end

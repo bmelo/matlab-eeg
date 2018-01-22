@@ -3,17 +3,20 @@
 % by Bruno Melo (bruno.raphael@gmail.com)
 
 % Preparing components (eeglab, matlab-utils)
-includeDeps;
+init_app;
 clc;
 
 %% Setup of processing
 config = setup('neutral_length', 10);
 
-config.subjs = [1 2 4:14];
-config.features = {'l_power_rel_feats' 'l_erders_feats'};
-config.bands = [4 8; 8 13; 13 30; 30 45];
-config.outdir = 'STATS/CLASSIFICATION/ANN/COMPLETE';
+config.bands = [13 26; 26 45];
+config.outdir = 'STATS/CLASSIFICATION/ANN/PDC';
 config.prefix = '';
 
-accs = neural_network(config);
+bands = config.bands;
+for nB = 1:size(bands, 1)
+    config.bands = bands(nB, :);
+    accs = neural_network(config);
+    save(sprintf('accs_%d-%d', config.bands), 'accs');
+end
 %neural_network_intersubjs(config);
