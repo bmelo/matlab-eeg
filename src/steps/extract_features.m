@@ -35,26 +35,28 @@ for subjN = config.subjs
     
     %% Connectivity
     if config.proc.features.connectivity
-        EEG = eeg_load( subjdir_in, sprintf('cEEG_%d', srate) );      
-
-        pdc_dtf_eeg(EEG, config);
+        EEG = eeg_load( subjdir_in, sprintf('cEEG_%d', srate) );
         
-        % Generating output for each band
-        tmpfiles = utils.resolve_names( fullfile(subjdir_out, 'l_conn_feats_*') );
-        for nB = 1:size(config.bands,1)
-            band = config.bands(nB,:);
-            % Reading each file (separated by conditions)
-            for nF = 1:length(tmpfiles)
-                cond = regexp(tmpfiles{nF}, '(\w)\.mat$', 'tokens', 'once');
-                connEEG = load( tmpfiles{nF} ); % Carrega todos os dados em CONN
-                connBand = connEEG.EEG.(cond{1})(:,:,band(1):band(2),:);
-                conn.(cond{1}) = squeeze( max(connBand, [], 3) );
+        pdc_eeg(EEG, config);
+        
+        if 0
+            % Generating output for each band
+            tmpfile = utils.resolve_name( fullfile(subjdir_out, 'l_conn_feats*') );
+            for nB = 1:size(config.bands,1)
+                band = config.bands(nB,:);
+                
+                connEEG = load( tmpfile ); % Carrega todos os dados em CONN
+                for cond = {'T' 'A' 'N'}
+                    connBand = connEEG.EEG.(cond{1})(:,:,band(1):band(2),:);
+                    conn.(cond{1}) = squeeze( utils.math.rms(connBand, [], 3) );
+                end
+                
+                eeg_save( subjdir_out, gen_filename('l_conn_feats', band), conn );
+                clear connEEG conn connBand;
             end
-            eeg_save( subjdir_out, gen_filename('l_conn_feats', band), conn );
-            clear connEEG conn connBand;
+            
+            clear EEG;
         end
-        
-        clear EEG;
     end
     
     % Separating each band

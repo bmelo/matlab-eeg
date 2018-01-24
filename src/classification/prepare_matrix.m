@@ -1,6 +1,8 @@
-function [ out ] = prepare_matrix( mEEG, srate )
+function [ varargout ] = prepare_matrix( mEEG, srate, clean_nan )
 %PREPARE_MATRIX Summary of this function goes here
 %   Detailed explanation goes here
+
+if nargin<3, clean_nan = 0; end
 
 % Neutral condition is doubled (excerpt for Tenderness and Anguish)
 intN  = floor( [2 10] * srate ); % 8s - selected to have the same size of the condition
@@ -21,8 +23,24 @@ for nC = 1 : num_chs
     out.A(nC, :) = reshape( mEEG.TASK_A(nC, :, idxC), 1, [] );
 end
 
+% If is active, remove NaN lines (excluded channels)
+if clean_nan
+    lines_ok = ~any(isnan(out.T),2);
+    out.T = out.T( lines_ok,:);
+    out.A = out.A( lines_ok,:);
+    out.N = out.N( lines_ok,:);
 end
 
+% Controlling outputs
+if nargout == 1
+    varargout = {out};
+else
+    varargout = {out ~lines_ok};
+end
+
+end
+
+% Created just to easily read some parts of the code
 function vec = vector( mat )
 vec = reshape(mat, 1, []);
 end

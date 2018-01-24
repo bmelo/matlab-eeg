@@ -1,26 +1,34 @@
-function pdc_dtf_eeg( EEG, config )
+function pdc_eeg( EEG, config )
 %PDC_DTF_EEG Summary of this function goes here
 %   Detailed explanation goes here
 
 EEG = epochs_apply(@remove_outliers, EEG, 2, config.srate, config.srate*.5);
+
+% Merging channels
+if config.proc.group_channels
+    good_chs = filter_bad_channels({EEG.chanlocs.labels}, config);
+    EEG = epochs_apply_all_chs(@group_channels, EEG, good_chs, config.proc.groups);
+    config.channels = config.proc.groups(:,1);
+end
+
 EEG = epochs_apply(@normalize_eeg, EEG);
-feats = prepare_matrix( matrices(EEG), config.srate );
+[feats, idx_chs_removed] = prepare_matrix( matrices(EEG), config.srate, 1 );
+
+% Saving remaining and removed channels labels
+config.channels_removed = config.channels(idx_chs_removed);
+config.channels = config.channels(~idx_chs_removed);
 
 config.Fmax = 50; % Frequencia de corte, deve ser menor que Fs/2
-config.Nf = 45;   % Numero de bins de frequencia para calcular a PDC
+config.Nf = 50;   % Numero de bins de frequencia para calcular a PDC
 
 SUBJDIROUT = fullfile( config.outdir_base, 'FEATS', sprintf('%s%03d', config.subj_prefix, config.subj) );
 
 PDC.N = computeCon( feats.N, config );
-eeg_save( SUBJDIROUT, 'l_conn_feats_N', PDC );
-clear PDC;
-
 PDC.T = computeCon( feats.T, config );
-eeg_save( SUBJDIROUT, 'l_conn_feats_T', PDC );
-clear PDC;
-
 PDC.A = computeCon( feats.A, config );
-eeg_save( SUBJDIROUT, 'l_conn_feats_A', PDC );
+PDC.config = config;
+
+eeg_save( SUBJDIROUT, 'l_conn_feats', PDC );
 clear PDC;
 end
 
@@ -31,13 +39,13 @@ srate = config.srate;
 % Setup for PDC
 nchs = size(y,1);
 pmax = 13;
-nmerge = ceil( (pmax * 1000) / srate ); % Number of windows to merge to use choosen pmax
+npoints = 2000;
+nmerge = ceil( npoints / srate ); % Number of windows to merge to use choosen pmax
 
 % Breaking data in small windows
 y = matrix_window( y, srate, srate/2 );
 nwins = size(y,2);
 PDC = zeros(nchs, nchs, config.Nf, nwins);
-DTF = PDC;
 
 f = tic;
 for nW = 1:nwins
@@ -47,23 +55,14 @@ for nW = 1:nwins
     [~,p_opt] = min(sbc);
     PDC(:, :, :, nW) = PDC_matrix(A, p_opt, config.srate, config.Fmax, config.Nf);
     fprintf('%03d/%03d\n', nW, nwins);
-    % Last windows have the same result
+    
+    % Merged windows that exceed signal size must be removed!
     if nW+nmerge > nwins
-        for nnW = nW+1:nwins
-            PDC(:, :, :, nnW) = PDC(:, :, :, nW);
-        end
+        PDC(:, :, :, nW+1:nwins) = [];
         break;
     end
 end
 toc(f)
-
-% Ignoring bad channels
-ignorechs = find([config.ignore{:,1}] == config.subj);
-if ~isempty(ignorechs)
-    ignchs = config.ignore{ignorechs, 2};
-    PDC(ignchs, :, :, :) = NaN;
-    PDC(:, ignchs, :, :) = NaN;
-end
 
 end
 

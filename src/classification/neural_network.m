@@ -30,7 +30,7 @@ for nS = subjs
     feats = prepare_features([all_feats conn_feats], random_classes);
     
     % Filtering
-    %feats = filter_trials( feats, 1:8 );
+    feats = filter_trials( feats, 1:8 );
     
     % Testing neural network
     n_hidden = utils.Var.get( config.ann, 'hidden', default_hidden );
@@ -53,8 +53,9 @@ for nS = subjs
     accs = [accs; accs_subj];
     
     if save_out
-        utils.file.txt_write(acctxt, sprintf('SUBJ%03d [mean] \t %.2f%%', nS, mean(accs_subj)*100), 0, 1 );
-        utils.file.txt_write(acctxt, sprintf('SUBJ%03d [median] \t %.2f%%', nS, median(accs_subj)*100), 0, 1 );
+        smean   = mean(accs_subj)*100;
+        smedian = median(accs_subj)*100;
+        utils.file.txt_write(acctxt, sprintf('SUBJ%03d [mean] %.2f%%\t[median] %.2f%%\n', nS, smean, smedian), 0, 1 );
     end
     
     clear mFeats net feats;
@@ -90,7 +91,7 @@ for nP = 1:length(patts)
                 continue
             end
             
-            nchs = feature_selection(channels, config);
+            nchs = feature_selection(channels, nB, config);
             
             % Preparing data
             featEEG.TASK_T = group.(feat).data(:).TASK_T(nchs, :, :);
@@ -145,7 +146,7 @@ data.block(:,~idx_keep) = [];
 end
 
 % Select only some channels
-function nchs = feature_selection(channels, config)
+function nchs = feature_selection(channels, nB, config)
 
 if config.ann.featselection
     [~, nchs] = intersect(channels, config.channels{nB, 2});

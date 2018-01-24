@@ -1,5 +1,5 @@
 function [ matEEG ] = epochs_apply_matrices( hFunc, varargin )
-%EPOCHS_APPLY Apply function to each epoch
+%EPOCHS_APPLY_MATRICES Apply function to each epoch
 %   Detailed explanation goes here
 global handle;
 handle = hFunc;

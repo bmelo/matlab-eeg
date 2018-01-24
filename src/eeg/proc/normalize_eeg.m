@@ -9,7 +9,7 @@ varE  = var(signal);
 
 if abs(varE) > 0.1% && abs(varE) < 200
     signal = signal / varE;
-else
+elseif ~isnan(varE)
     disp(varE);
 end
 

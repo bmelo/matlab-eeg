@@ -9,7 +9,7 @@ clc;
 %% Setup of processing
 config = setup('neutral_length', 10);
 
-config.bands = [13 26; 26 45];
+config.bands = [4 8; 8 13; 13 30; 30 45];
 config.outdir = 'STATS/CLASSIFICATION/ANN/PDC';
 config.prefix = '';
 
