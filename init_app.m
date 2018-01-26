@@ -31,6 +31,7 @@ utils.path.includeSubdirs({
     'vendors/cosmomvpa'
     'vendors/bcilab'
     'vendors/arfit'
+    'vendors/biosig/tsa/inst'
     'src'
 });
 
@@ -41,6 +42,10 @@ if ~exist('eeglabUpdater', 'var')
     % Installing plugin to read Brain Vision signal
     if( ~exist( 'pop_loadbv' ) )
         plugin_install('https://github.com/widmann/bva-io/archive/v1.5.14.zip', 'bva-io', '1.5.14');
+        %Other important extensions:
+        % SIFT
+        % dipfit
+        % firfilt
         eeglab;
     end
 end

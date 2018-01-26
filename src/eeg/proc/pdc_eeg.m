@@ -23,9 +23,9 @@ config.Nf = 50;   % Numero de bins de frequencia para calcular a PDC
 
 SUBJDIROUT = fullfile( config.outdir_base, 'FEATS', sprintf('%s%03d', config.subj_prefix, config.subj) );
 
-PDC.N = computeCon( feats.N, config );
-PDC.T = computeCon( feats.T, config );
-PDC.A = computeCon( feats.A, config );
+PDC.N = computeConn( feats.N, config );
+PDC.T = computeConn( feats.T, config );
+PDC.A = computeConn( feats.A, config );
 PDC.config = config;
 
 eeg_save( SUBJDIROUT, 'l_conn_feats', PDC );
@@ -34,11 +34,11 @@ end
 
 
 %% Computes PDC for y
-function [PDC] = computeCon( y, config )
+function [PDC] = computeConn( y, config )
 srate = config.srate;
 % Setup for PDC
 nchs = size(y,1);
-pmax = 13;
+pmax = 20;
 npoints = 2000;
 nmerge = ceil( npoints / srate ); % Number of windows to merge to use choosen pmax
 

@@ -37,7 +37,7 @@ for subjN = config.subjs
     if config.proc.features.connectivity
         EEG = eeg_load( subjdir_in, sprintf('cEEG_%d', srate) );
         
-        pdc_eeg(EEG, config);
+        gpdc_eeg(EEG, config);
         
         if 0
             % Generating output for each band
