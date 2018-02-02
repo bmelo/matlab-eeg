@@ -39,24 +39,22 @@ for subjN = config.subjs
         
         gpdc_eeg(EEG, config);
         
-        if 0
-            % Generating output for each band
-            tmpfile = utils.resolve_name( fullfile(subjdir_out, 'l_conn_feats*') );
-            for nB = 1:size(config.bands,1)
-                band = config.bands(nB,:);
-                
-                connEEG = load( tmpfile ); % Carrega todos os dados em CONN
-                for cond = {'T' 'A' 'N'}
-                    connBand = connEEG.EEG.(cond{1})(:,:,band(1):band(2),:);
-                    conn.(cond{1}) = squeeze( utils.math.rms(connBand, [], 3) );
-                end
-                
-                eeg_save( subjdir_out, gen_filename('l_conn_feats', band), conn );
-                clear connEEG conn connBand;
+        % Generating output for each band
+        tmpfile = utils.resolve_name( fullfile(subjdir_out, 'l_conn_gpdc*') );
+        connEEG = load( tmpfile ); % Carrega todos os dados em CONN
+        
+        for nB = 1:size(config.bands,1)
+            band = config.bands(nB,:);
+            for cond = {'T' 'A' 'N'}
+                connBand = connEEG.EEG.(cond{1})(:,:,band(1):band(2),:);
+                conn.(cond{1}) = squeeze( utils.math.rms(connBand, 3) );
             end
             
-            clear EEG;
+            eeg_save( subjdir_out, gen_filename('l_conn_gpdc', band), conn );
+            clear conn connBand;
         end
+        
+        clear EEG connEEG;
     end
     
     % Separating each band

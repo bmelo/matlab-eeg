@@ -30,7 +30,9 @@ for nS = subjs
     feats = prepare_features([all_feats conn_feats], random_classes);
     
     % Filtering
-    feats = filter_trials( feats, 1:8 );
+    if utils.Var.get(config, 'filter_blocks')
+        feats = filter_trials( feats, config.filter_blocks );
+    end
     
     % Testing neural network
     n_hidden = utils.Var.get( config.ann, 'hidden', default_hidden );
@@ -71,6 +73,8 @@ end
 
 % Function to export features (not connectivity)
 function mFeats = get_feats( patts, config )
+mFeats = [];
+
 % Check if need generate feat file
 for nP = 1:length(patts)
     % Each band
@@ -111,13 +115,15 @@ end
 
 % Function to export features (not connectivity)
 function mData = get_conn_feats( patts, config )
-    
+
+conndir = fullfile(config.proc_dir, 'CONN', config.subjid);
+
 % Check if need generate feat file
 for nP = 1:length(patts)
     % Each band
     for nB = 1:size(config.bands, 1)
         file  = gen_filename(patts{nP}, config.bands(nB,:)); % Generates filename
-        load( fullfile( config.subjdir, file ));
+        load( fullfile( conndir, file ));
         connData = EEG;
         
         dims = size( connData.A );
