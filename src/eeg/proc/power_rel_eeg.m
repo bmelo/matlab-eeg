@@ -1,8 +1,8 @@
-function signal = power_rel_eeg(signal)
+function signal = power_rel_eeg( signal, power_global )
 % POWER_REL_EEG - Relative Power
 % Details
 
 power = power_eeg( signal );
-signal = power / median(power);
+signal = power ./ power_global;
 
 end

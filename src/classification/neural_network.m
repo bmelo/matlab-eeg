@@ -116,6 +116,7 @@ end
 % Function to export features (not connectivity)
 function mData = get_conn_feats( patts, config )
 
+mData = {};
 conndir = fullfile(config.proc_dir, 'CONN', config.subjid);
 
 % Check if need generate feat file

@@ -7,7 +7,7 @@ function run_eeg_procs_parallel()
 init_app;
 clc;
 
-matlabpool open local 3
+matlabpool open local 8
 tempconf = setup('neutral_length', 10);
 subjs = tempconf.subjs;
 

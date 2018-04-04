@@ -46,10 +46,11 @@ for subjN = config.subjs
     % Saving clean EEG
     name_srate = sprintf('cEEG_%d', srate);
     eeg_save( subjdir, name_srate, EEG );
+    all_bands = [config.bands; config.band_global];
     
     % Saving each band
-    for nB = 1:size(config.bands, 1)
-        band = config.bands(nB, :);
+    for nB = 1:size(all_bands, 1)
+        band = all_bands(nB, :);
         bEEG = epochs_apply( @filter_bands, EEG, EEG.srate, band );
         bEEG.ext.bands = band;
         

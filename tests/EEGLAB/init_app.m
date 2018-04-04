@@ -1,5 +1,5 @@
 %% Checking if EEGLAB was started
-if ~evalin('base', 'exist(''eeglabUpdater'', ''var'')');
+if exist('eeglab','file')~=2
     %% Including component matlab-utils
     run( '../../vendors/matlab-utils/libsetup.m');
     
