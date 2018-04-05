@@ -3,7 +3,7 @@ if exist('eeglab','file')~=2
     %% Including component matlab-utils
     run( '../../vendors/matlab-utils/libsetup.m');
     
-    %% Primeiro os vendors, para poderem ser sobrescritos pela aplica��o
+    %% First vendors to allow override with application functions
     utils.path.includeSubdirs({
         '../../vendors/eeglab-14.1'
         '../../src'

@@ -29,6 +29,15 @@ for nS = subjs
     random_classes = utils.Var.get(config.ann, 'random_classes');
     feats = prepare_features([all_feats conn_feats], random_classes);
     
+    % Removing or not NEUTRAL condition
+    if utils.Var.get(config.ann, 'remove_neutral')
+        idxs = feats.classes(1,:) == 1;
+        feats.features(:,idxs) = [];
+        feats.block(:,idxs) = [];
+        feats.classes(:,idxs) = [];
+        feats.classes(1,:) = [];
+    end
+    
     % Filtering
     if utils.Var.get(config, 'filter_blocks')
         feats = filter_trials( feats, config.filter_blocks );

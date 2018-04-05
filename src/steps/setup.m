@@ -12,8 +12,8 @@ config = struct(...
 );
 
 % Reload config vars with local_params.m script
-if( ~exist( fullfile(pwd, 'local_params.m'), 'file') )
-    error('Setup parameters using file ''local_params.m''');
+if( ~exist( 'local_params.m', 'file') )
+    error('File ''local_params.m'' not found.');
 end
 local_params;
 

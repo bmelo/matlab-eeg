@@ -1,6 +1,8 @@
 function preproc(config)
 %PREPROC
 outlier_sd = utils.Var.get(config, 'outlier_sd', 2);
+w_size = utils.Var.get(config, 'window_size', config.srate);
+w_overlap = utils.Var.get(config, 'window_overlap', w_size * .5);
 
 % Do the same for each subject
 for subjN = config.subjs
@@ -40,8 +42,8 @@ for subjN = config.subjs
     EEG = epochs_shrink(EEG); % Same size for all epochs
     
     % Two pass - outlier remotion
-    EEG = epochs_apply(@remove_outliers, EEG, outlier_sd, srate, srate*.5);
-    EEG = epochs_apply(@remove_outliers, EEG, outlier_sd, srate, srate*.5);
+    EEG = epochs_apply(@remove_outliers, EEG, outlier_sd, w_size, w_overlap);
+    EEG = epochs_apply(@remove_outliers, EEG, outlier_sd, w_size, w_overlap);
     
     % Saving clean EEG
     name_srate = sprintf('cEEG_%d', srate);
@@ -56,8 +58,8 @@ for subjN = config.subjs
         
         % Two pass - outlier remotion
         if ~config.debug
-            bEEG = epochs_apply(@remove_outliers, bEEG, outlier_sd, srate, srate*.5);
-            bEEG = epochs_apply(@remove_outliers, bEEG, outlier_sd, srate, srate*.5);
+            bEEG = epochs_apply(@remove_outliers, bEEG, outlier_sd, w_size, w_overlap);
+            bEEG = epochs_apply(@remove_outliers, bEEG, outlier_sd, w_size, w_overlap);
         end
         
         % Saving EEG bands

@@ -1,11 +1,9 @@
 % Scripts to manipulate EEG data
 %
 % by Bruno Melo (bruno.raphael@gmail.com)
-curdir = pwd;
-addpath(curdir);
 
 % Preparing components (eeglab, matlab-utils)
-cd ../..;
+addpath( fileparts( fileparts( pwd ) ) );
 init_app;
 clc;
 
@@ -38,6 +36,3 @@ for k=1:63
     accs = neural_network(config);
     save(sprintf('accs_all_%d-%d', config.bands), 'accs');
 end
-
-cd(curdir);
-

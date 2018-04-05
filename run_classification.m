@@ -13,6 +13,9 @@ config = setup('neutral_length', 10);
 config.outdir = 'STATS/CLASSIFICATION/ANN';
 config.prefix = '';
 
+config.subjs = 4;
+config.features = {'l_power_feats' 'l_power_rel_feats' 'l_dens_feats'};
+
 accs = neural_network(config);
 save('accs_all', 'accs');
 
