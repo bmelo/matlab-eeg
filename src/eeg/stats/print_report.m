@@ -15,7 +15,7 @@ if isstruct(results)
     list = sprintf('%s ', labels{results.T_A == 1});
     disp(list);
 else
-    list = sprintf('%s ', labels{results == 1});
+    list = sprintf('%s ', labels{results < .01 });
     disp(list);
 end
 

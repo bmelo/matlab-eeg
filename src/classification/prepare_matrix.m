@@ -4,12 +4,15 @@ function [ varargout ] = prepare_matrix( mEEG, srate, clean_nan )
 
 if nargin<3, clean_nan = 0; end
 
+n_wins = size(mEEG.TASK_T, 3);
+
 % Neutral condition is doubled (excerpt for Tenderness and Anguish)
 intN  = floor( [2 10] * srate ); % 8s - selected to have the same size of the condition
 intNF = floor( [57 62] * srate ); % 5s - selected to have the same size of the condition
 intC  = floor( [20 46] * srate ); % 26s
 
 idxN = [intN(1)+1:intN(2)  intNF(1)+1:intNF(2)];
+idxN(idxN > n_wins) = [];
 idxC = intC(1)+1:intC(2);
 
 num_chs = size( mEEG.TASK_T, 1 );

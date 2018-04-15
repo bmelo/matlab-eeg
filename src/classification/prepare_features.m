@@ -71,7 +71,7 @@ function min_len = get_min_length(data)
 
 min_len = Inf;
 for k=1:length(data)
-    min_len = min( [min_len size(data(k).N, 2)] );
+    min_len = min( [min_len size(data(k).N, 2) size(data(k).T, 2) size(data(k).A, 2)] );
 end
 
 end

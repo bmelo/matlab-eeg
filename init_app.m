@@ -1,5 +1,6 @@
 % File to prepare application
 % Initialize dependencies and do some setups
+rootdir = fileparts( mfilename('fullpath') );
 
 % Checking if need run file again
 global included
@@ -8,11 +9,7 @@ if ~isempty(included)
 end
 
 %% Loading configuration
-try
-    local_params
-catch e
-    config.vendors_dir = 'vendors';
-end
+config.vendors_dir = fullfile( rootdir, 'vendors');
 
 %% Checking config.vendors_dir
 [~, config.vendors_dir] = fileattrib( config.vendors_dir );
@@ -49,6 +46,7 @@ if( ~exist( 'pop_loadbv' ) )
 end
 close all;
 
+clear rootdir;
 % Preparing CoSMoMVPA
 %cosmo_set_path;
 

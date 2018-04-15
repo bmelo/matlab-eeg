@@ -3,12 +3,13 @@
 % by Bruno Melo (bruno.raphael@gmail.com)
 
 % Preparing components (eeglab, matlab-utils)
-addpath( fileparts( fileparts( pwd ) ) );
+[~, rootdir] = fileattrib('../../..');
+addpath( rootdir.Name );
 init_app;
 clc;
 
-%matlabpool open local 12
+pool = parpool('local', 30);
 parfor k=1:63
     testa_canais(k);
 end
-matlabpool close
+delete(pool)

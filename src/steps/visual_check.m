@@ -7,7 +7,8 @@ for subjN = config.subjs
     close all;
     
     subj = sprintf('%s%03d', config.subj_prefix, subjN);
-    subjdir = fullfile( config.outdir_base, subj );
+    subjdir_in = fullfile( config.preproc_dir, subj );
+    subjdir_out = fullfile( config.outdir_base, subj );
     
     fprintf('\n####   VISUAL CHECK - %s   ####\n\n', subj);
     
@@ -17,7 +18,7 @@ for subjN = config.subjs
     
     %% Characteristics
     % ERD/ERS
-    EEG = eeg_load( subjdir, 'pEEG_8_13', 'pEEG_13_26', 'pEEG_26_45' );
+    EEG = eeg_load( subjdir_in, 'pEEG_8_13', 'pEEG_13_26', 'pEEG_26_45' );
     plot_bands_overlap_task(EEG, 'ERD-ERS bands', config.chs, 0, only_before, @erd_ers, EEG(1).srate, floor(EEG(1).srate/5), [EEG(1).srate*5 EEG(1).srate*10]);
     
     %input('[Enter] para continuar...');

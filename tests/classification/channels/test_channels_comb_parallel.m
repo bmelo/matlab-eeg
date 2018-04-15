@@ -9,12 +9,13 @@ clc;
 accs = chs_acc('CHANNELS');
 [vals, idxs] = sort(accs);
 
-matlabpool open local 12
+pool = parpool('local', 30);
+% ASCEND
 parfor k=2:63
     testa_canais( idxs(1:k), 'CHANNELS_COMB_ASC' );
 end
 
-DESCEND
+% DESCEND
 [vals, idxs] = sort(accs, 'descend');
 parfor k=2:63    
     testa_canais( idxs(1:k), 'CHANNELS_COMB' );
@@ -25,4 +26,4 @@ idxs_random = randperm(63);
 parfor k=1:63
     testa_canais( idxs_random(1:k), 'CHANNELS_COMB_RAND' );
 end
-matlabpool close
+delete(pool);

@@ -7,14 +7,19 @@ if Var.get(config.preproc, 'active')
 end
 
 %% Visual Check
+if Var.get(config, 'visual_check')
+    visual_check(config);
+end
+
+%% PROC
+% Features extraction
 if Var.get(config.proc.features, 'active')
     extract_features(config);
 end
 
-%% PROC
 % Grand Average
 if Var.get(config.proc, 'grand_average')
-    grand_averages( config, prefixes );
+    grand_average( config );
 end
 
 %% STATS

@@ -1,34 +1,26 @@
 function second_level(config)
 
-files = {'pEEG_8_13' 'pEEG_13_26' 'pEEG_26_45'};
-for k = 1:length(files)
-    file  = files{k};
+for nB = 1:size(config.bands, 1)
+    band = config.bands(nB,:);
+    sBand = sprintf('%d-%d', band);
     
-    group = group_matrix_eeg(config, file);
-    srate = group.srate;
+    group    = group_matrix_eeg(config, nB);
+    srate    = group.srate;
     channels = group.channels;
     
-    pEEG.TASK_T = [group.data(:).TASK_T];
-    pEEG.TASK_A = [group.data(:).TASK_A];
+    erdEEG.data.TASK_T = [group.data(:).TASK_T];
+    erdEEG.data.TASK_A = [group.data(:).TASK_A];
+    
+    erdEEG.srate = srate;
     clear group;
-    mpEEG = mean_matrix(pEEG, srate); % mean power
     
-    results(k).stats.sl.ftest.power = testChannels( mpEEG, 'testF' );
-    results(k).stats.sl.friedman.power = testChannels( mpEEG, 'friedman' );
-    results(k).stats.sl.ttest.power = testChannels( mpEEG, 'testT' );
-    results(k).stats.sl.wilcoxon.power = testChannels( mpEEG, 'wilcoxon' );
-    clear mEEG;
+    results.stats.sl.bands(nB).erders  = testConds( erdEEG, 'friedman' );
+    results.channels = channels;
     
-    syncEEG = epochs_apply_matrices(@erd_ers, pEEG, [srate*5 srate*10] );
-    syncEEG = epochs_apply_matrices(@window_func, syncEEG, srate, srate/5 );
-    perc = size(syncEEG.TASK_T,3) / size(pEEG.TASK_T,3);
-    clear pEEG;
-    msEEG = mean_matrix(syncEEG, srate * perc); % mean sync
+    fprintf('\n\nSECOND LEVEL - ERD/ERS [%s]\n', sBand);
+    print_report( results.stats.sl.bands(nB).erders.median, results.channels );
+    fprintf('\n\n');
     
-    results(k).stats.sl.ftest.sync = testChannels( msEEG, 'testF' );
-    results(k).stats.sl.friedman.sync = testChannels( msEEG, 'friedman' );
-    results(k).stats.sl.ttest.sync = testChannels( msEEG, 'testT' );
-    results(k).stats.sl.wilcoxon.sync = testChannels( msEEG, 'wilcoxon' );
 end
 
 outfile = fullfile( config.outdir_base, 'results-SL.mat' );

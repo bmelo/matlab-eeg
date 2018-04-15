@@ -6,8 +6,7 @@ function run_eeg_procs_parallel()
 % Preparing components (eeglab, matlab-utils)
 init_app;
 clc;
-
-matlabpool open local 8
+pool = parpool(13);
 tempconf = setup('neutral_length', 10);
 subjs = tempconf.subjs;
 
@@ -24,4 +23,4 @@ parfor k=1:length(tempconf.subjs)
     run_procs(config);
 end
 
-matlabpool close
+delete(pool);
